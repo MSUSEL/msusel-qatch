@@ -40,7 +40,7 @@
 			<include name="**/*.class"/>
 			<!--include name="**/*.jar"/-->
 			<!--exclude name="**/*Test*.class"/-->
-			<extdirs path="lib" />
+			<!--<extdirs path="lib" />-->
 		</ckjm>
 	</target>
 

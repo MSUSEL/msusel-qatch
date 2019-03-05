@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ckjm>
+	<class>
+		<name>edu.montana.msusel.qatch.Main</name>
+		<wmc>2</wmc>
+		<dit>1</dit>
+		<noc>0</noc>
+		<cbo>0</cbo>
+		<rfc>4</rfc>
+		<lcom>1</lcom>
+		<ca>0</ca>
+		<ce>0</ce>
+		<npm>2</npm>
+		<lcom3>2.0</lcom3>
+		<loc>9</loc>
+		<dam>0.0</dam>
+		<moa>0</moa>
+		<mfa>0.0</mfa>
+		<cam>0.5</cam>
+		<ic>0</ic>
+		<cbm>0</cbm>
+		<amc>3.5</amc>
+		<cc>
+			<method name="public static void main(String[] args)">1</method>
+			<method name="public void _init_()">1</method>
+		</cc>
+	</class>
+</ckjm>

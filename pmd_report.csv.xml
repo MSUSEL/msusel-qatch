@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd version="5.4.1" timestamp="2019-03-05T08:10:18.113">
+<file name="src\edu\montana\msusel\qatch\Main.java">
+<violation beginline="5" endline="5" begincolumn="29" endcolumn="41" rule="MethodArgumentCouldBeFinal" ruleset="Optimization" package="edu.montana.msusel.qatch" class="Main" method="main" variable="args" externalInfoUrl="https://pmd.github.io/pmd-5.4.1/pmd-java/rules/java/optimizations.html#MethodArgumentCouldBeFinal" priority="3">
+Parameter 'args' is not assigned and could be declared final
+</violation>
+</file>
+</pmd>

@@ -1,0 +1,359 @@
+{
+    "name": "java-baseModel-perfect-score",
+    "path": "C:\\Users\\davidrice3\\Repository\\MSUSEL\\sample-analysis-projects\\java\\java-baseModel-perfect-score",
+    "properties": {
+        "properties": [
+            {
+                "name": "Bad_Function",
+                "description": "Avoid bad patterns",
+                "thresholds": [
+                    0.0,
+                    0.0095,
+                    0.0195
+                ],
+                "eval": 1.0,
+                "profile": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "positive": false,
+                "measure": {
+                    "value": 0.0,
+                    "normValue": 0.0,
+                    "type": 1,
+                    "metricName": "",
+                    "rulesetPath": "./Rulesets/badFunRuleSet.xml",
+                    "tool": "PMD",
+                    "normalizer": 9
+                }
+            },
+            {
+                "name": "Comprehensibility",
+                "description": "This measures evaluates how much understandable and readable the code is!!\n They derive from Spinelis book entitled : \" Code Quality \"",
+                "thresholds": [
+                    0.0306,
+                    0.1239,
+                    0.2189
+                ],
+                "eval": 0.0,
+                "profile": [
+                    0.0,
+                    0.0,
+                    2.0,
+                    1.0,
+                    0.0
+                ],
+                "positive": false,
+                "measure": {
+                    "value": 3.0,
+                    "normValue": 0.3333333333333333,
+                    "type": 1,
+                    "metricName": "",
+                    "rulesetPath": "./Rulesets/compRuleSet.xml",
+                    "tool": "PMD",
+                    "normalizer": 9
+                }
+            },
+            {
+                "name": "Redundancy",
+                "description": "This priority evaluates if the code is free from redundant code",
+                "thresholds": [
+                    0.0,
+                    0.0045,
+                    0.0133
+                ],
+                "eval": 1.0,
+                "profile": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "positive": false,
+                "measure": {
+                    "value": 0.0,
+                    "normValue": 0.0,
+                    "type": 1,
+                    "metricName": "",
+                    "rulesetPath": "./Rulesets/redundantRuleSet.xml",
+                    "tool": "PMD",
+                    "normalizer": 9
+                }
+            },
+            {
+                "name": "Structurdness",
+                "description": "Structured",
+                "thresholds": [
+                    0.0,
+                    0.0081,
+                    0.0167
+                ],
+                "eval": 1.0,
+                "profile": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "positive": false,
+                "measure": {
+                    "value": 0.0,
+                    "normValue": 0.0,
+                    "type": 1,
+                    "metricName": "",
+                    "rulesetPath": "./Rulesets/structRuleSet.xml",
+                    "tool": "PMD",
+                    "normalizer": 9
+                }
+            },
+            {
+                "name": "Assignment",
+                "description": "Evaluates how well the system conforms to the rules of JUnit API (if used)",
+                "thresholds": [
+                    0.0136,
+                    0.0694,
+                    0.1327
+                ],
+                "eval": 0.17061611374407587,
+                "profile": [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                ],
+                "positive": false,
+                "measure": {
+                    "value": 1.0,
+                    "normValue": 0.1111111111111111,
+                    "type": 1,
+                    "metricName": "",
+                    "rulesetPath": "./Rulesets/assignmentRuleSet.xml",
+                    "tool": "PMD",
+                    "normalizer": 9
+                }
+            },
+            {
+                "name": "Resource_Handling",
+                "description": "This measures evaluates the resources!",
+                "thresholds": [
+                    0.004,
+                    0.0591,
+                    0.1168
+                ],
+                "eval": 0.04939341421143845,
+                "profile": [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                ],
+                "positive": false,
+                "measure": {
+                    "value": 1.0,
+                    "normValue": 0.1111111111111111,
+                    "type": 1,
+                    "metricName": "",
+                    "rulesetPath": "./Rulesets/resourceHandRuleSet.xml",
+                    "tool": "PMD",
+                    "normalizer": 9
+                }
+            },
+            {
+                "name": "Cohesion",
+                "description": "This property evaluates the cohesion of the project\u0027s classes",
+                "thresholds": [
+                    2.5007,
+                    365.8247,
+                    1571.1989
+                ],
+                "eval": 1.0,
+                "positive": false,
+                "measure": {
+                    "value": 9.0,
+                    "normValue": 1.0,
+                    "type": 0,
+                    "metricName": "LCOM",
+                    "rulesetPath": "",
+                    "tool": "CKJM",
+                    "normalizer": 9
+                }
+            },
+            {
+                "name": "Coupling",
+                "description": "Evaluates the total number of efferent and afferent coupling of the system.",
+                "thresholds": [
+                    0.0,
+                    12.8935,
+                    42.3494
+                ],
+                "eval": 1.0,
+                "positive": false,
+                "measure": {
+                    "value": 0.0,
+                    "normValue": 0.0,
+                    "type": 0,
+                    "metricName": "CBO",
+                    "rulesetPath": "",
+                    "tool": "CKJM",
+                    "normalizer": 9
+                }
+            },
+            {
+                "name": "Complexity",
+                "description": "Complexity of the whole System",
+                "thresholds": [
+                    3.1903,
+                    24.6993,
+                    62.3931
+                ],
+                "eval": 1.0,
+                "positive": false,
+                "measure": {
+                    "value": 18.0,
+                    "normValue": 2.0,
+                    "type": 0,
+                    "metricName": "WMC",
+                    "rulesetPath": "",
+                    "tool": "CKJM",
+                    "normalizer": 9
+                }
+            },
+            {
+                "name": "Messaging",
+                "description": "The level of the API",
+                "thresholds": [
+                    2.3966,
+                    15.6597,
+                    40.4448
+                ],
+                "eval": 1.0,
+                "positive": false,
+                "measure": {
+                    "value": 18.0,
+                    "normValue": 2.0,
+                    "type": 0,
+                    "metricName": "NPM",
+                    "rulesetPath": "",
+                    "tool": "CKJM",
+                    "normalizer": 9
+                }
+            },
+            {
+                "name": "Encapsulation",
+                "description": "The level of the encapsulation of the system",
+                "thresholds": [
+                    0.2482,
+                    0.6745,
+                    0.9884
+                ],
+                "eval": 1.0,
+                "positive": false,
+                "measure": {
+                    "value": 0.0,
+                    "normValue": 0.0,
+                    "type": 0,
+                    "metricName": "DAM",
+                    "rulesetPath": "",
+                    "tool": "CKJM",
+                    "normalizer": 9
+                }
+            }
+        ]
+    },
+    "characteristics": {
+        "characteristics": [
+            {
+                "name": "Maintainability",
+                "standard": "ISO/IEC 25010",
+                "description": "The maintainability of the project",
+                "weights": [
+                    0.0636,
+                    0.2551,
+                    0.1271,
+                    0.0879,
+                    0.1152,
+                    0.0187,
+                    0.0608,
+                    0.0696,
+                    0.1612,
+                    0.0166,
+                    0.0242
+                ],
+                "eval": 0.6315786331490714
+            },
+            {
+                "name": "Reliability",
+                "standard": "ISO/IEC 25010",
+                "description": "The reliability of the project",
+                "weights": [
+                    0.1082,
+                    0.2267,
+                    0.1377,
+                    0.0216,
+                    0.1014,
+                    0.0958,
+                    0.0727,
+                    0.0605,
+                    0.0399,
+                    0.0456,
+                    0.09
+                ],
+                "eval": 0.5982323630151051
+            },
+            {
+                "name": "Security",
+                "standard": "ISO/IEC 25010",
+                "description": "The security of the project",
+                "weights": [
+                    0.0971,
+                    0.0429,
+                    0.0663,
+                    0.0519,
+                    0.086,
+                    0.1811,
+                    0.043,
+                    0.0498,
+                    0.0205,
+                    0.0231,
+                    0.3382
+                ],
+                "eval": 0.7135181330956821
+            },
+            {
+                "name": "Performance_Efficiency",
+                "standard": "ISO/IEC 25010",
+                "description": "The performance of the project",
+                "weights": [
+                    0.2301,
+                    0.0367,
+                    0.0798,
+                    0.0688,
+                    0.0765,
+                    0.2974,
+                    0.0716,
+                    0.039,
+                    0.0427,
+                    0.0328,
+                    0.0246
+                ],
+                "eval": 0.6171417340879036
+            }
+        ]
+    },
+    "tqi": {
+        "eval": 0.6284682895481202,
+        "weights": [
+            0.5528,
+            0.1202,
+            0.0583,
+            0.2687
+        ]
+    }
+}
