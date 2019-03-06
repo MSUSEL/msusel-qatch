@@ -69,7 +69,6 @@ public class TestSingleProjectEvaluator {
 		/*
 		 * Step 0 : Load the desired Quality Model
 		 */
-
 		System.out.println("**************** STEP 0: Quality Model Loader ************************");
 		System.out.println("*");
 		System.out.println("* Loading the desired Quality Model...");

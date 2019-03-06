@@ -84,7 +84,9 @@
                 <include>Rulesets/</include>
                 <include>tools/</include>
                 <include>build.xml</include>
+                <include>pmd_build.xml</include>
                 <include>config.xml</include>
+                <include>*_evalResults.json</include>
               </includes>
               <followSymlinks>false</followSymlinks>
             </fileset>
@@ -99,6 +101,21 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>miltos.diploma.characteristics.TestSingleProjectEvaluator</mainClass>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
