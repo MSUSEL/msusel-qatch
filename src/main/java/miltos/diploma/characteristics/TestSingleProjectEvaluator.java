@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -58,6 +59,8 @@ public class TestSingleProjectEvaluator {
 		System.out.println("******************************  Project Evaluator *******************************");
 		System.out.println();
 
+		//Extract necessary tools if not already extracted
+		extractTools();
 		//Get the configuration
 		getConfig();
 		//Receive the appropriate configuration from the user through terminal
@@ -310,6 +313,25 @@ public class TestSingleProjectEvaluator {
 		System.out.println("* You can find the results at : " + new File(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH).getAbsolutePath() + " as well..!");
 	}
 
+
+	/**
+	 *
+	 */
+	public static void extractTools(){
+		String resources = "src/main/resources/";
+		File buildFile = new File(resources + "build.xml");
+		File configFile = new File(resources + "config.xml");
+		File rulesets = new File(resources + "Rulesets");
+		File tools = new File(resources + "tools");
+		try {
+			FileUtils.copyFileToDirectory(buildFile, new File(System.getProperty("user.dir")));
+			FileUtils.copyFileToDirectory(configFile, new File(System.getProperty("user.dir")));
+			FileUtils.copyDirectoryToDirectory(rulesets, new File(System.getProperty("user.dir")));
+			FileUtils.copyDirectoryToDirectory(tools, new File(System.getProperty("user.dir")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * A method that parses the configuration xml file in order to set up

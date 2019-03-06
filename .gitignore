@@ -203,5 +203,10 @@ $RECYCLE.BIN/
 
 # Project specific
 Results/
+Rulesets/
+build.xml
+config.xml
+*_evalResults.json
+tools/
 
 # End of https://www.gitignore.io/api/git,java,maven,macos,linux,windows,intellij
