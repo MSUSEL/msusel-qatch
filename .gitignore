@@ -205,6 +205,7 @@ $RECYCLE.BIN/
 Results/
 Rulesets/
 build.xml
+pmd_build.xml
 config.xml
 *_evalResults.json
 tools/

@@ -321,11 +321,13 @@ public class TestSingleProjectEvaluator {
 		String resources = "src/main/resources/";
 		File buildFile = new File(resources + "build.xml");
 		File configFile = new File(resources + "config.xml");
+		File pmdBuildFile = new File(resources + "pmd_build.xml");
 		File rulesets = new File(resources + "Rulesets");
 		File tools = new File(resources + "tools");
 		try {
 			FileUtils.copyFileToDirectory(buildFile, new File(System.getProperty("user.dir")));
 			FileUtils.copyFileToDirectory(configFile, new File(System.getProperty("user.dir")));
+			FileUtils.copyFileToDirectory(pmdBuildFile, new File(System.getProperty("user.dir")));
 			FileUtils.copyDirectoryToDirectory(rulesets, new File(System.getProperty("user.dir")));
 			FileUtils.copyDirectoryToDirectory(tools, new File(System.getProperty("user.dir")));
 		} catch (IOException e) {
