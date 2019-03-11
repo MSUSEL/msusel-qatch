@@ -1,28 +1,22 @@
 package miltos.diploma.characteristics;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Iterator;
+import java.io.InputStream;
+import java.nio.file.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.tools.ant.DirectoryScanner;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
-import miltos.diploma.BenchmarkAggregator;
-import miltos.diploma.BenchmarkAnalysisExporter;
 import miltos.diploma.BenchmarkAnalyzer;
-import miltos.diploma.BenchmarkEvaluator;
-import miltos.diploma.BenchmarkProjects;
-import miltos.diploma.BenchmarkResultImporter;
 import miltos.diploma.CKJMAggregator;
 import miltos.diploma.CKJMAnalyzer;
 import miltos.diploma.CKJMResultsImporter;
@@ -34,7 +28,6 @@ import miltos.diploma.Project;
 import miltos.diploma.ProjectEvaluator;
 import miltos.diploma.Property;
 
-import com.google.gson.Gson;
 /**
  * TODO: Bring the cloning processes together at the beginning of the class
  * TODO: Add a parallel analysis option...
@@ -60,7 +53,7 @@ public class TestSingleProjectEvaluator {
 		System.out.println();
 
 		//Extract necessary tools if not already extracted
-		extractTools();
+		extractResources();
 		//Get the configuration
 		getConfig();
 		//Receive the appropriate configuration from the user through terminal
@@ -316,19 +309,73 @@ public class TestSingleProjectEvaluator {
 	/**
 	 *
 	 */
-	public static void extractTools(){
-		String resources = "src/main/resources/";
-		File buildFile = new File(resources + "build.xml");
-		File configFile = new File(resources + "config.xml");
-		File pmdBuildFile = new File(resources + "pmd_build.xml");
-		File rulesets = new File(resources + "Rulesets");
-		File tools = new File(resources + "tools");
-		try {
-			FileUtils.copyFileToDirectory(buildFile, new File(System.getProperty("user.dir")));
-			FileUtils.copyFileToDirectory(configFile, new File(System.getProperty("user.dir")));
-			FileUtils.copyFileToDirectory(pmdBuildFile, new File(System.getProperty("user.dir")));
-			FileUtils.copyDirectoryToDirectory(rulesets, new File(System.getProperty("user.dir")));
-			FileUtils.copyDirectoryToDirectory(tools, new File(System.getProperty("user.dir")));
+	public static void extractResources(){
+
+		//Set filepath for resources depending if run from jar or in IDE
+		String buildLoc, configLoc, pmd_buildLoc, rulesetsLoc, toolsLoc;
+		File rootDirectory = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
+
+		String protocol = TestSingleProjectEvaluator.class.getResource("").getProtocol();
+		if(Objects.equals(protocol, "jar")){
+			throw new RuntimeException("todo: extract resources when in jar");
+		}
+		else if(Objects.equals(protocol, "file")) {
+			String resourcesLoc = "src/main/resources/";
+			buildLoc 	 = resourcesLoc + "build.xml";
+			configLoc 	 = resourcesLoc + "config.xml";
+			pmd_buildLoc = resourcesLoc + "pmd_build.xml";
+			rulesetsLoc  = resourcesLoc + "Rulesets";
+			toolsLoc     = resourcesLoc + "tools";
+
+			File buildXml	  	= new File(buildLoc);
+			File configXml 	 	= new File(configLoc);
+			File pmd_buildXml 	= new File(pmd_buildLoc);
+			File rulesetsFolder = new File(rulesetsLoc);
+			File toolsFolder 	= new File(toolsLoc);
+
+			try {
+				FileUtils.copyFileToDirectory(buildXml, rootDirectory);
+				FileUtils.copyFileToDirectory(configXml, rootDirectory);
+				FileUtils.copyFileToDirectory(pmd_buildXml, rootDirectory);
+				FileUtils.copyDirectoryToDirectory(rulesetsFolder, rootDirectory);
+				FileUtils.copyDirectoryToDirectory(toolsFolder, rootDirectory);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+		else {
+			throw new RuntimeException("Unable to determine if project is running from IDE or JAR");
+		}
+
+		//Create empty directories
+//		boolean dirSuccess = true;
+//		dirSuccess = dirSuccess && new File("Rulesets").mkdir();
+//		dirSuccess = dirSuccess && new File("tools/pmd-bin-5.4.1/bin").mkdirs();
+//		dirSuccess = dirSuccess && new File("tools/pmd-bin-5.4.1/lib").mkdirs();
+//		if (!dirSuccess) { throw new RuntimeException("Directory creation for resource extraction failed"); }
+//
+//		String  build 	  = "build.xml",
+//			    config    = "config.xml",
+//				pmd_build = "pmd_build.xml",
+//				rulesets  = "Rulesets";
+//
+//		Path root = new File(System.getProperty("user.dir")).toPath();
+//		Path buildPath = Paths.get(root.toString(), build);
+//		Path configPath = Paths.get(root.toString(), config);
+//		Path pmd_BuildPath = Paths.get(root.toString(), pmd_build);
+//		Path rulesetsPath = Paths.get(root.toString(), rulesets, "test");
+//		Path toolsPath = Paths.get(root.toString(), "build.xml");
+//
+//		copyResource(build, buildPath);
+//		copyResource(config, configPath);
+//		copyResource(pmd_build, pmd_BuildPath);
+//		copyResource(rulesets, rulesetsPath);
+	}
+
+	public static void copyResource(String resName, Path resPath) {
+		try (InputStream is = TestSingleProjectEvaluator.class.getClassLoader().getResourceAsStream(resName)) {
+			Files.copy(is, resPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
