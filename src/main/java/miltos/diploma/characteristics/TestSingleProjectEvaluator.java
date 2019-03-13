@@ -1,13 +1,15 @@
 package miltos.diploma.characteristics;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.DirectoryScanner;
@@ -305,79 +307,6 @@ public class TestSingleProjectEvaluator {
 		System.out.println("* You can find the results at : " + new File(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH).getAbsolutePath() + " as well..!");
 	}
 
-
-	/**
-	 *
-	 */
-	public static void extractResources() {
-
-		//Set filepath for resources depending if run from jar or in IDE
-		String buildLoc, configLoc, pmd_buildLoc, rulesetsLoc, toolsLoc;
-		File rootDirectory = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
-
-		String protocol = TestSingleProjectEvaluator.class.getResource("").getProtocol();
-
-		if (Objects.equals(protocol, "jar")) {
-			String resourcesLoc = null;
-			try {
-				resourcesLoc = rootDirectory.getCanonicalPath() + "/";
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			buildLoc = resourcesLoc + "build.xml";
-			configLoc = resourcesLoc + "config.xml";
-			pmd_buildLoc = resourcesLoc + "pmd_build.xml";
-			rulesetsLoc = resourcesLoc + "Rulesets";
-			toolsLoc = resourcesLoc + "tools";
-
-			File buildXml = new File(buildLoc);
-			File configXml = new File(configLoc);
-			File pmd_buildXml = new File(pmd_buildLoc);
-			File rulesetsFolder = new File(rulesetsLoc);
-			File toolsFolder = new File(toolsLoc);
-
-			try {
-				FileUtils.copyFileToDirectory(buildXml, rootDirectory);
-				FileUtils.copyFileToDirectory(configXml, rootDirectory);
-				FileUtils.copyFileToDirectory(pmd_buildXml, rootDirectory);
-				FileUtils.copyDirectoryToDirectory(rulesetsFolder, rootDirectory);
-				FileUtils.copyDirectoryToDirectory(toolsFolder, rootDirectory);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		else if (Objects.equals(protocol, "file")) {
-			String resourcesLoc = "src/main/resources/";
-			buildLoc = resourcesLoc + "build.xml";
-			configLoc = resourcesLoc + "config.xml";
-			pmd_buildLoc = resourcesLoc + "pmd_build.xml";
-			rulesetsLoc = resourcesLoc + "Rulesets";
-			toolsLoc = resourcesLoc + "tools";
-
-			File buildXml = new File(buildLoc);
-			File configXml = new File(configLoc);
-			File pmd_buildXml = new File(pmd_buildLoc);
-			File rulesetsFolder = new File(rulesetsLoc);
-			File toolsFolder = new File(toolsLoc);
-
-			try {
-				FileUtils.copyFileToDirectory(buildXml, rootDirectory);
-				FileUtils.copyFileToDirectory(configXml, rootDirectory);
-				FileUtils.copyFileToDirectory(pmd_buildXml, rootDirectory);
-				FileUtils.copyDirectoryToDirectory(rulesetsFolder, rootDirectory);
-				FileUtils.copyDirectoryToDirectory(toolsFolder, rootDirectory);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
-
-		else {
-			throw new RuntimeException("Unable to determine if project is running from IDE or JAR");
-		}
-	}
-
 	/**
 	 * A method that parses the configuration xml file in order to set up
 	 * some fixed user defined parameters.
@@ -552,6 +481,85 @@ public class TestSingleProjectEvaluator {
 					answer = "";
 				}
 			}
+		}
+	}
+
+	private static void extractResources() {
+		//Set filepath for resources depending if run from jar or in IDE
+		String buildLoc, configLoc, pmd_buildLoc, rulesetsLoc, toolsLoc;
+		File rootDirectory = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
+
+		String protocol = TestSingleProjectEvaluator.class.getResource("").getProtocol();
+
+		if (Objects.equals(protocol, "jar")) {
+			extractResourcesToTempFolder();
+		}
+
+		else if (Objects.equals(protocol, "file")) {
+			String resourcesLoc = "src/main/resources/";
+			buildLoc = resourcesLoc + "build.xml";
+			configLoc = resourcesLoc + "config.xml";
+			pmd_buildLoc = resourcesLoc + "pmd_build.xml";
+			rulesetsLoc = resourcesLoc + "Rulesets";
+			toolsLoc = resourcesLoc + "tools";
+
+			File buildXml = new File(buildLoc);
+			File configXml = new File(configLoc);
+			File pmd_buildXml = new File(pmd_buildLoc);
+			File rulesetsFolder = new File(rulesetsLoc);
+			File toolsFolder = new File(toolsLoc);
+
+			try {
+				FileUtils.copyFileToDirectory(buildXml, rootDirectory);
+				FileUtils.copyFileToDirectory(configXml, rootDirectory);
+				FileUtils.copyFileToDirectory(pmd_buildXml, rootDirectory);
+				FileUtils.copyDirectoryToDirectory(rulesetsFolder, rootDirectory);
+				FileUtils.copyDirectoryToDirectory(toolsFolder, rootDirectory);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		else {
+			throw new RuntimeException("Unable to determine if project is running from IDE or JAR");
+		}
+	}
+
+	public static void extractResourcesToTempFolder() {
+		try {
+//			//If folder exist, delete it.
+			String rootPath = TestSingleProjectEvaluator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+			String destPath = "C:\\Users\\davidrice3\\Desktop\\temp\\";
+//			deleteDirectoryRecursive(new File(destPath));
+
+			JarFile jarFile = new JarFile(rootPath);
+			Enumeration<JarEntry> enums = jarFile.entries();
+			while (enums.hasMoreElements()) {
+				JarEntry entry = enums.nextElement();
+				if (entry.getName().startsWith("resources")) {
+					File toWrite = new File(destPath + entry.getName());
+					if (entry.isDirectory()) {
+						toWrite.mkdirs();
+						continue;
+					}
+					InputStream in = new BufferedInputStream(jarFile.getInputStream(entry));
+					OutputStream out = new BufferedOutputStream(new FileOutputStream(toWrite));
+					byte[] buffer = new byte[2048];
+					for (;;) {
+						int nBytes = in.read(buffer);
+						if (nBytes <= 0) {
+							break;
+						}
+						out.write(buffer, 0, nBytes);
+					}
+					out.flush();
+					out.close();
+					in.close();
+				}
+				System.out.println(entry.getName());
+			}
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
 	}
 }
