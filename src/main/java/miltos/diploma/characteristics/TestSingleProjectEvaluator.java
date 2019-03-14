@@ -1,15 +1,10 @@
 package miltos.diploma.characteristics;
 
 import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.DirectoryScanner;
@@ -492,8 +487,12 @@ public class TestSingleProjectEvaluator {
 		String protocol = TestSingleProjectEvaluator.class.getResource("").getProtocol();
 
 		if (Objects.equals(protocol, "jar")) {
-			extractResourcesToTempFolder();
-		}
+            try {
+                extractResourcesToTempFolder(rootDirectory.getCanonicalPath().concat("\\"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
 		else if (Objects.equals(protocol, "file")) {
 			String resourcesLoc = "src/main/resources/";
@@ -525,11 +524,21 @@ public class TestSingleProjectEvaluator {
 		}
 	}
 
-	public static void extractResourcesToTempFolder() {
+	/**
+	 * Code from https://stackoverflow.com/questions/1529611/how-to-write-a-java-program-which-can-extract-a-jar-file-and-store-its-data-in-s/1529707#1529707
+	 * by user Jamesst20
+	 *
+	 * Used when running program as a JAR.
+	 *
+	 * Takes resources in the resources folder within the JAR and copies them to a
+	 * resources folder in the same directory as the JAR. Also moves the ant build.xml
+	 * file to root directory.
+	 */
+	private static void extractResourcesToTempFolder(String destinationPath) {
 		try {
 //			//If folder exist, delete it.
 			String rootPath = TestSingleProjectEvaluator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-			String destPath = "C:\\Users\\davidrice3\\Desktop\\temp\\";
+			String destPath = destinationPath; 	// "C:\\Users\\davidrice3\\Desktop\\temp\\";
 //			deleteDirectoryRecursive(new File(destPath));
 
 			JarFile jarFile = new JarFile(rootPath);
@@ -556,7 +565,6 @@ public class TestSingleProjectEvaluator {
 					out.close();
 					in.close();
 				}
-				System.out.println(entry.getName());
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
