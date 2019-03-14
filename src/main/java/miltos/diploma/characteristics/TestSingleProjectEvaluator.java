@@ -479,6 +479,10 @@ public class TestSingleProjectEvaluator {
 		}
 	}
 
+    /**
+     * Automatically extract necessary scripts and tools for analaysis run.
+     * Works whether run as a JAR or within an IDE.
+     */
 	private static void extractResources() {
 		//Set filepath for resources depending if run from jar or in IDE
 		String buildLoc, configLoc, pmd_buildLoc, rulesetsLoc, toolsLoc;
@@ -488,7 +492,7 @@ public class TestSingleProjectEvaluator {
 
 		if (Objects.equals(protocol, "jar")) {
             try {
-                extractResourcesToTempFolder(rootDirectory.getCanonicalPath().concat("\\"));
+                extractResourcesToTempFolder(rootDirectory);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -534,40 +538,45 @@ public class TestSingleProjectEvaluator {
 	 * resources folder in the same directory as the JAR. Also moves the ant build.xml
 	 * file to root directory.
 	 */
-	private static void extractResourcesToTempFolder(String destinationPath) {
-		try {
-//			//If folder exist, delete it.
-			String rootPath = TestSingleProjectEvaluator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-			String destPath = destinationPath; 	// "C:\\Users\\davidrice3\\Desktop\\temp\\";
-//			deleteDirectoryRecursive(new File(destPath));
+	private static void extractResourcesToTempFolder(File root) throws IOException {
+        File resources = new File(root, "resources");
+        String rootPath = TestSingleProjectEvaluator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        String destPath = root.getCanonicalPath().concat("\\");
 
-			JarFile jarFile = new JarFile(rootPath);
-			Enumeration<JarEntry> enums = jarFile.entries();
-			while (enums.hasMoreElements()) {
-				JarEntry entry = enums.nextElement();
-				if (entry.getName().startsWith("resources")) {
-					File toWrite = new File(destPath + entry.getName());
-					if (entry.isDirectory()) {
-						toWrite.mkdirs();
-						continue;
-					}
-					InputStream in = new BufferedInputStream(jarFile.getInputStream(entry));
-					OutputStream out = new BufferedOutputStream(new FileOutputStream(toWrite));
-					byte[] buffer = new byte[2048];
-					for (;;) {
-						int nBytes = in.read(buffer);
-						if (nBytes <= 0) {
-							break;
-						}
-						out.write(buffer, 0, nBytes);
-					}
-					out.flush();
-					out.close();
-					in.close();
-				}
-			}
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+        //If folder exist, delete it.
+        if (Files.exists(resources.toPath())) {
+            FileUtils.forceDelete(new File(root, "resources"));
+            System.out.println("Deleted resources folder");
+        }
+
+        //Recursively build resources folder from JAR sibling to JAR file
+        JarFile jarFile = new JarFile(rootPath);
+        Enumeration<JarEntry> enums = jarFile.entries();
+        while (enums.hasMoreElements()) {
+            JarEntry entry = enums.nextElement();
+            if (entry.getName().startsWith("resources")) {
+                File toWrite = new File(destPath + entry.getName());
+                if (entry.isDirectory()) {
+                    toWrite.mkdirs();
+                    continue;
+                }
+                InputStream in = new BufferedInputStream(jarFile.getInputStream(entry));
+                OutputStream out = new BufferedOutputStream(new FileOutputStream(toWrite));
+                byte[] buffer = new byte[2048];
+                for (;;) {
+                    int nBytes = in.read(buffer);
+                    if (nBytes <= 0) {
+                        break;
+                    }
+                    out.write(buffer, 0, nBytes);
+                }
+                out.flush();
+                out.close();
+                in.close();
+            }
+        }
+
+		//Move ant build.xml to root directory
+        FileUtils.copyFileToDirectory(new File(resources, "build.xml"), root);
+    }
 }
