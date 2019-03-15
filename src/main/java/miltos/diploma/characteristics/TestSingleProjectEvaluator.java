@@ -322,9 +322,7 @@ public class TestSingleProjectEvaluator {
 					keepResults =Boolean.parseBoolean(el.getText());
 				}
 			}
-		}  catch (JDOMException e) {
-			System.out.println(e.getMessage());
-		} catch (IOException e) {
+		}  catch (JDOMException | IOException e) {
 			System.out.println(e.getMessage());
 		}
 	}
@@ -358,7 +356,7 @@ public class TestSingleProjectEvaluator {
 	 * A method that implements the CMD User Interface of the script.
 	 * TODO: Add more checks - e.g. Check the validity of the xml file
 	 */
-	public static void getUserInputs(){
+	private static void getUserInputs(){
 
 		//Create a Scanner object in order to read data from the command line
 		Scanner console = new Scanner(System.in);
@@ -541,7 +539,7 @@ public class TestSingleProjectEvaluator {
 	private static void extractResourcesToTempFolder(File root) throws IOException {
         File resources = new File(root, "resources");
         String rootPath = TestSingleProjectEvaluator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        String destPath = root.getCanonicalPath().concat("\\");
+        String destPath = root.getCanonicalPath().concat(File.separator);
 
         //If folder exist, delete it.
         if (Files.exists(resources.toPath())) {
