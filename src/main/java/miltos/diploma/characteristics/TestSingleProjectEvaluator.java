@@ -497,6 +497,8 @@ public class TestSingleProjectEvaluator {
         }
 
 		else if (Objects.equals(protocol, "file")) {
+			File tempResources = new File(rootDirectory, "resources");
+
 			String resourcesLoc = "src/main/resources/";
 			buildLoc = resourcesLoc + "build.xml";
 			configLoc = resourcesLoc + "config.xml";
@@ -511,11 +513,11 @@ public class TestSingleProjectEvaluator {
 			File toolsFolder = new File(toolsLoc);
 
 			try {
-				FileUtils.copyFileToDirectory(buildXml, rootDirectory);
-				FileUtils.copyFileToDirectory(configXml, rootDirectory);
-				FileUtils.copyFileToDirectory(pmd_buildXml, rootDirectory);
-				FileUtils.copyDirectoryToDirectory(rulesetsFolder, rootDirectory);
-				FileUtils.copyDirectoryToDirectory(toolsFolder, rootDirectory);
+				FileUtils.copyFileToDirectory(buildXml, tempResources);
+				FileUtils.copyFileToDirectory(configXml, tempResources);
+				FileUtils.copyFileToDirectory(pmd_buildXml, tempResources);
+				FileUtils.copyDirectoryToDirectory(rulesetsFolder, tempResources);
+				FileUtils.copyDirectoryToDirectory(toolsFolder, tempResources);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -574,7 +576,11 @@ public class TestSingleProjectEvaluator {
             }
         }
 
-		//Move ant build.xml to root directory
+		//Move necessary files to root directory
         FileUtils.copyFileToDirectory(new File(resources, "build.xml"), root);
+        FileUtils.copyFileToDirectory(new File(resources, "config.xml"), root);
+        FileUtils.copyFileToDirectory(new File(resources, "pmd_build.xml"), root);
+        FileUtils.copyDirectoryToDirectory(new File(resources, "Rulesets"), root);
+        FileUtils.copyDirectoryToDirectory(new File(resources, "tools"), root);
     }
 }
