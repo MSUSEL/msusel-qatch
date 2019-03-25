@@ -497,7 +497,6 @@ public class TestSingleProjectEvaluator {
 		}
 
 		else if (Objects.equals(protocol, "file")) {
-			File tempResources = new File(rootDirectory, "resources");
 
 			String resourcesLoc = "src/main/resources/";
 			buildLoc = resourcesLoc + "build.xml";
@@ -513,11 +512,11 @@ public class TestSingleProjectEvaluator {
 			File toolsFolder = new File(toolsLoc);
 
 			try {
-				FileUtils.copyFileToDirectory(buildXml, tempResources);
-				FileUtils.copyFileToDirectory(configXml, tempResources);
-				FileUtils.copyFileToDirectory(pmd_buildXml, tempResources);
-				FileUtils.copyDirectoryToDirectory(rulesetsFolder, tempResources);
-				FileUtils.copyDirectoryToDirectory(toolsFolder, tempResources);
+				FileUtils.copyFileToDirectory(buildXml, rootDirectory);
+				FileUtils.copyFileToDirectory(configXml, rootDirectory);
+				FileUtils.copyFileToDirectory(pmd_buildXml, rootDirectory);
+				FileUtils.copyDirectoryToDirectory(rulesetsFolder, rootDirectory);
+				FileUtils.copyDirectoryToDirectory(toolsFolder, rootDirectory);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
