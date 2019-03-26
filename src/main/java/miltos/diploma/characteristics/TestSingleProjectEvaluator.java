@@ -5,6 +5,7 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.DirectoryScanner;
@@ -44,7 +45,7 @@ public class TestSingleProjectEvaluator {
 	public static boolean keepResults = false;
 
 
-	public static void main(String[] args) throws CloneNotSupportedException, InterruptedException{
+	public static void main(String[] args) throws Exception {
 
 		System.out.println("******************************  Project Evaluator *******************************");
 		System.out.println();
@@ -54,7 +55,7 @@ public class TestSingleProjectEvaluator {
 		//Get the configuration
 		getConfig();
 		//Receive the appropriate configuration from the user through terminal
-		getUserInputs();
+		getUserInputs(args);
 
 		/*
 		 * Step 0 : Load the desired Quality Model
@@ -356,18 +357,46 @@ public class TestSingleProjectEvaluator {
 	 * A method that implements the CMD User Interface of the script.
 	 * TODO: Add more checks - e.g. Check the validity of the xml file
 	 */
-	private static void getUserInputs(){
+	private static void getUserInputs(String... args) {
+		//Handle input from either console or input param config file
+		ArrayList<String> configsLocation = new ArrayList<>();
 
-		//Create a Scanner object in order to read data from the command line
-		Scanner console = new Scanner(System.in);
+		if (args.length > 0) {
+			String configLocation = args[0];
+			try (Stream<String> configLines = Files.lines(new File(configLocation).toPath())) {
+				Iterator itr = configLines.iterator();
+				while (itr.hasNext()) {
+					configsLocation.add(itr.next().toString());
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
-		boolean exists = false;
+		else {
+			//Create a Scanner object in order to read data from the command line
+			Scanner console = new Scanner(System.in);
 
-		File dir = null;
-		while(!exists){
 			System.out.println("\nPlease provide the path of the desired project that you would like to assess its quality : ");
-			dir = new File(console.nextLine());
+			configsLocation.add(console.nextLine());
 
+			System.out.println("\nPlease provide the path of the XML file that contains the desired Quality Model : ");
+			configsLocation.add(console.nextLine());
+
+			System.out.println("\nPlease provide the path where you would like the results of the analysis to be placed : ");
+			configsLocation.add(console.nextLine());
+
+			System.out.println("\nWould you like to include the inspection results as well? (yes/no): ");
+			configsLocation.add(console.nextLine());
+
+			System.out.println("\nWould you like to run a new static analysis ? (yes/no): ");
+			System.out.println("(If no then the results of the previous analysis will be used for the project's evaluation) ");
+			configsLocation.add(console.nextLine());
+		}
+
+		File dir = new File(configsLocation.get(0));
+		boolean exists = false;
+		while(!exists) {
 			if(dir.exists() && dir.isDirectory()){
 
 				DirectoryScanner scanner = new DirectoryScanner();
@@ -389,10 +418,8 @@ public class TestSingleProjectEvaluator {
 				scanner.scan();
 				String[] jarFiles = scanner.getIncludedFiles();
 
-				if(javaFiles.length == 0){
-					System.out.println("There are no java files inside the desired directory!");
-				}else if(classFiles.length == 0 || classFiles.length == 0){
-					System.out.println("There are no class or jar files inside the desired directory!");
+				if(javaFiles.length == 0 && classFiles.length == 0 && jarFiles.length == 0){
+					System.out.println("There are no java, class, or jar files inside the desired directory!");
 				}else{
 					exists = true;
 					projectPath = dir.getAbsolutePath();
@@ -402,11 +429,9 @@ public class TestSingleProjectEvaluator {
 			}
 		}
 
-		File qmXMLFile = null;
+		File qmXMLFile = new File(configsLocation.get(1));
 		exists = false;
 		while(!exists){
-			System.out.println("\nPlease provide the path of the XML file that contains the desired Quality Model : ");
-			qmXMLFile = new File(console.nextLine());
 			if(!qmXMLFile.exists() || !qmXMLFile.isFile()){
 				System.out.println("The desired file doesn't exist..!");
 			}else if(!qmXMLFile.getName().contains(".xml")){
@@ -417,62 +442,36 @@ public class TestSingleProjectEvaluator {
 			}
 		}
 
-		File resDirPath = null;
-		exists = false;
-		while(!exists){
-			System.out.println("\nPlease provide the path where you would like the results of the analysis to be placed : ");
-			resDirPath = new File(console.nextLine());
-			if(resDirPath.exists() && resDirPath.isDirectory()){
-				resPath = resDirPath.getAbsolutePath();
-				exists = true;
-			}else{
-				System.out.println("The destination folder doesn't exist..!");
-			}
+		File resDirPath = new File(configsLocation.get(2));
+		if(resDirPath.exists() && resDirPath.isDirectory()){
+			resPath = resDirPath.getAbsolutePath();
+		}else {
+			throw new RuntimeException("The destination folder doesn't exist..!");
 		}
 
-		String answer = "";
-		boolean wrongAnswer = false;
-		while((!"yes".equalsIgnoreCase(answer)) &&! ("no".equalsIgnoreCase(answer))){
-			if(!wrongAnswer){
-				System.out.println("\nWould you like to include the inspection results as well? (yes/no): ");
-			}
-			answer = console.nextLine();
-
-			if("yes".equalsIgnoreCase(answer)){
-				includeInspectRes = true;
-			}else if("no".equalsIgnoreCase(answer)){
-				includeInspectRes = false;
-			}else{
-				System.out.println("\nWrong answer. Please answer with yes or no : ");
-				wrongAnswer = true;
-			}
+		String inspectionAnswer = configsLocation.get(3);
+		if("yes".equalsIgnoreCase(inspectionAnswer)){
+			includeInspectRes = true;
+		}else if("no".equalsIgnoreCase(inspectionAnswer)){
+			includeInspectRes = false;
+		}else{
+			throw new RuntimeException("include inspection results input was not of form 'yes' or 'no'");
 		}
 
-		answer = "";
-		wrongAnswer = false;
-		while((!"yes".equalsIgnoreCase(answer)) &&! ("no".equalsIgnoreCase(answer))){
-			if(!wrongAnswer){
-				System.out.println("\nWould you like to run a new static analysis ? (yes/no): ");
-				System.out.println("(If no then the results of the previous analysis will be used for the project's evaluation) ");
-			}
-			answer = console.nextLine();
+		String newAnalysisAnswer = configsLocation.get(4);
+		if("yes".equalsIgnoreCase(newAnalysisAnswer)){
+			staticAnalysis = true;
+		}else if("no".equalsIgnoreCase(newAnalysisAnswer)){
+			staticAnalysis = false;
+		}else{
+			throw new RuntimeException("\nnew static analysis input was not of form 'yes' or 'no'");
+		}
 
-			if("yes".equalsIgnoreCase(answer)){
-				staticAnalysis = true;
-			}else if("no".equalsIgnoreCase(answer)){
-				staticAnalysis = false;
-			}else{
-				System.out.println("\nWrong answer. Please answer with yes or no : ");
-			}
-
-			//If the user doesn't want a new analysis check if there are results for the desired project
-			if("no".equalsIgnoreCase(answer)){
-
-				File resDir = new File(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + "/" + dir.getName());
-				if(!resDir.isDirectory() || !resDir.exists() ){
-					System.out.println("\nThe aren't any previous results for this project..! ");
-					answer = "";
-				}
+		//If the user doesn't want a new analysis check if there are results for the desired project
+		if("no".equalsIgnoreCase(newAnalysisAnswer)){
+			File resDir = new File(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + "/" + dir.getName());
+			if(!resDir.isDirectory() || !resDir.exists() ){
+				throw new RuntimeException("\nThe aren't any previous results for this project..! ");
 			}
 		}
 	}
