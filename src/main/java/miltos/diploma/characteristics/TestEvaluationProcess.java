@@ -17,7 +17,6 @@ import org.jdom.input.SAXBuilder;
 
 import com.google.gson.Gson;
 
-import miltos.diploma.AbstractAnalyzer;
 import miltos.diploma.BenchmarkAggregator;
 import miltos.diploma.BenchmarkAnalysisExporter;
 import miltos.diploma.BenchmarkAnalyzer;
