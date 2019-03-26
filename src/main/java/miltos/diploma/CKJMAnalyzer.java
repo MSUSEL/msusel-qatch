@@ -16,7 +16,7 @@ import java.util.Iterator;
  *
  */
 //TODO: CKJM should be invoked at any case because we need the total LOC of the project for normalization purposes.
-public class CKJMAnalyzer extends AbstractAnalyzer {
+public class CKJMAnalyzer  {
 
 	public static final String TOOL_NAME = "CKJM";
 

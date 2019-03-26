@@ -16,7 +16,7 @@ import java.util.Iterator;
  * @author Miltos
  *
  */
-public class PMDAnalyzer extends AbstractAnalyzer{
+public class PMDAnalyzer {
 
 	public static final String TOOL_NAME = "PMD";
 
