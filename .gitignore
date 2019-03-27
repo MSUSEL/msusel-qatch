@@ -203,12 +203,14 @@ $RECYCLE.BIN/
 
 # Project specific
 Results/
-/Rulesets/
 /build.xml
-/pmd_build.xml
 /config.xml
+/pmd_build.xml
+/reference.txt
+/Rulesets/
 /tools/
 .idea/artifacts/
 *_evalResults.json
+
 
 # End of https://www.gitignore.io/api/git,java,maven,macos,linux,windows,intellij
