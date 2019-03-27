@@ -1,4 +1,4 @@
-# qatch
+# msusel-qatch
 
 **This project is currently at an alpha stage work-in-progress.**
 
