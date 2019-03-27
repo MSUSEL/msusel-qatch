@@ -1,5 +1,5 @@
-C:\Users\davidrice3\Repository\MSUSEL\qatch
-C:\Users\davidrice3\Repository\MSUSEL\qatch\src\main\resources\Models\qualityModel.xml
-C:\Users\davidrice3\Repository\MSUSEL\qatch
+C:\Users\davidrice3\Repository\MSUSEL\msusel-qatch
+C:\Users\davidrice3\Repository\MSUSEL\msusel-qatch\src\main\resources\Models\qualityModel.xml
+C:\Users\davidrice3\Repository\MSUSEL\msusel-qatch
 no
 yes

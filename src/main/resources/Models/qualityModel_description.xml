@@ -12,7 +12,7 @@
     <property name="Structurdness" type="1" description="Structured" positive_impact="false" metricName="" ruleset="./Rulesets/structRuleSet.xml" tool="PMD" />
     <property name="Assignment" type="1" description="Evaluates how well the system conforms to the rules of JUnit API (if used)" positive_impact="false" metricName="" ruleset="./Rulesets/assignmentRuleSet.xml" tool="PMD" />
     <property name="Resource_Handling" type="1" description="This measures evaluates the resources!" positive_impact="false" metricName="" ruleset="./Rulesets/resourceHandRuleSet.xml" tool="PMD" />
-	<property name="Cohesion" type="0" description="How cohesive is your code" positive_impact="false" metricName="LCOM" ruleset="" tool="CKJM" />
+    <property name="Cohesion" type="0" description="How cohesive is your code" positive_impact="false" metricName="LCOM" ruleset="" tool="CKJM" />
     <property name="Coupling" type="0" description="Evaluates the total number of efferent and afferent coupling of the system." positive_impact="false" metricName="CBO" ruleset="" tool="CKJM" />
     <property name="Complexity" type="0" description="The total complexity of the system" positive_impact="false" metricName="WMC" ruleset="" tool="CKJM" />
     <property name="Messaging" type="0" description="The level of the API" positive_impact="false" metricName="NPM" ruleset="" tool="CKJM" />
