@@ -205,6 +205,7 @@ $RECYCLE.BIN/
 Results/
 /build.xml
 /config.xml
+/dest
 /pmd_build.xml
 /reference.txt
 /Rulesets/
