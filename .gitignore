@@ -211,6 +211,7 @@ Results/
 /Rulesets/
 /tools/
 .idea/artifacts/
+/src/test/java/miltos/diploma/Scratch.java
 *_evalResults.json
 
 

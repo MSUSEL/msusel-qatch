@@ -1,9 +1,12 @@
 package miltos.diploma;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import miltos.diploma.characteristics.*;
 import miltos.diploma.toolkit.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.DirectoryScanner;
+import org.jdom.JDOMException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -24,13 +27,28 @@ public class IntegrationTests {
     private boolean includeInspectRes = false;
     private boolean staticAnalysis = true;
 
+    /**
+     * Tests the single project evaluation test using the following modules:
+     *  - Quality Model
+     *  - ProjectImporter
+     *  - Toolkit
+     *  - ProjectEvaluator
+     *
+     * The test resource file 'devconfig.txt' must point to the root folder of an appropriate project
+     * to be evaluated. For example, have the 5 lines of the file look like...
+     *  C:\Users\<username>\Repository\MSUSEL\sample-analysis-projects\java\java-baseModel-perfect-score
+     *  C:\Users\<username>\Repository\MSUSEL\msusel-qatch\src\test\resources\Models\qualityModel.xml
+     *  C:\Users\<username>\Repository\MSUSEL\msusel-qatch\test-results
+     *  no
+     *  yes
+     *
+     * The asserted value at the end is the expected TQI of the project and will vary depending what the project
+     * is and which quality model is used. Be sure to adjust accordingly.
+     *
+     * @throws CloneNotSupportedException
+     */
     @Test
-    public void tempTest() {
-        Assert.assertTrue(true);
-    }
-
-    @Test
-    public void singleProjectEvaluatorTest() throws CloneNotSupportedException {
+    public void singleProjectEvaluatorTest() throws CloneNotSupportedException, JDOMException, IOException {
         System.out.println("******************************  Project Evaluator *******************************");
         System.out.println();
 
@@ -284,6 +302,15 @@ public class IntegrationTests {
         //Export the results
         EvaluationResultsExporter.exportProjectToJson(project, new File(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH + "/" + project.getName() + "_evalResults.json").getAbsolutePath());
         System.out.println("* You can find the results at : " + new File(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH).getAbsolutePath() + " as well..!");
+
+        /*
+         * (Test Step) Step 10: Assert TQI is its expected value
+         */
+        File evalResults = new File(System.getProperty("user.dir") + "/test-results/" + project.getName() + "_evalResults.json" );
+        JsonParser parser = new JsonParser();
+        JsonObject data = (JsonObject) parser.parse(new FileReader(evalResults));
+        Double eval = data.getAsJsonObject("tqi").get("eval").getAsDouble();
+        Assert.assertEquals (0.6284682895481202, eval, 0.001);
     }
 
     /**
