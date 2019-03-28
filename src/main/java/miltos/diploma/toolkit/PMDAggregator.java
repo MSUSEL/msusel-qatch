@@ -1,4 +1,8 @@
-package miltos.diploma;
+package miltos.diploma.toolkit;
+
+import miltos.diploma.IssueSet;
+import miltos.diploma.Project;
+import miltos.diploma.Property;
 
 import java.util.Iterator;
 

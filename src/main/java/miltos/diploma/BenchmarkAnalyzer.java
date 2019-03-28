@@ -1,9 +1,10 @@
 package miltos.diploma;
 
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.text.Text;
+import miltos.diploma.toolkit.CKJMAnalyzer;
+import miltos.diploma.toolkit.PMDAnalyzer;
 
 import java.io.File;
 /**

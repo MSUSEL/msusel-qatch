@@ -1,4 +1,6 @@
-package miltos.diploma;
+package miltos.diploma.toolkit;
+
+import miltos.diploma.*;
 
 /**
  * This class is responsible for calculating the value of the

@@ -1,4 +1,8 @@
-package miltos.diploma;
+package miltos.diploma.toolkit;
+
+import miltos.diploma.Measure;
+import miltos.diploma.Property;
+import miltos.diploma.PropertySet;
 
 import java.io.BufferedReader;
 import java.io.IOException;

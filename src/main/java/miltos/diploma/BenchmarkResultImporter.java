@@ -1,5 +1,8 @@
 package miltos.diploma;
 
+import miltos.diploma.toolkit.CKJMResultsImporter;
+import miltos.diploma.toolkit.PMDResultsImporter;
+
 import java.io.File;
 
 /**

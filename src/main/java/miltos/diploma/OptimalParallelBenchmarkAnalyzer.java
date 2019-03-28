@@ -5,6 +5,8 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
+import miltos.diploma.toolkit.CKJMAnalyzer;
+import miltos.diploma.toolkit.PMDAnalyzer;
 
 import java.io.File;
 import java.util.Iterator;

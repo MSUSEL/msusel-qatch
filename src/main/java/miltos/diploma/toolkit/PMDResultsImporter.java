@@ -1,9 +1,12 @@
-package miltos.diploma;
+package miltos.diploma.toolkit;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import miltos.diploma.Filename;
+import miltos.diploma.Issue;
+import miltos.diploma.IssueSet;
 import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 
