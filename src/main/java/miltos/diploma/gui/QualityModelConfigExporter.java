@@ -1,10 +1,10 @@
 package miltos.diploma.gui;
 
-import miltos.diploma.Property;
-import miltos.diploma.PropertySet;
-import miltos.diploma.characteristics.Characteristic;
-import miltos.diploma.characteristics.CharacteristicSet;
-import miltos.diploma.characteristics.QualityModel;
+import miltos.diploma.qualitymodel.Property;
+import miltos.diploma.qualitymodel.PropertySet;
+import miltos.diploma.qualitymodel.Characteristic;
+import miltos.diploma.qualitymodel.CharacteristicSet;
+import miltos.diploma.qualitymodel.QualityModel;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;

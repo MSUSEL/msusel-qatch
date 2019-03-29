@@ -6,7 +6,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Text;
-import miltos.diploma.OptimalParallelBenchmarkAnalyzer;
+import miltos.diploma.calibration.OptimalParallelBenchmarkAnalyzer;
 
 /**
  * Created by Miltos on 16/2/2016.

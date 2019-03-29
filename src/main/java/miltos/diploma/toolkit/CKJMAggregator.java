@@ -1,6 +1,8 @@
 package miltos.diploma.toolkit;
 
-import miltos.diploma.*;
+import miltos.diploma.evaluation.Project;
+import miltos.diploma.qualitymodel.Measure;
+import miltos.diploma.qualitymodel.Property;
 
 /**
  * This class is responsible for calculating the value of the

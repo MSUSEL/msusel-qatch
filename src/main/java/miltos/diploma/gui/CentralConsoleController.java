@@ -1,11 +1,10 @@
 package miltos.diploma.gui;
 
 import javafx.fxml.FXML;
-import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
-import miltos.diploma.OptimalParallelBenchmarkAnalyzer;
+import miltos.diploma.calibration.OptimalParallelBenchmarkAnalyzer;
 
 import java.io.File;
 import java.util.Vector;

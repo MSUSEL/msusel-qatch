@@ -8,7 +8,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
@@ -18,13 +17,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import miltos.diploma.*;
-import miltos.diploma.characteristics.Characteristic;
+import miltos.diploma.calibration.*;
 
-import miltos.diploma.characteristics.CharacteristicSet;
-import miltos.diploma.characteristics.QualityModel;
-import miltos.diploma.characteristics.Tqi;
+import miltos.diploma.qualitymodel.*;
 import org.apache.commons.io.FileUtils;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -34,7 +29,6 @@ import org.jdom.input.SAXBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Vector;
 
 public class Main extends Application {

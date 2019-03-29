@@ -3,9 +3,7 @@ package miltos.diploma.gui;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import miltos.diploma.Measure;
-import miltos.diploma.Property;
-import miltos.diploma.characteristics.Characteristic;
+import miltos.diploma.qualitymodel.Characteristic;
 
 import java.io.File;
 

@@ -2,9 +2,6 @@ package miltos.diploma.gui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import miltos.diploma.Property;
-import miltos.diploma.PropertySet;
-import miltos.diploma.characteristics.QualityModel;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

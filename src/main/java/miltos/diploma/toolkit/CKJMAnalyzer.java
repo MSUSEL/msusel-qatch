@@ -1,8 +1,8 @@
 package miltos.diploma.toolkit;
 
-import miltos.diploma.Measure;
-import miltos.diploma.Property;
-import miltos.diploma.PropertySet;
+import miltos.diploma.qualitymodel.Measure;
+import miltos.diploma.qualitymodel.Property;
+import miltos.diploma.qualitymodel.PropertySet;
 
 import java.io.BufferedReader;
 import java.io.IOException;

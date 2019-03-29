@@ -2,8 +2,8 @@ package miltos.diploma.gui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import miltos.diploma.ComparisonMatricesCreator;
-import miltos.diploma.RInvoker;
+import miltos.diploma.calibration.ComparisonMatricesCreator;
+import miltos.diploma.calibration.RInvoker;
 
 import java.io.File;
 

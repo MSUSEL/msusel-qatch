@@ -2,13 +2,9 @@ package miltos.diploma.toolkit;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import miltos.diploma.MethodLevelAttributes;
-import miltos.diploma.MetricSet;
-import miltos.diploma.Metrics;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

@@ -2,7 +2,12 @@ package miltos.diploma;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import miltos.diploma.characteristics.*;
+import miltos.diploma.calibration.BenchmarkAnalyzer;
+import miltos.diploma.evaluation.EvaluationResultsExporter;
+import miltos.diploma.evaluation.Project;
+import miltos.diploma.evaluation.ProjectCharacteristicsEvaluator;
+import miltos.diploma.evaluation.ProjectEvaluator;
+import miltos.diploma.qualitymodel.*;
 import miltos.diploma.toolkit.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.DirectoryScanner;

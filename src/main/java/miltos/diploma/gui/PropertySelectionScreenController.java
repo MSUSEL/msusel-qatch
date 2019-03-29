@@ -1,11 +1,10 @@
 package miltos.diploma.gui;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import miltos.diploma.Measure;
-import miltos.diploma.Property;
+import miltos.diploma.qualitymodel.Measure;
+import miltos.diploma.qualitymodel.Property;
 
 import java.io.File;
 

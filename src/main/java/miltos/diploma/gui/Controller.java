@@ -2,11 +2,9 @@ package miltos.diploma.gui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import miltos.diploma.OptimalParallelBenchmarkAnalyzer;
-import miltos.diploma.characteristics.QualityModel;
+import miltos.diploma.calibration.OptimalParallelBenchmarkAnalyzer;
+import miltos.diploma.qualitymodel.QualityModel;
 
 import java.io.File;
 import java.io.IOException;
