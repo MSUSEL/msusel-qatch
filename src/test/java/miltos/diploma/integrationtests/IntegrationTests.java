@@ -1,4 +1,4 @@
-package miltos.diploma;
+package miltos.diploma.integrationtests;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -34,13 +34,12 @@ public class IntegrationTests {
 
     /**
      * Tests the single project evaluation test using the following modules:
-     *  - Quality Model
-     *  - ProjectImporter
-     *  - Toolkit
-     *  - ProjectEvaluator
+     *  - qualitymodel
+     *  - toolkit
+     *  - evaluation
      *
      * The test resource file 'devconfig.txt' must point to the root folder of an appropriate project
-     * to be evaluated. For example, have the 5 lines of the file look like...
+     * to be evaluated and a valid quality model. For example, have the 5 lines of the file look like...
      *  C:\Users\<username>\Repository\MSUSEL\sample-analysis-projects\java\java-baseModel-perfect-score
      *  C:\Users\<username>\Repository\MSUSEL\msusel-qatch\src\test\resources\Models\qualityModel.xml
      *  C:\Users\<username>\Repository\MSUSEL\msusel-qatch\test-results
