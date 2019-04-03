@@ -29,7 +29,11 @@ public class IssueSet {
     //Constructors
 
     public IssueSet(){
-        issues = new Vector<>();
+        this.issues = new Vector<>();
+    }
+    public IssueSet(String name) {
+        this.issues = new Vector<>();
+        this.propertyName = name;
     }
 
 

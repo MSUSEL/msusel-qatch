@@ -21,6 +21,6 @@ public class FxcopResultsImporterTest {
         Issue lastIssue = is.getIssues().lastElement();
 
         Assert.assertEquals(is.getPropertyName(), "FxcopFindingsProperty01");
-        Assert.assertEquals(is.getIssues().size(),6);
+        Assert.assertEquals(is.getIssues().size(),8);
     }
 }
