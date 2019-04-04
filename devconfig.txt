@@ -1,5 +1,5 @@
-C:\Users\davidrice3\Repository\MSUSEL\sample-analysis-projects\java\java-baseModel-perfect-score
-C:\Users\davidrice3\Repository\MSUSEL\msusel-qatch\src\main\resources\Models\qualityModel.xml
-C:\Users\davidrice3\Repository\MSUSEL\msusel-qatch
+C:/Users/david/Repository/MSUSEL/msusel-qatch
+C:/Users/david/Repository/MSUSEL/msusel-qatch/src/main/resources/Models/qualityModel.xml
+C:/Users/david/Repository/MSUSEL/msusel-qatch
 no
 yes
