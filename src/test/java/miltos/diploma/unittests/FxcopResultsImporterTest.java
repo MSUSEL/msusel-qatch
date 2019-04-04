@@ -5,6 +5,10 @@ import miltos.diploma.toolkit.Issue;
 import miltos.diploma.toolkit.IssueSet;
 import org.junit.Assert;
 import org.junit.Test;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 public class FxcopResultsImporterTest {
 
@@ -13,8 +17,8 @@ public class FxcopResultsImporterTest {
      * add the Issue objects to an IssueSet, and name the IssueSet according to the QM Property the findings belong to.
      */
     @Test
-    public void testParseIssues() {
-        String resultsPath = "src/test/resources/scanner-results/FxcopFindingsProperty01.xml";
+    public void testParseIssues() throws IOException, SAXException, ParserConfigurationException {
+        String resultsPath = "Results/Analysis/SingleProjectResults/java-baseModel-perfect-score/FxcopFindingsProperty01.xml";
         FxcopResultsImporter ri = new FxcopResultsImporter();
         IssueSet is = ri.parseIssues(resultsPath);
         Issue firstIssue = is.getIssues().firstElement();

@@ -37,15 +37,31 @@ public class FxcopResultsImporter {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder loader = factory.newDocumentBuilder();
-        Document document = loader.parse("C:\\Users\\davidrice3\\Repository\\MSUSEL\\msusel-qatch\\src\\test\\resources\\scanner-results\\FxcopFindingsProperty01.xml");
+        Document document = loader.parse("Results/Analysis/SingleProjectResults/java-baseModel-perfect-score/FxcopFindingsProperty01.xml");
         DocumentTraversal trav = (DocumentTraversal) document;
 
         NodeIterator it = trav.createNodeIterator(document.getDocumentElement(), NodeFilter.SHOW_ALL, null, true);
 
         for (Node node = it.nextNode(); node != null; node = it.nextNode()) {
             if (node.getNodeName().equals("Message")) {
-                NamedNodeMap attributes = node.getAttributes();
-                System.out.println(attributes.item(3).toString());
+
+                Node messageNode = node;
+                Node issueNode = it.nextNode();
+                Issue issue = new Issue();
+
+                NamedNodeMap messageAttributes = messageNode.getAttributes();
+                NamedNodeMap issueAttributes = issueNode.getAttributes();
+
+                issue.setRuleName(messageAttributes.getNamedItem("TypeName").getNodeValue());
+                issue.setRuleSetName(messageAttributes.getNamedItem("Category").getNodeValue());
+                issue.setPackageName(null);
+                issue.setDescription(issueNode.getNodeValue());
+                issue.setExternalInfoUrl(messageAttributes.getNamedItem("CheckId").getNodeValue());
+//                issue.setPriority(null);
+//                issue.setBeginLine(null);
+//                issue.setEndLine(null);
+//                issue.setBeginCol(null);
+//                issue.setEndCol(null);
             }
         }
         throw new RuntimeException("TODO complete writing method");
