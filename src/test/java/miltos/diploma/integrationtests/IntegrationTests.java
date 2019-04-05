@@ -59,7 +59,7 @@ public class IntegrationTests {
         //Extract necessary tools if not already extracted
         extractResources();
         //Receive the appropriate configuration from the user through terminal
-        getUserInputs(resourcesDirectory.toString() + "\\devconfig.txt");
+        getUserInputs(resourcesDirectory.toString() + "/devconfig.txt");
 
         /*
          * Step 0 : Load the desired Quality Model
