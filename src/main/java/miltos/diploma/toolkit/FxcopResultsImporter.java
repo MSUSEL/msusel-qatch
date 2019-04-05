@@ -37,7 +37,7 @@ public class FxcopResultsImporter {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder loader = factory.newDocumentBuilder();
-        Document document = loader.parse("Results/Analysis/SingleProjectResults/java-baseModel-perfect-score/FxcopFindingsProperty01.xml");
+        Document document = loader.parse(path);
         DocumentTraversal trav = (DocumentTraversal) document;
 
         NodeIterator it = trav.createNodeIterator(document.getDocumentElement(), NodeFilter.SHOW_ALL, null, true);
@@ -45,11 +45,13 @@ public class FxcopResultsImporter {
         for (Node node = it.nextNode(); node != null; node = it.nextNode()) {
             if (node.getNodeName().equals("Message")) {
 
-                Node messageNode = node;
-                Node issueNode = it.nextNode();
+                Node issueNode = node;
+                while (!issueNode.getNodeName().equals("Issue")) {
+                    issueNode = it.nextNode();
+                }
                 Issue issue = new Issue();
 
-                NamedNodeMap messageAttributes = messageNode.getAttributes();
+                NamedNodeMap messageAttributes = node.getAttributes();
                 NamedNodeMap issueAttributes = issueNode.getAttributes();
 
                 issue.setRuleName(messageAttributes.getNamedItem("TypeName").getNodeValue());
@@ -57,14 +59,15 @@ public class FxcopResultsImporter {
                 issue.setPackageName(null);
                 issue.setDescription(issueNode.getNodeValue());
                 issue.setExternalInfoUrl(messageAttributes.getNamedItem("CheckId").getNodeValue());
-//                issue.setPriority(null);
-//                issue.setBeginLine(null);
-//                issue.setEndLine(null);
-//                issue.setBeginCol(null);
-//                issue.setEndCol(null);
+                issue.setPriority(FxcopPriority.get(FxcopPriority.valueOf(issueAttributes.getNamedItem("Level").getNodeValue())));
+                if (issueAttributes.getNamedItem("Line") != null) {
+                    issue.setBeginLine(Integer.parseInt(issueAttributes.getNamedItem("Line").getNodeValue()));
+                }
+
+                issues.addIssue(issue);
             }
         }
-        throw new RuntimeException("TODO complete writing method");
 
+        return issues;
     }
 }

@@ -17,7 +17,7 @@ public class Issue {
     private String packageName;
     private String description;
     private String externalInfoUrl;
-    private int priority;
+    private int priority;   //1 is higher priority than 5
     private int beginLine;
     private int endLine;
     private int beginCol;

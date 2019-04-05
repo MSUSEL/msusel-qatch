@@ -18,13 +18,22 @@ public class FxcopResultsImporterTest {
      */
     @Test
     public void testParseIssues() throws IOException, SAXException, ParserConfigurationException {
-        String resultsPath = "Results/Analysis/SingleProjectResults/java-baseModel-perfect-score/FxcopFindingsProperty01.xml";
+        String resultsPath = "src/test/resources/scanner-results/FxcopFindingsProperty01.xml";
         FxcopResultsImporter ri = new FxcopResultsImporter();
+
         IssueSet is = ri.parseIssues(resultsPath);
         Issue firstIssue = is.getIssues().firstElement();
         Issue lastIssue = is.getIssues().lastElement();
 
         Assert.assertEquals(is.getPropertyName(), "FxcopFindingsProperty01");
         Assert.assertEquals(is.getIssues().size(),8);
+
+        Assert.assertEquals(firstIssue.getRuleName(), "IdentifiersShouldBeSpelledCorrectly");
+        Assert.assertEquals(firstIssue.getRuleSetName(), "Microsoft.Naming");
+        Assert.assertEquals(firstIssue.getPriority(), 3);
+
+        Assert.assertEquals(lastIssue.getRuleName(), "ReviewUnusedParameters");
+        Assert.assertEquals(lastIssue.getRuleSetName(), "Microsoft.Usage");
+        Assert.assertEquals(lastIssue.getPriority(), 4);
     }
 }

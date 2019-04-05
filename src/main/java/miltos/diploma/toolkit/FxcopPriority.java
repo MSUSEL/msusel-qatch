@@ -4,11 +4,15 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Enum of FxCop MessageLevel (priority) values used for string -> int translation
+ */
 public enum FxcopPriority {
-    WAITING(0),
-    READY(1),
-    SKIPPED(-1),
-    Completed(5);
+    CriticalError(1),
+    Error(2),
+    CriticalWarning(3),
+    Warning(4),
+    Information(5);
 
     private static final Map<Integer, FxcopPriority> intLookup = new HashMap<>();
     private static final Map<FxcopPriority, Integer> priorityLookup = new HashMap<>();
