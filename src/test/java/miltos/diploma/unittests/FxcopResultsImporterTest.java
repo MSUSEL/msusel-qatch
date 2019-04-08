@@ -13,7 +13,7 @@ import java.io.IOException;
 public class FxcopResultsImporterTest {
 
     /**
-     * This method should successfully find the FxCop XML file, parse the found issues in to Issue objects,
+     * This test should successfully find the FxCop XML file, parse the found issues in to Issue objects,
      * add the Issue objects to an IssueSet, and name the IssueSet according to the QM Property the findings belong to.
      */
     @Test

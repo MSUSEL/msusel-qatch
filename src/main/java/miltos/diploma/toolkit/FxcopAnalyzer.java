@@ -30,15 +30,18 @@ public class FxcopAnalyzer {
     public void analyze(String src, String dest, String ruleset, String filename) {
         //Set the path delimiter based on the OS that is used
         ProcessBuilder builder;
+        String output = dest + "/" + filename;
 
         if(System.getProperty("os.name").contains("Windows")){
-            src = "\"" + src + "\"";
-            dest = "\"" + dest + "\"";
-            ruleset = "\"" + ruleset + "\"";
+            String rootDirectory = System.getProperty("user.dir");
             builder = new ProcessBuilder(
      "cmd.exe",
                 "/c",
-                "ant -buildfile fxcop_build.xml -Dsrc.dir=" + src +" -Ddest.dir="+ dest + " -Druleset.path=" + ruleset + " -Dfilename=" + filename);
+                "ant -Dbasedir=" + rootDirectory +
+                    " -f src/test/resources/fxcop_build.xml" +
+                    " -Dsrc.dir=" + src +
+                    " -Ddest.dir=" + output +
+                    " -Druleset.path=" + ruleset);
         }
         else {
             throw new RuntimeException("FxCop C# analysis not supported on non-Windows machines due to FxCopCmd.exe tool only supported on Windows");

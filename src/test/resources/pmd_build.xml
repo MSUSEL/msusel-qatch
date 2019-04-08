@@ -4,7 +4,7 @@
 	<!-- Src and destination directories to search for java files -->
 	<property name="src.dir" value="src"/>
 	<property name="dest.dir" value="dest"/>
-	<!-- PMDs home folder. Nedded for adding the needed APIs (.jars) to the classpath-->
+	<!-- PMDs home folder. Needed for adding the needed APIs (.jars) to the classpath-->
 	<property name="pmd.dir" value="./tools/pmd-bin-5.4.1"/>
 	
 	<!-- The name of the result xml file -->
@@ -32,7 +32,7 @@
 		
 		<pmd shortFilenames="true">
 		    <ruleset>${ruleset.path}</ruleset>
-			<formatter type="xml" toFile="${dest.dir}\${filename}.xml"></formatter> <!-- e.g. "C:\Users\Miltos\Desktop\pmd_report.csv"-->
+			<formatter type="xml" toFile="${dest.dir}\${filename}.xml"/> <!-- e.g. "C:\Users\Miltos\Desktop\pmd_report.csv"-->
 			<fileset dir="${src.dir}"> <!-- C:\Users\Miltos\Desktop\pmd workspace\HelloWorld -->
 				<include name="**/*.java"/>
 				<!--exclude name="**/*Test*.java"/-->
