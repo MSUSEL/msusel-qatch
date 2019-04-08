@@ -310,7 +310,7 @@ public class IntegrationTests {
         /*
          * (Test Step) Step 10: Assert TQI is its expected value
          */
-        File evalResults = new File(System.getProperty("user.dir") + "/test-results/" + project.getName() + "_evalResults.json" );
+        File evalResults = new File(System.getProperty("user.dir") + "/Results/Evaluation/SingleProjectResults/" + project.getName() + "_evalResults.json" );
         JsonParser parser = new JsonParser();
         JsonObject data = (JsonObject) parser.parse(new FileReader(evalResults));
         Double eval = data.getAsJsonObject("tqi").get("eval").getAsDouble();

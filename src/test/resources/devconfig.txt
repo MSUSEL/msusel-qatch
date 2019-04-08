@@ -1,4 +1,4 @@
-.
+C:\Users\davidrice3\Repository\MSUSEL\sample-analysis-projects\java\java-baseModel-perfect-score
 src/main/resources/Models/qualityModel.xml
 .
 no

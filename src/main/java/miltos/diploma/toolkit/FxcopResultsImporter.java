@@ -59,7 +59,7 @@ public class FxcopResultsImporter {
                 issue.setPackageName(null);
                 issue.setDescription(issueNode.getNodeValue());
                 issue.setExternalInfoUrl(messageAttributes.getNamedItem("CheckId").getNodeValue());
-                issue.setPriority(FxcopPriority.get(FxcopPriority.valueOf(issueAttributes.getNamedItem("Level").getNodeValue())));
+                issue.setPriority(FxcopPriority.valueOf(issueAttributes.getNamedItem("Level").getNodeValue()).getCode());
                 if (issueAttributes.getNamedItem("Line") != null) {
                     issue.setBeginLine(Integer.parseInt(issueAttributes.getNamedItem("Line").getNodeValue()));
                 }
