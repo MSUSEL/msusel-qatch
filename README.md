@@ -10,6 +10,8 @@ This fork intends to extend Qatch by adding C# and TypeScript functionality, qua
 Academically, the framework will be used to evaluate the following questions:
   - Can complex, deep-layered Quamoco quality models be effectively reduced to the 3-layer, fully-connected model used in Qatch?
   - Can static analysis effectively assist domain-aware quality analysis of security?
+  - Can security be evaluated as more than just a count and aggregation of findings?
+  - Can security be evaluated contextural to subfactors of domain interest as determined by AHP?
 
 ## Roadmap
 (todo)
