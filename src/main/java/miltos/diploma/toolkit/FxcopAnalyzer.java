@@ -38,13 +38,13 @@ public class FxcopAnalyzer {
      "cmd.exe",
                 "/c",
                 "ant -Dbasedir=" + rootDirectory +
-                    " -f src/test/resources/fxcop_build.xml" +
+                    " -f src/main/resources/fxcop_build.xml" +
                     " -Dsrc.dir=" + src +
                     " -Ddest.dir=" + output +
-                    " -Druleset.path=" + ruleset);
+                    " -Druleset.dir=" + ruleset);
         }
         else {
-            throw new RuntimeException("FxCop C# analysis not supported on non-Windows machines due to FxCopCmd.exe tool only supported on Windows");
+            throw new RuntimeException("FxCop C# analysis not supported on non-Windows machines. FxCopCmd.exe tool only supported on Windows.");
         }
 
         builder.redirectErrorStream(true);

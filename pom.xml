@@ -81,13 +81,15 @@
             <fileset>
               <directory>.</directory>
               <includes>
+                <include>*_evalResults.json</include>
+                <include>**/output/*</include>
                 <include>build.xml</include>
                 <include>config.xml</include>
                 <include>dest/</include>
+                <include>fxcopresults.xml</include>
                 <include>pmd_build.xml</include>
-                <include>tools/</include>
                 <include>Rulesets/</include>
-                <include>*_evalResults.json</include>
+                <include>tools/</include>
               </includes>
               <followSymlinks>false</followSymlinks>
             </fileset>

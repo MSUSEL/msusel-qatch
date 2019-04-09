@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<project name="FxCop Static Analysis" default="fxcop" basedir=".">
+
+    <!-- FxCop analysis parameters -->
+    <property name="src.dir" value="src"/>
+    <property name="dest.dir" value="dest"/>
+    <property name="fxcop.dir" value="src\test\resources\tools\FxCop\FxCopCmd.exe"/>
+    <property name="ruleset.dir" value="ruleset"/>
+
+    <target name="fxcop">
+        <exec executable="cmd.exe">
+            <arg value="/c"/>
+            <arg value="${fxcop.dir}"/>
+            <arg value="/file:${src.dir}"/>
+            <arg value="/r:+${ruleset.dir}"/>
+            <arg value="/out:${dest.dir}"/>
+            <arg value="/summary"/>
+        </exec>
+    </target>
+
+</project>

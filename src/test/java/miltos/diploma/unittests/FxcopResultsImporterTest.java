@@ -18,7 +18,7 @@ public class FxcopResultsImporterTest {
      */
     @Test
     public void testParseIssues() throws IOException, SAXException, ParserConfigurationException {
-        String resultsPath = "src/test/resources/scanner-results/FxcopFindingsProperty01.xml";
+        String resultsPath = "src/test/resources/ScannerResults/FxcopFindingsProperty01.xml";
         FxcopResultsImporter ri = new FxcopResultsImporter();
 
         IssueSet is = ri.parseIssues(resultsPath);
