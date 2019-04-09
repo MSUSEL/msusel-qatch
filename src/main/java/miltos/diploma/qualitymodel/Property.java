@@ -16,10 +16,8 @@ public class Property implements Cloneable {
     private String description;//A brief description of the property (optional)
     private double[] thresholds;//The three thresholds of the property metric, needed for the evaluation
     private double eval;//The quality score of the property
-    private double profile[];//The profile of this Property (SIG Model for metrics - just violation counter per severity category for PMD)
+    private double[] profile;//The profile of this Property (SIG Model for metrics - just violation counter per severity category for PMD)
     private boolean positive;//If this field is true then the metric has a positive impact on the property
-    //private String tool;//The tool used for quantifying it (PMD, CKJM etc.)
-
     private Measure measure;
 
 
@@ -28,12 +26,15 @@ public class Property implements Cloneable {
         thresholds = new double[THRESHOLDS_NUM];
         measure = new Measure();
     }
-
     public Property(Measure measure){
         thresholds = new double[THRESHOLDS_NUM];
         this.measure = measure;
     }
-
+    public Property(String name, Measure measure){
+        thresholds = new double[THRESHOLDS_NUM];
+        this.name = name;
+        this.measure = measure;
+    }
 
     public boolean isPositive() {
         return positive;

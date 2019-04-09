@@ -1,5 +1,0 @@
-C:/Users/david/Repository/MSUSEL/msusel-qatch
-C:/Users/david/Repository/MSUSEL/msusel-qatch/src/main/resources/Models/qualityModel.xml
-C:/Users/david/Repository/MSUSEL/msusel-qatch
-no
-yes

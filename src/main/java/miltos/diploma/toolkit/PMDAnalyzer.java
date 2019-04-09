@@ -95,8 +95,6 @@ public class PMDAnalyzer {
             if(p.getMeasure().getTool().equals(PMDAnalyzer.TOOL_NAME) && p.getMeasure().getType() == Measure.FINDING){//TODO: Remove redundant condition!!!
                 //Analyze the project against this property
                 analyze(src, dest, p.getMeasure().getRulesetPath(), p.getName());
-            }else{
-                //System.out.println("* Property : " + p.getName() + " is not a PMD Property!!");
             }
         }
     }

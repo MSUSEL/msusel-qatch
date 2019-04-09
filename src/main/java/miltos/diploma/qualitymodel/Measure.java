@@ -8,44 +8,41 @@ public class Measure implements Cloneable {
 
     private double value;//The value of it's metric (metric or number of violations/findings)
     private double normValue;//The normalized value of it's measure (metric or findings)
-    private int type;//The type of the property(METRIC or FINDING)
+    private int    type;//The type of the property(METRIC or FINDING)
     private String metricName;
     private String rulesetPath;
     private String tool;
-    private int normalizer;
+    private int    normalizer;
 
     public Measure(){
         //Empty constructor in order to avoid null pointer exception during quality model import...
     }
-
     public Measure(int type){
         if(type == METRIC || type == FINDING){
             this.type = type;
-        }else{
-            System.out.println("Invalid measure type! A measure can be either METRIC or FINDING!");
-        }
-
+        } else { System.out.println("Invalid measure type! A measure can be either METRIC or FINDING!");}
     }
-
     public Measure(int type, String metricName){
         if(type == METRIC || type == FINDING){
             this.type = type;
-        }else{
-            System.out.println("Invalid measure type! A measure can be either METRIC or FINDING!");
-        }
-
+        } else { System.out.println("Invalid measure type! A measure can be either METRIC or FINDING!");}
         this.metricName = metricName;
     }
-
     public Measure(int type, String metricName, String rulesetPath){
         if(type == METRIC || type == FINDING){
             this.type = type;
-        }else{
-            System.out.println("Invalid measure type! A measure can be either METRIC or FINDING!");
-        }
-
+        } else { System.out.println("Invalid measure type! A measure can be either METRIC or FINDING!");}
         this.metricName = metricName;
         this.rulesetPath = rulesetPath;
+    }
+    public Measure(int type, String metricName, String rulesetPath, String tool) {
+        if(type == METRIC || type == FINDING){
+            this.type = type;
+        } else { System.out.println("Invalid measure type! A measure can be either METRIC or FINDING!");}
+        this.type = type;
+        this.metricName = metricName;
+        this.rulesetPath = rulesetPath;
+        this.tool = tool;
     }
 
     public double getValue() {

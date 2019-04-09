@@ -1,5 +1,5 @@
 ../sample-analysis-projects/java/SimpleJava
 src/main/resources/Models/qualityModel.xml
-.
+src/test/output
 no
 yes

@@ -92,7 +92,7 @@ public class FxcopAnalyzer {
             //TODO: Check this outside this function
             if(p.getMeasure().getTool().equals(FxcopAnalyzer.TOOL_NAME) && p.getMeasure().getType() == Measure.FINDING) {
                 //Analyze the project against this property
-                analyze(src, dest, p.getMeasure().getRulesetPath(), p.getName());
+                analyze(src, dest, p.getMeasure().getRulesetPath(), p.getName()+".xml");
             }
         }
     }
