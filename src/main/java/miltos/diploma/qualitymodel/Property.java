@@ -26,6 +26,11 @@ public class Property implements Cloneable {
         thresholds = new double[THRESHOLDS_NUM];
         measure = new Measure();
     }
+    public Property(String name) {
+        thresholds = new double[THRESHOLDS_NUM];
+        this.name = name;
+        this.measure = new Measure();
+    }
     public Property(Measure measure){
         thresholds = new double[THRESHOLDS_NUM];
         this.measure = measure;

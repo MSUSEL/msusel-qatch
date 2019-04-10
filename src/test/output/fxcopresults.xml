@@ -6,7 +6,7 @@
    <Modules>
     <Module Name="simplecsharp.exe">
      <Messages>
-      <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Status="Active" Created="2019-04-09 23:25:08Z" FixCategory="NonBreaking">
+      <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Status="Active" Created="2019-04-10 14:11:24Z" FixCategory="NonBreaking">
        <Issue Name="NoStrongName" Certainty="95" Level="CriticalError">Sign 'SimpleCSharp.exe' with a strong name key.</Issue>
       </Message>
      </Messages>
@@ -17,10 +17,10 @@
          <Members>
           <Member Name="#Main(System.String[])" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message Id="System.Console.WriteLine(System.String)" TypeName="Do not pass literals as localized parameters" Category="Microsoft.Globalization" CheckId="CA1303" Status="Active" Created="2019-04-09 23:25:08Z" FixCategory="DependsOnFix">
+            <Message Id="System.Console.WriteLine(System.String)" TypeName="Do not pass literals as localized parameters" Category="Microsoft.Globalization" CheckId="CA1303" Status="Active" Created="2019-04-10 14:11:24Z" FixCategory="DependsOnFix">
              <Issue Name="KnownValue" Certainty="75" Level="Warning" Path="C:\Users\davidrice3\Repository\MSUSEL\sample-analysis-projects\csharp\SimpleCSharp\SimpleCSharp" File="Program.cs" Line="9">Method 'Program.Main(string[])' passes a literal string as parameter 'value' of a call to 'Console.WriteLine(string)'. Retrieve the following string(s) from a resource table instead: "Hello World!".</Issue>
             </Message>
-            <Message Id="args" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Status="Active" Created="2019-04-09 23:25:08Z" FixCategory="NonBreaking">
+            <Message Id="args" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Status="Active" Created="2019-04-10 14:11:24Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="Warning" Path="C:\Users\davidrice3\Repository\MSUSEL\sample-analysis-projects\csharp\SimpleCSharp\SimpleCSharp" File="Program.cs" Line="8">Parameter 'args' of 'Program.Main(string[])' is never used. Remove the parameter or use it in the method body.</Issue>
             </Message>
            </Messages>

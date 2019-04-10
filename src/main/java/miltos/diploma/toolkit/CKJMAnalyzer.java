@@ -29,8 +29,7 @@ public class CKJMAnalyzer  {
      * tool.
      *
      * ATTENTION:
-     *  - The appropriate build.xml ant file should be placed inside the eclipse folder.
-     *  - TODO: Check if you can provide the path of the build.xml.
+     *  - The appropriate build.xml ant file should be placed inside the resources directory.
      *
      * @param src      : The path of the folder that contains the class files of the project.
      * @param dest     : The path where the XML file that contains the results will be placed.

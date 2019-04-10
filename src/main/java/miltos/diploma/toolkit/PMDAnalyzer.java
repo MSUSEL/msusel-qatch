@@ -29,7 +29,7 @@ public class PMDAnalyzer {
      * by calling the PMD tool through the command line with the appropriate configuration.
      *
      * ATTENTION:
-     *  - The appropriate build.xml ant file should be placed inside the base directory.
+     *  - The appropriate pmd_build.xml ant file should be placed inside the resources directory.
      */
     public void analyze(String src, String dest, String ruleset, String filename) {
 

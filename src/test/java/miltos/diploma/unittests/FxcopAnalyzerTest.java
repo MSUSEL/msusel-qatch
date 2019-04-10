@@ -14,14 +14,14 @@ import java.io.IOException;
 public class FxcopAnalyzerTest {
 
     /**
-     * This test should use a mocked PropertySet (will actually come from the QM object)
+     * FxCop analysis needs a compiled CSharp project located at 'src' in order to work
      */
+    private final String src = "../sample-analysis-projects/csharp/SimpleCSharp/SimpleCSharp/bin/Debug";
+    private final String dest = "src/test/output";
+
     @Test
     public void testAnalyze() throws IOException {
         clean();
-
-        String src = "../sample-analysis-projects/csharp/SimpleCSharp/SimpleCSharp/bin/Debug",
-               dest = "src/test/output";
 
         Measure measure01 = new Measure(
                 1,
@@ -41,7 +41,7 @@ public class FxcopAnalyzerTest {
         ps.addProperty(property02);
 
         FxcopAnalyzer analyzer = new FxcopAnalyzer();
-        analyzer.analyze(src, dest, ps);
+        analyzer.analyze(this.src, this.dest, ps);
 
         File result01 = new File(dest + "/" + property01.getName() + ".xml");
         File result02 = new File(dest + "/" + property02.getName() + ".xml");
@@ -69,15 +69,13 @@ public class FxcopAnalyzerTest {
     public void testAnalyzeSubroutine() throws IOException {
         clean();
 
-        String src = "../sample-analysis-projects/csharp/SimpleCSharp/SimpleCSharp/bin/Debug",
-               dest = "src/test/output",
-               ruleset = "src/test/resources/tools/FxCop/Rules",
+        String ruleset = "src/test/resources/tools/FxCop/Rules",
                filename = "fxcopresults.xml";
 
         FxcopAnalyzer analyzer = new FxcopAnalyzer();
-        analyzer.analyze(src, dest, ruleset, filename);
+        analyzer.analyze(this.src, this.dest, ruleset, filename);
 
-        File results = new File(dest + "/" + filename);
+        File results = new File(this.dest + "/" + filename);
 
         // XML file exists in expected location with correct name
         Assert.assertTrue(results.exists());
@@ -90,7 +88,7 @@ public class FxcopAnalyzerTest {
     }
 
     private void clean() throws IOException {
-        File output = new File("src/test/output");
+        File output = new File(this.dest);
         FileUtils.cleanDirectory(output);
     }
 }

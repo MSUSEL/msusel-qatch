@@ -40,19 +40,17 @@ public class IntegrationTests {
      *
      * The test resource file 'devconfig.txt' must point to the root folder of an appropriate project
      * to be evaluated and a valid quality model. For example, have the 5 lines of the file look like...
-     *  C:\Users\<username>\Repository\MSUSEL\sample-analysis-projects\java\java-baseModel-perfect-score
-     *  C:\Users\<username>\Repository\MSUSEL\msusel-qatch\src\test\resources\Models\qualityModel.xml
-     *  C:\Users\<username>\Repository\MSUSEL\msusel-qatch\test-results
+     *  C:/Users/<username>/Repository/.../SimpleJava
+     *  src/test/resources/Models/qualityModel.xml
+     *  src/test/output
      *  no
      *  yes
      *
      * The asserted value at the end is the expected TQI of the project and will vary depending what the project
      * is and which quality model is used. Be sure to adjust accordingly.
-     *
-     * @throws CloneNotSupportedException
      */
     @Test
-    public void singleProjectEvaluatorTest() throws CloneNotSupportedException, JDOMException, IOException {
+    public void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException {
         System.out.println("******************************  Project Evaluator *******************************");
         System.out.println();
 
@@ -70,13 +68,11 @@ public class IntegrationTests {
         System.out.println("* Please wait...");
         System.out.println("*");
 
-        //Instantiate a new QualityModel object
-        QualityModel qualityModel = new QualityModel();
         //Instantiate the Quality Model importer
         QualityModelLoader qmImporter = new QualityModelLoader(qmPath);
 
         //Load the desired quality model
-        qualityModel = qmImporter.importQualityModel();
+        QualityModel qualityModel = qmImporter.importQualityModel();
 
         System.out.println("* Quality Model successfully loaded..!");
 
@@ -154,6 +150,7 @@ public class IntegrationTests {
         File[] results = resultsDir.listFiles();
 
         //For each result file found in the directory do...
+        assert results != null;
         for(File resultFile : results){
 
             //Check if it is a ckjm result file
@@ -189,8 +186,7 @@ public class IntegrationTests {
         //Clone the properties of the quality model to the properties of the certain project
         for(int i = 0; i < qualityModel.getProperties().size(); i++){
             //Clone the property and add it to the PropertySet of the current project
-            Property p = null;
-            p = (Property) qualityModel.getProperties().get(i).clone();
+            Property p = (Property) qualityModel.getProperties().get(i).clone();
             project.addProperty(p);
         }
 
@@ -313,7 +309,7 @@ public class IntegrationTests {
         File evalResults = new File(System.getProperty("user.dir") + "/Results/Evaluation/SingleProjectResults/" + project.getName() + "_evalResults.json" );
         JsonParser parser = new JsonParser();
         JsonObject data = (JsonObject) parser.parse(new FileReader(evalResults));
-        Double eval = data.getAsJsonObject("tqi").get("eval").getAsDouble();
+        double eval = data.getAsJsonObject("tqi").get("eval").getAsDouble();
         Assert.assertEquals (0.6284682895481202, eval, 0.001);
     }
 
@@ -327,9 +323,7 @@ public class IntegrationTests {
         File dir = new File(path);
 
         //Check if the directory exists
-        if(!dir.isDirectory() || !dir.exists()){
-            dir.mkdirs();
-        }
+        if(!dir.isDirectory() || !dir.exists()) dir.mkdirs();
 
         //Clear previous results
         try {
@@ -344,7 +338,7 @@ public class IntegrationTests {
      */
     private void extractResources() {
         //Set filepath for resources depending if run from jar or in IDE
-        String buildLoc, configLoc, pmd_buildLoc, rulesetsLoc, toolsLoc;
+        String buildLoc, pmd_buildLoc, rulesetsLoc, toolsLoc;
         File rootDirectory = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
 
         String resourcesLoc = "src/test/resources/";
