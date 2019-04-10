@@ -2,6 +2,7 @@ package miltos.diploma.integrationtests;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import miltos.diploma.calibration.BenchmarkAnalyzer;
 import miltos.diploma.evaluation.EvaluationResultsExporter;
 import miltos.diploma.evaluation.Project;
@@ -9,28 +10,23 @@ import miltos.diploma.evaluation.ProjectCharacteristicsEvaluator;
 import miltos.diploma.evaluation.ProjectEvaluator;
 import miltos.diploma.qualitymodel.*;
 import miltos.diploma.toolkit.*;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.DirectoryScanner;
-import org.jdom.JDOMException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.io.*;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.util.*;
-import java.util.stream.Stream;
 
 @Category(IntegrationTest.class)
 public class IntegrationTests {
 
-    private File resourcesDirectory = new File("src/test/resources");
-    private String projectPath;
     private String qmPath;
     private String resPath;
-    private boolean includeInspectRes = false;
-    private boolean staticAnalysis = true;
+    private boolean includeInspectRes;
+    private boolean staticAnalysis;
 
     /**
      * Tests the single project evaluation test using the following modules:
@@ -38,26 +34,35 @@ public class IntegrationTests {
      *  - toolkit
      *  - evaluation
      *
-     * The test resource file 'devconfig.txt' must point to the root folder of an appropriate project
-     * to be evaluated and a valid quality model. For example, have the 5 lines of the file look like...
-     *  C:/Users/<username>/Repository/.../SimpleJava
-     *  src/test/resources/Models/qualityModel.xml
-     *  src/test/output
-     *  no
-     *  yes
+     * Note: to reduce repository size, the projects being analyzed are kept in an outside folder.
+     * Adjust the string path provided in singleProjectEvaluatorTest(<PATH_STRING>) if needed.
      *
      * The asserted value at the end is the expected TQI of the project and will vary depending what the project
-     * is and which quality model is used. Be sure to adjust accordingly.
+     * is and which quality model is used. Be sure to adjust the parameter accordingly.
      */
     @Test
-    public void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException {
+    public void singleProjectEvaluatorTest_Java() throws IOException, CloneNotSupportedException {
+        singleProjectEvaluatorTest(
+        "../sample-analysis-projects/java/SimpleJava",
+        "src/test/resources/Models/java/qualityModel_java.xml");
+    }
+
+    @Test
+    public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException {
+        singleProjectEvaluatorTest(
+        "../sample-analysis-projects/csharp/SimpleCSharp",
+        "src/main/resources/Models/csharp/qualityModel_csharp.xml");
+    }
+
+    private void singleProjectEvaluatorTest(String projectLocation, String qmLocation)
+            throws CloneNotSupportedException, IOException {
         System.out.println("******************************  Project Evaluator *******************************");
         System.out.println();
 
         //Extract necessary tools if not already extracted
         extractResources();
         //Receive the appropriate configuration from the user through terminal
-        getUserInputs(resourcesDirectory.toString() + "/devconfig.txt");
+        getUserInputs(projectLocation, qmLocation, "src/test/output", false, true);
 
         /*
          * Step 0 : Load the desired Quality Model
@@ -69,7 +74,7 @@ public class IntegrationTests {
         System.out.println("*");
 
         //Instantiate the Quality Model importer
-        QualityModelLoader qmImporter = new QualityModelLoader(qmPath);
+        QualityModelLoader qmImporter = new QualityModelLoader(qmLocation);
 
         //Load the desired quality model
         QualityModel qualityModel = qmImporter.importQualityModel();
@@ -87,13 +92,13 @@ public class IntegrationTests {
         System.out.println("*");
 
         //Get the directory of the project
-        File projectDir = new File(projectPath);
+        File projectDir = new File(projectLocation);
 
         //Create a Project object to store the results of the static analysis and the evaluation of this project...
         Project project = new Project();
 
         //Set the absolute path and the name of the project
-        project.setPath(projectPath);
+        project.setPath(projectLocation);
         project.setName(projectDir.getName());
 
         System.out.println("* Project Name : " + project.getName());
@@ -122,8 +127,8 @@ public class IntegrationTests {
             CKJMAnalyzer ckjm = new CKJMAnalyzer();
 
             //Analyze the project against the desired properties of each tool supported by the system...
-            pmd.analyze(projectPath, BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(), qualityModel.getProperties());
-            ckjm.analyze(projectPath, BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(), qualityModel.getProperties());
+            pmd.analyze(projectLocation, BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(), qualityModel.getProperties());
+            ckjm.analyze(projectLocation, BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(), qualityModel.getProperties());
 
             //Print some messages to the user
             System.out.println("* The analysis is finished");
@@ -313,6 +318,7 @@ public class IntegrationTests {
         Assert.assertEquals (0.6284682895481202, eval, 0.001);
     }
 
+
     /**
      * A method that checks the predefined directory structure, creates the
      * directory tree if it doesn't exists and clears it's contents for the
@@ -362,31 +368,14 @@ public class IntegrationTests {
         }
     }
 
-    /**
-     * A method that implements the CMD User Interface of the script.
-     * TODO: Add more checks - e.g. Check the validity of the xml file
-     */
-    private void getUserInputs(String... args) {
-        //Handle input from either console or input param config file
-        ArrayList<String> configsLocation = new ArrayList<>();
+    private void getUserInputs(
+            String projectPath,
+            String qmPath,
+            String outputPath,
+            boolean inspectionResults,
+            boolean staticAnalysis){
 
-        if (args.length > 0) {
-            String configLocation = args[0];
-            try (Stream<String> configLines = Files.lines(new File(configLocation).toPath())) {
-                Iterator itr = configLines.iterator();
-                while (itr.hasNext()) {
-                    configsLocation.add(itr.next().toString());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        else {
-            Assert.fail("No devconfig.txt file given to getUserInputs method");
-        }
-
-        File dir = new File(configsLocation.get(0));
+        File dir = new File(projectPath);
         boolean exists = false;
         while(!exists) {
             if(dir.exists() && dir.isDirectory()){
@@ -414,55 +403,34 @@ public class IntegrationTests {
                     System.out.println("There are no java, class, or jar files inside the desired directory!");
                 }else{
                     exists = true;
-                    projectPath = dir.getAbsolutePath();
                 }
             }else{
                 System.out.println("The desired directory doesn't exist..!");
             }
         }
 
-        File qmXMLFile = new File(configsLocation.get(1));
-        exists = false;
-        while(!exists){
-            if(!qmXMLFile.exists() || !qmXMLFile.isFile()){
-                System.out.println("The desired file doesn't exist..!");
-            }else if(!qmXMLFile.getName().contains(".xml")){
-                System.out.println("The desired file is not an XML file..!");
-            }else{
-                qmPath = qmXMLFile.getAbsolutePath();
-                exists = true;
-            }
+        File qmXMLFile = new File(qmPath);
+        if(!qmXMLFile.exists() || !qmXMLFile.isFile()){
+            throw new RuntimeException("The desired file doesn't exist..!");
+        }else if(!qmXMLFile.getName().contains(".xml")){
+            throw new RuntimeException("The desired file is not an XML file..!");
+        }else{
+            this.qmPath = qmXMLFile.getAbsolutePath();
         }
 
-        File resDirPath = new File(configsLocation.get(2));
+        File resDirPath = new File(outputPath);
         if(resDirPath.exists() && resDirPath.isDirectory()){
-            resPath = resDirPath.getAbsolutePath();
+            this.resPath = resDirPath.getAbsolutePath();
         }else {
             resDirPath.mkdir();
-            resPath = resDirPath.getAbsolutePath();
+            this.resPath = resDirPath.getAbsolutePath();
         }
 
-        String inspectionAnswer = configsLocation.get(3);
-        if("yes".equalsIgnoreCase(inspectionAnswer)){
-            includeInspectRes = true;
-        }else if("no".equalsIgnoreCase(inspectionAnswer)){
-            includeInspectRes = false;
-        }else{
-            throw new RuntimeException("include inspection results input was not of form 'yes' or 'no'");
-        }
+        if(inspectionResults){ this.includeInspectRes = true; }
+        else { this.includeInspectRes = false; }
 
-        String newAnalysisAnswer = configsLocation.get(4);
-        if("yes".equalsIgnoreCase(newAnalysisAnswer)){
-            staticAnalysis = true;
-        }else if("no".equalsIgnoreCase(newAnalysisAnswer)){
-            staticAnalysis = false;
-        }else{
-            throw new RuntimeException("\nnew static analysis input was not of form 'yes' or 'no'");
-        }
+        if(staticAnalysis){ this.staticAnalysis = true; }
+        else { throw new RuntimeException("integration test must have new analysis check as configuration"); }
 
-        //If the user doesn't want a new analysis check if there are results for the desired project
-        if("no".equalsIgnoreCase(newAnalysisAnswer)){
-            Assert.fail("integration test must have new analysis check as configuration");
-        }
     }
 }
