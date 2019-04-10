@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -23,14 +24,15 @@ public class QualityModelLoader {
 
     private String xmlPath;				//The exact path where the XML file that contains the QM description is placed
 
-
     //Constructors
-    public QualityModelLoader(){
-        this.xmlPath = "";
-    }
-
     public QualityModelLoader(String xmlPath){
-        this.xmlPath = xmlPath;
+        File qmFile = new File(xmlPath);
+        String extension = FilenameUtils.getExtension(qmFile.getName());
+
+        if (!qmFile.isFile() || !extension.equalsIgnoreCase("xml")) {
+            throw new RuntimeException("Unable to find valid quality model XML file at location " + xmlPath);
+        }
+        else { this.xmlPath = xmlPath; }
     }
 
     //Setters and Getters

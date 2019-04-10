@@ -51,7 +51,7 @@ public class IntegrationTests {
     public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException {
         singleProjectEvaluatorTest(
         "../sample-analysis-projects/csharp/SimpleCSharp",
-        "src/main/resources/Models/csharp/qualityModel_csharp.xml");
+        "src/test/resources/Models/csharp/qualityModel_csharp.xml");
     }
 
     private void singleProjectEvaluatorTest(String projectLocation, String qmLocation)
