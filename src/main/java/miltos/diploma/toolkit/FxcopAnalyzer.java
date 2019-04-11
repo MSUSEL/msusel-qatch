@@ -41,7 +41,7 @@ public class FxcopAnalyzer {
                     " -f src/main/resources/fxcop_build.xml" +
                     " -Dsrc.dir=" + src +
                     " -Ddest.dir=" + output +
-                    " -Druleset.dir=" + ruleset);
+                    " -Druleset.file=" + ruleset);
         }
         else {
             throw new RuntimeException("FxCop C# analysis not supported on non-Windows machines. FxCopCmd.exe tool only supported on Windows.");
@@ -80,7 +80,7 @@ public class FxcopAnalyzer {
     public void analyze(String src, String dest, PropertySet properties) {
         //Create an Iterator in order to iterate through the properties of the desired PropertySet object
         Iterator<Property> iterator = properties.iterator();
-        Property p = null;
+        Property p;
 
         //For each property found in the PropertySet do...
         while(iterator.hasNext()){

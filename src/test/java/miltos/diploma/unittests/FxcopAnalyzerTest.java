@@ -69,7 +69,7 @@ public class FxcopAnalyzerTest {
     public void testAnalyzeSubroutine() throws IOException {
         clean();
 
-        String ruleset = "src/test/resources/Rulesets/CSharpTestModel",
+        String ruleset = "src/test/resources/Rulesets/CSharpTestModel/DesignRules.dll",
                filename = "fxcopresults.xml";
 
         FxcopAnalyzer analyzer = new FxcopAnalyzer();
@@ -83,7 +83,9 @@ public class FxcopAnalyzerTest {
         Assert.assertEquals("fxcopresults.xml", results.getName());
 
         // XML file has approximate expected number of bytes
-        Assert.assertEquals(6313, results.length(), 500);
+        // A better way to test this would be to parse the XML output for expected entries, but
+        // that approach adds substantial run time to the unit test
+        Assert.assertEquals(2863, results.length(), 200);
 
     }
 
