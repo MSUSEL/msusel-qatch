@@ -82,8 +82,8 @@ public class FxcopAnalyzerTest {
         Assert.assertTrue(results.isFile());
         Assert.assertEquals("fxcopresults.xml", results.getName());
 
-        // XML file has approximate expected number of bytes
-        // A better way to test this would be to parse the XML output for expected entries, but
+        // XML file has approximate expected number of bytes. A better way to test
+        // this would be to parse the XML output for expected entries, but
         // that approach adds substantial run time to the unit test
         Assert.assertEquals(2863, results.length(), 200);
 

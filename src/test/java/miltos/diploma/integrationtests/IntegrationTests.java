@@ -19,14 +19,18 @@ import org.junit.experimental.categories.Category;
 
 import java.io.*;
 import java.nio.file.FileSystems;
+import java.util.Properties;
 
 @Category(IntegrationTest.class)
 public class IntegrationTests {
 
-    private String qmPath;
-    private String resPath;
-    private boolean includeInspectRes;
-    private boolean staticAnalysis;
+    //Shorthand reference for accessing config properties
+    private final String  projLocation      = "project.location",
+                          qmLocation        = "qm.location",
+                          rerun             = "analysis.rerun",
+                          inspectionResults = "output.inspectionresults",
+                          resultsLocation   = "results.location";
+    private Properties properties = new Properties();
 
     /**
      * Tests the single project evaluation test using the following modules:
@@ -41,28 +45,31 @@ public class IntegrationTests {
      * is and which quality model is used. Be sure to adjust the parameter accordingly.
      */
     @Test
-    public void singleProjectEvaluatorTest_Java() throws IOException, CloneNotSupportedException {
-        singleProjectEvaluatorTest(
-        "../sample-analysis-projects/java/SimpleJava",
-        "src/test/resources/Models/java/qualityModel_java.xml");
+    public void singleProjectEvaluatorTest_Java() {
+        setConfig(
+            "../sample-analysis-projects/java/SimpleJava",
+            "src/test/resources/Models/java/qualityModel_java.xml",
+            true,
+            false);
     }
 
     @Test
-    public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException {
-        singleProjectEvaluatorTest(
-        "../sample-analysis-projects/csharp/SimpleCSharp",
-        "src/test/resources/Models/csharp/qualityModel_csharp.xml");
+    public void singleProjectEvaluatorTest_CSharp() {
+        setConfig(
+            "../sample-analysis-projects/csharp/SimpleCSharp/SimpleCSharp/bin/Debug/SimpleCSharp.exe",
+            "src/test/resources/Models/csharp/qualityModel_csharp.xml",
+            true,
+            false);
     }
 
-    private void singleProjectEvaluatorTest(String projectLocation, String qmLocation)
-            throws CloneNotSupportedException, IOException {
+    private void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException {
         System.out.println("******************************  Project Evaluator *******************************");
         System.out.println();
 
-        //Extract necessary tools if not already extracted
+        //Extract necessary tools if not already extracted (necessary for deployable JAR run)
         extractResources();
-        //Receive the appropriate configuration from the user through terminal
-        getUserInputs(projectLocation, qmLocation, "src/test/output", false, true);
+        //Instantiate Properties file
+        properties.load(new FileInputStream("src/main/resources/config.properties"));
 
         /*
          * Step 0 : Load the desired Quality Model
@@ -74,7 +81,7 @@ public class IntegrationTests {
         System.out.println("*");
 
         //Instantiate the Quality Model importer
-        QualityModelLoader qmImporter = new QualityModelLoader(qmLocation);
+        QualityModelLoader qmImporter = new QualityModelLoader(properties.getProperty(qmLocation));
 
         //Load the desired quality model
         QualityModel qualityModel = qmImporter.importQualityModel();
@@ -92,13 +99,13 @@ public class IntegrationTests {
         System.out.println("*");
 
         //Get the directory of the project
-        File projectDir = new File(projectLocation);
+        File projectDir = new File(properties.getProperty(projLocation));
 
         //Create a Project object to store the results of the static analysis and the evaluation of this project...
         Project project = new Project();
 
         //Set the absolute path and the name of the project
-        project.setPath(projectLocation);
+        project.setPath(properties.getProperty(projLocation));
         project.setName(projectDir.getName());
 
         System.out.println("* Project Name : " + project.getName());
@@ -109,8 +116,7 @@ public class IntegrationTests {
         /*
          * Step 2: Analyze the desired project against the selected properties
          */
-
-        if(staticAnalysis){
+        if(Boolean.parseBoolean(properties.getProperty(rerun))) {
 
             //Check if the results directory exists and if not create it. Clear it's contents as well.
             checkCreateClearDirectory(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH);
@@ -127,8 +133,14 @@ public class IntegrationTests {
             CKJMAnalyzer ckjm = new CKJMAnalyzer();
 
             //Analyze the project against the desired properties of each tool supported by the system...
-            pmd.analyze(projectLocation, BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(), qualityModel.getProperties());
-            ckjm.analyze(projectLocation, BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(), qualityModel.getProperties());
+            pmd.analyze(
+                properties.getProperty(projLocation),
+                BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
+                qualityModel.getProperties());
+            ckjm.analyze(
+                properties.getProperty(projLocation),
+                BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
+                qualityModel.getProperties());
 
             //Print some messages to the user
             System.out.println("* The analysis is finished");
@@ -289,14 +301,17 @@ public class IntegrationTests {
 
         //Clear Issues and metrics for more lightweight solution
         //TODO: Remove this ... For debugging purposes only
-        if(!includeInspectRes){
+        if(!Boolean.parseBoolean(properties.getProperty(inspectionResults))){
             project.clearIssuesAndMetrics();
         }
 
-        EvaluationResultsExporter.exportProjectToJson(project, new File(resPath + "/" + project.getName() + "_evalResults.json").getAbsolutePath());
+        EvaluationResultsExporter.exportProjectToJson(
+                project,
+                new File(properties.getProperty(resultsLocation) + "/" + project.getName() + "_evalResults.json").getAbsolutePath()
+        );
 
         System.out.println("* Results successfully exported..!");
-        System.out.println("* You can find the results at : " + new File(resPath).getAbsolutePath());
+        System.out.println("* You can find the results at : " + new File(properties.getProperty(resultsLocation)).getAbsolutePath());
 
         /*
          * Step 9 : Export the results to the predefined path as well
@@ -368,69 +383,89 @@ public class IntegrationTests {
         }
     }
 
-    private void getUserInputs(
-            String projectPath,
-            String qmPath,
-            String outputPath,
-            boolean inspectionResults,
-            boolean staticAnalysis){
+    /**
+     * Update config.properties with desired user input
+     */
+    private void setConfig(String projectLoc, String qmLoc, boolean analysisRerun, boolean inspectionResults) {
+        try {
+            OutputStream output = new FileOutputStream(new File("src/main/resources/config.properties"));
+            Properties properties = new Properties();
 
-        File dir = new File(projectPath);
-        boolean exists = false;
-        while(!exists) {
-            if(dir.exists() && dir.isDirectory()){
+            properties.setProperty("project.location", projectLoc);
+            properties.setProperty("qm.location", qmLoc);
+            properties.setProperty("analysis.rerun", Boolean.toString(analysisRerun));
+            properties.setProperty("output.inspectionresults", Boolean.toString(inspectionResults));
 
-                DirectoryScanner scanner = new DirectoryScanner();
-                scanner.setIncludes(new String[]{"**/*.java"});
-                scanner.setBasedir(dir.getAbsolutePath());
-                scanner.setCaseSensitive(false);
-                scanner.scan();
-                String[] javaFiles = scanner.getIncludedFiles();
+            properties.store(output, null);
 
-                scanner.setIncludes(new String[]{"**/*.class"});
-                scanner.setBasedir(dir.getAbsolutePath());
-                scanner.setCaseSensitive(false);
-                scanner.scan();
-                String[] classFiles = scanner.getIncludedFiles();
-
-                scanner.setIncludes(new String[]{"**/*.jar"});
-                scanner.setBasedir(dir.getAbsolutePath());
-                scanner.setCaseSensitive(false);
-                scanner.scan();
-                String[] jarFiles = scanner.getIncludedFiles();
-
-                if(javaFiles.length == 0 && classFiles.length == 0 && jarFiles.length == 0){
-                    System.out.println("There are no java, class, or jar files inside the desired directory!");
-                }else{
-                    exists = true;
-                }
-            }else{
-                System.out.println("The desired directory doesn't exist..!");
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        File qmXMLFile = new File(qmPath);
-        if(!qmXMLFile.exists() || !qmXMLFile.isFile()){
-            throw new RuntimeException("The desired file doesn't exist..!");
-        }else if(!qmXMLFile.getName().contains(".xml")){
-            throw new RuntimeException("The desired file is not an XML file..!");
-        }else{
-            this.qmPath = qmXMLFile.getAbsolutePath();
-        }
-
-        File resDirPath = new File(outputPath);
-        if(resDirPath.exists() && resDirPath.isDirectory()){
-            this.resPath = resDirPath.getAbsolutePath();
-        }else {
-            resDirPath.mkdir();
-            this.resPath = resDirPath.getAbsolutePath();
-        }
-
-        if(inspectionResults){ this.includeInspectRes = true; }
-        else { this.includeInspectRes = false; }
-
-        if(staticAnalysis){ this.staticAnalysis = true; }
-        else { throw new RuntimeException("integration test must have new analysis check as configuration"); }
-
     }
+
+    //(TODO) refactor into strategy pattern and config file
+//    private void getUserInputs(
+//            String projectPath,
+//            String qmPath,
+//            String outputPath,
+//            boolean inspectionResults,
+//            boolean staticAnalysis){
+//
+//        File dir = new File(projectPath);
+//        boolean exists = false;
+//        while(!exists) {
+//            if(dir.exists() && dir.isDirectory()){
+//
+//                DirectoryScanner scanner = new DirectoryScanner();
+//                scanner.setIncludes(new String[]{"**/*.java"});
+//                scanner.setBasedir(dir.getAbsolutePath());
+//                scanner.setCaseSensitive(false);
+//                scanner.scan();
+//                String[] javaFiles = scanner.getIncludedFiles();
+//
+//                scanner.setIncludes(new String[]{"**/*.class"});
+//                scanner.setBasedir(dir.getAbsolutePath());
+//                scanner.setCaseSensitive(false);
+//                scanner.scan();
+//                String[] classFiles = scanner.getIncludedFiles();
+//
+//                scanner.setIncludes(new String[]{"**/*.jar"});
+//                scanner.setBasedir(dir.getAbsolutePath());
+//                scanner.setCaseSensitive(false);
+//                scanner.scan();
+//                String[] jarFiles = scanner.getIncludedFiles();
+//
+//                if(javaFiles.length == 0 && classFiles.length == 0 && jarFiles.length == 0){
+//                    System.out.println("There are no java, class, or jar files inside the desired directory!");
+//                }else{
+//                    exists = true;
+//                }
+//            }else{
+//                System.out.println("The desired directory doesn't exist..!");
+//            }
+//        }
+//
+//        File qmXMLFile = new File(qmPath);
+//        if(!qmXMLFile.exists() || !qmXMLFile.isFile()){
+//            throw new RuntimeException("The desired file doesn't exist..!");
+//        }else if(!qmXMLFile.getName().contains(".xml")){
+//            throw new RuntimeException("The desired file is not an XML file..!");
+//        }else{
+//            this.qmPath = qmXMLFile.getAbsolutePath();
+//        }
+//
+//        File resDirPath = new File(outputPath);
+//        if(resDirPath.exists() && resDirPath.isDirectory()){
+//            this.resPath = resDirPath.getAbsolutePath();
+//        }else {
+//            resDirPath.mkdir();
+//            this.resPath = resDirPath.getAbsolutePath();
+//        }
+//
+//        if(inspectionResults){ this.includeInspectRes = true; }
+//        else { this.includeInspectRes = false; }
+//
+//        if(staticAnalysis){ this.staticAnalysis = true; }
+//        else { throw new RuntimeException("integration test must have new analysis check as configuration"); }
+//    }
 }
