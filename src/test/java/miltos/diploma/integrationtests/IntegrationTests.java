@@ -16,7 +16,9 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.util.Properties;
@@ -45,7 +47,7 @@ public class IntegrationTests {
      * is and which quality model is used. Be sure to adjust the parameter accordingly.
      */
     @Test
-    public void singleProjectEvaluatorTest_Java() throws IOException, CloneNotSupportedException {
+    public void singleProjectEvaluatorTest_Java() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
         setConfig(
             "../sample-analysis-projects/java/SimpleJava",
             "src/test/resources/Models/java/qualityModel_java.xml",
@@ -57,7 +59,7 @@ public class IntegrationTests {
     }
 
     @Test
-    public void singleProjectEvaluatorTest_CSharp() {
+    public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
         setConfig(
             "../sample-analysis-projects/csharp/SimpleCSharp/SimpleCSharp/bin/Debug/SimpleCSharp.exe",
             "src/test/resources/Models/csharp/qualityModel_csharp.xml",
@@ -65,9 +67,10 @@ public class IntegrationTests {
             false,
             "src/test/output"
         );
+        singleProjectEvaluatorTest();
     }
 
-    private void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException {
+    private void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException, ParserConfigurationException, SAXException {
         System.out.println("******************************  Project Evaluator *******************************");
         System.out.println();
 
@@ -136,13 +139,20 @@ public class IntegrationTests {
             //Instantiate the available single project analyzers of the system ...
             PMDAnalyzer pmd = new PMDAnalyzer();
             CKJMAnalyzer ckjm = new CKJMAnalyzer();
+            FxcopAnalyzer fxcop = new FxcopAnalyzer();
 
             //Analyze the project against the desired properties of each tool supported by the system...
             pmd.analyze(
                 properties.getProperty(projLocation),
                 BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
-                qualityModel.getProperties());
+                qualityModel.getProperties()
+            );
             ckjm.analyze(
+                properties.getProperty(projLocation),
+                BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
+                qualityModel.getProperties()
+            );
+            fxcop.analyze(
                 properties.getProperty(projLocation),
                 BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
                 qualityModel.getProperties());
@@ -166,6 +176,7 @@ public class IntegrationTests {
         //Create a simple PMD and CKJM Result Importers
         PMDResultsImporter pmdImporter = new PMDResultsImporter();
         CKJMResultsImporter ckjmImporter = new CKJMResultsImporter();
+        FxcopResultsImporter fxcopImporter = new FxcopResultsImporter();
 
         //Get the directory with the results of the analysis
         File resultsDir = new File(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName());
@@ -180,6 +191,7 @@ public class IntegrationTests {
 
                 //Parse the issues and add them to the IssueSet Vector of the Project object
                 project.addIssueSet(pmdImporter.parseIssues(resultFile.getAbsolutePath()));
+                project.addIssueSet(fxcopImporter.parseIssues(resultFile.getAbsolutePath()));
 
             }else{
 
@@ -213,12 +225,14 @@ public class IntegrationTests {
         }
 
         //Create an empty PMDAggregator and CKJMAggregator
-        PMDAggregator pmd = new PMDAggregator();
-        CKJMAggregator ckjm = new CKJMAggregator();
+        PMDAggregator pmdAgg = new PMDAggregator();
+        CKJMAggregator ckjmAgg = new CKJMAggregator();
+        FxcopAggregator fxcopAgg = new FxcopAggregator();
 
         //Aggregate all the analysis results
-        pmd.aggregate(project);
-        ckjm.aggregate(project);
+        pmdAgg.aggregate(project);
+        ckjmAgg.aggregate(project);
+        fxcopAgg.aggregate(project);
 
         //Normalize their values
         for(int i = 0; i < project.getProperties().size(); i++){
