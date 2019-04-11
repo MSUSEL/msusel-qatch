@@ -45,12 +45,15 @@ public class IntegrationTests {
      * is and which quality model is used. Be sure to adjust the parameter accordingly.
      */
     @Test
-    public void singleProjectEvaluatorTest_Java() {
+    public void singleProjectEvaluatorTest_Java() throws IOException, CloneNotSupportedException {
         setConfig(
             "../sample-analysis-projects/java/SimpleJava",
             "src/test/resources/Models/java/qualityModel_java.xml",
             true,
-            false);
+            false,
+            "src/test/output"
+        );
+        singleProjectEvaluatorTest();
     }
 
     @Test
@@ -59,7 +62,9 @@ public class IntegrationTests {
             "../sample-analysis-projects/csharp/SimpleCSharp/SimpleCSharp/bin/Debug/SimpleCSharp.exe",
             "src/test/resources/Models/csharp/qualityModel_csharp.xml",
             true,
-            false);
+            false,
+            "src/test/output"
+        );
     }
 
     private void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException {
@@ -386,7 +391,7 @@ public class IntegrationTests {
     /**
      * Update config.properties with desired user input
      */
-    private void setConfig(String projectLoc, String qmLoc, boolean analysisRerun, boolean inspectionResults) {
+    private void setConfig(String projectLoc, String qmLoc, boolean analysisRerun, boolean inspectionResults, String resultsLocation) {
         try {
             OutputStream output = new FileOutputStream(new File("src/main/resources/config.properties"));
             Properties properties = new Properties();
@@ -395,6 +400,7 @@ public class IntegrationTests {
             properties.setProperty("qm.location", qmLoc);
             properties.setProperty("analysis.rerun", Boolean.toString(analysisRerun));
             properties.setProperty("output.inspectionresults", Boolean.toString(inspectionResults));
+            properties.setProperty("results.location", resultsLocation);
 
             properties.store(output, null);
 
