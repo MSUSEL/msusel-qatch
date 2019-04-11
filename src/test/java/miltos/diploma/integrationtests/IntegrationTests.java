@@ -47,12 +47,12 @@ public class IntegrationTests {
         "src/test/resources/Models/java/qualityModel_java.xml");
     }
 
-    @Test
-    public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException {
-        singleProjectEvaluatorTest(
-        "../sample-analysis-projects/csharp/SimpleCSharp",
-        "src/test/resources/Models/csharp/qualityModel_csharp.xml");
-    }
+//    @Test
+//    public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException {
+//        singleProjectEvaluatorTest(
+//        "../sample-analysis-projects/csharp/SimpleCSharp",
+//        "src/test/resources/Models/csharp/qualityModel_csharp.xml");
+//    }
 
     private void singleProjectEvaluatorTest(String projectLocation, String qmLocation)
             throws CloneNotSupportedException, IOException {
