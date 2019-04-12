@@ -11,12 +11,15 @@ public class Filename {
         extensionSeparator = ext;
     }
 
+    /**
+     * @return
+     */
     public String extension() {
         int dot = fullPath.lastIndexOf(extensionSeparator);
         return fullPath.substring(dot + 1);
     }
 
-    // gets filename without extension
+    // Get filename without extension
     public String filename() {
         int dot = fullPath.lastIndexOf(extensionSeparator);
         int sep = fullPath.lastIndexOf(pathSeparator);

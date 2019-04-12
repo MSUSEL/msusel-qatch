@@ -71,6 +71,9 @@ public class IntegrationTests {
     }
 
     private void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException, ParserConfigurationException, SAXException {
+
+        String projectLanguage;
+
         System.out.println("******************************  Project Evaluator *******************************");
         System.out.println();
 
@@ -137,6 +140,7 @@ public class IntegrationTests {
             System.out.println("*");
 
             //Instantiate the available single project analyzers of the system ...
+            //(TODO): Refactor into Builder or Template design pattern and move into framework classes
             PMDAnalyzer pmd = new PMDAnalyzer();
             CKJMAnalyzer ckjm = new CKJMAnalyzer();
             FxcopAnalyzer fxcop = new FxcopAnalyzer();
