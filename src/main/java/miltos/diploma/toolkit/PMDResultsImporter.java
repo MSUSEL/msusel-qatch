@@ -19,7 +19,7 @@ import java.util.Vector;
  *
  */
 
-public class PMDResultsImporter {
+public class PMDResultsImporter implements FindingsResultsImporter {
 
 
     /**
@@ -27,7 +27,7 @@ public class PMDResultsImporter {
      * result XML PMD file, that corresponds to a certain property, into a single
      * IssueSet object.
      */
-    public IssueSet parseIssues(String path){
+    public IssueSet parse(String path){
 
         //The IssueSet object used to store all the violations of this property
         IssueSet tempIssues = new IssueSet();

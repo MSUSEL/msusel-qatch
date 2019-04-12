@@ -22,7 +22,7 @@ import org.jdom.input.SAXBuilder;
  * @author Miltos
  *
  */
-public class CKJMResultsImporter {
+public class CKJMResultsImporter implements MetricsResultsImporter {
 
     //The delimiter that the OS uses for the urls and the paths
     private final static char PATH_SEPARATOR = '\\';
@@ -34,7 +34,7 @@ public class CKJMResultsImporter {
      *
      * @param path : The exact path to the ckjmResults.xml file
      */
-    public MetricSet parseMetrics(String path){
+    public MetricSet parse(String path){
 
         //A MetricSet object for storing the calculated metrics
         MetricSet metricSet = new MetricSet();

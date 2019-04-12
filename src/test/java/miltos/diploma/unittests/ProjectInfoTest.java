@@ -34,7 +34,7 @@ public class ProjectInfoTest {
         Assert.assertTrue(jdSuccess && j01Success && j02Success && csdSuccess && cs01Success);
         Assert.assertEquals(
                 ProjectInfo.getProjectLanguage(root.toString()),
-                ProjectLanguage.valueOf("Java")
+                ProjectLanguage.Java
         );
     }
 
@@ -57,7 +57,7 @@ public class ProjectInfoTest {
         Assert.assertTrue(jdSuccess && j01Success && csdSuccess && cs01Success && cs02Success);
         Assert.assertEquals(
                 ProjectInfo.getProjectLanguage(root.toString()),
-                ProjectLanguage.valueOf("CSharp")
+                ProjectLanguage.CSharp
         );
     }
 }

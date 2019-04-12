@@ -12,13 +12,17 @@ import java.util.Iterator;
 /**
  * This class is responsible for analyzing a single C# project
  * against:
- *
  * 	1. a certain ruleset (i.e. property) or
  *  2. a set of rulesets (i.e. properties)
  * by invoking the FxCopExe tool.
  */
-public class FxcopAnalyzer {
-    public static final String TOOL_NAME = "FxCop";
+public class FxcopAnalyzer implements Analyzer {
+    private static final String TOOL_NAME = "FxCop";
+
+    @Override
+    public void analyze(String src, String dest) {
+        throw new RuntimeException("FxCop needs a ruleset as parameter in order to analyze");
+    }
 
     /**
      * This method is used in order to analyze a single project against a certain ruleset (property)

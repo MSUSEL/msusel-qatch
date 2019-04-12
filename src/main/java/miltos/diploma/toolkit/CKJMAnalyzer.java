@@ -20,7 +20,8 @@ import java.util.Iterator;
  *
  */
 //TODO: CKJM should be invoked at any case because we need the total LOC of the project for normalization purposes.
-public class CKJMAnalyzer  {
+
+public class CKJMAnalyzer implements Analyzer {
 
     public static final String TOOL_NAME = "CKJM";
 
@@ -68,6 +69,11 @@ public class CKJMAnalyzer  {
         }
     }
 
+    @Override
+    public void analyze(String src, String dest, String ruleset, String filename) {
+        throw new RuntimeException("Ruleset analyze not supported in CKJM");
+    }
+
     /**
      * This method is responsible for analyzing a single project against a set of
      * properties by using the CKJM Tool.
@@ -106,13 +112,8 @@ public class CKJMAnalyzer  {
 
                 //Analyze this project
                 analyze(src, dest);
-
                 //Found at least one ckjm property. Process finished.
                 break;
-
-            }else{
-                //Print some messages for debugging purposes
-                //System.out.println("* Property : " + p.getName() + " is not a CKJM Property!!");
             }
         }
     }

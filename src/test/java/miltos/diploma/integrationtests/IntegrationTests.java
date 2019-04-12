@@ -11,8 +11,9 @@ import miltos.diploma.evaluation.ProjectEvaluator;
 import miltos.diploma.qualitymodel.*;
 import miltos.diploma.toolkit.*;
 
+import miltos.diploma.utility.ProjectInfo;
+import miltos.diploma.utility.ProjectLanguage;
 import org.apache.commons.io.FileUtils;
-import org.apache.tools.ant.DirectoryScanner;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -72,15 +73,15 @@ public class IntegrationTests {
 
     private void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException, ParserConfigurationException, SAXException {
 
-        String projectLanguage;
+        //Instantiate Properties file
+        properties.load(new FileInputStream("src/main/resources/config.properties"));
+        //Reference for majorty language represented by project root
+        ProjectLanguage projectLanguage = ProjectInfo.getProjectLanguage(properties.getProperty(projLocation));
+        //Extract necessary tools if not already extracted (necessary for deployable JAR run)
+        extractResources();
 
         System.out.println("******************************  Project Evaluator *******************************");
         System.out.println();
-
-        //Extract necessary tools if not already extracted (necessary for deployable JAR run)
-        extractResources();
-        //Instantiate Properties file
-        properties.load(new FileInputStream("src/main/resources/config.properties"));
 
         /*
          * Step 0 : Load the desired Quality Model
@@ -141,25 +142,39 @@ public class IntegrationTests {
 
             //Instantiate the available single project analyzers of the system ...
             //(TODO): Refactor into Builder or Template design pattern and move into framework classes
-            PMDAnalyzer pmd = new PMDAnalyzer();
-            CKJMAnalyzer ckjm = new CKJMAnalyzer();
-            FxcopAnalyzer fxcop = new FxcopAnalyzer();
+            Analyzer metricsAnalyzer;
+            Analyzer findingsAnalyzer;
 
-            //Analyze the project against the desired properties of each tool supported by the system...
-            pmd.analyze(
-                properties.getProperty(projLocation),
-                BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
-                qualityModel.getProperties()
-            );
-            ckjm.analyze(
-                properties.getProperty(projLocation),
-                BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
-                qualityModel.getProperties()
-            );
-            fxcop.analyze(
-                properties.getProperty(projLocation),
-                BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
-                qualityModel.getProperties());
+            if (projectLanguage == ProjectLanguage.Java) {
+
+                metricsAnalyzer = new CKJMAnalyzer();
+                findingsAnalyzer = new PMDAnalyzer();
+
+                metricsAnalyzer.analyze(
+                        properties.getProperty(projLocation),
+                        BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
+                        qualityModel.getProperties()
+                );
+                findingsAnalyzer.analyze(
+                        properties.getProperty(projLocation),
+                        BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
+                        qualityModel.getProperties()
+                );
+
+            }
+
+            else if (projectLanguage == ProjectLanguage.CSharp) {
+
+                metricsAnalyzer = null;
+                findingsAnalyzer = new FxcopAnalyzer();
+
+                findingsAnalyzer.analyze(
+                        properties.getProperty(projLocation),
+                        BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
+                        qualityModel.getProperties()
+                );
+            }
+            else throw new RuntimeException("projectLanguage did not match to a support language enumeration");
 
             //Print some messages to the user
             System.out.println("* The analysis is finished");
@@ -177,10 +192,20 @@ public class IntegrationTests {
         System.out.println("* Please wait...");
         System.out.println("*");
 
+        //(TODO): Refactor into Builder or Template design pattern and move into framework classes
         //Create a simple PMD and CKJM Result Importers
-        PMDResultsImporter pmdImporter = new PMDResultsImporter();
-        CKJMResultsImporter ckjmImporter = new CKJMResultsImporter();
-        FxcopResultsImporter fxcopImporter = new FxcopResultsImporter();
+        MetricsResultsImporter metricsImporter;
+        FindingsResultsImporter findingsImporter;
+
+        if (projectLanguage == ProjectLanguage.Java) {
+            metricsImporter = new CKJMResultsImporter();
+            findingsImporter = new PMDResultsImporter();
+        }
+        else if (projectLanguage == ProjectLanguage.CSharp) {
+            metricsImporter = null;
+            findingsImporter = new FxcopResultsImporter();
+        }
+        else throw new RuntimeException("projectLanguage did not match to a support language enumeration");
 
         //Get the directory with the results of the analysis
         File resultsDir = new File(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName());
@@ -194,13 +219,13 @@ public class IntegrationTests {
             if(!resultFile.getName().contains("ckjm")){
 
                 //Parse the issues and add them to the IssueSet Vector of the Project object
-                project.addIssueSet(pmdImporter.parseIssues(resultFile.getAbsolutePath()));
-                project.addIssueSet(fxcopImporter.parseIssues(resultFile.getAbsolutePath()));
+                project.addIssueSet(pmdImporter.parse(resultFile.getAbsolutePath()));
+                project.addIssueSet(fxcopImporter.parse(resultFile.getAbsolutePath()));
 
             }else{
 
                 //Parse the metrics of the project and add them to the MetricSet field of the Project object
-                project.setMetrics(ckjmImporter.parseMetrics(resultFile.getAbsolutePath()));
+                project.setMetrics(ckjmImporter.parse(resultFile.getAbsolutePath()));
             }
         }
 

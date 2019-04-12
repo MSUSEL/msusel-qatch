@@ -20,9 +20,14 @@ import java.util.Iterator;
  * @author Miltos
  *
  */
-public class PMDAnalyzer {
+public class PMDAnalyzer implements Analyzer{
 
     public static final String TOOL_NAME = "PMD";
+
+    @Override
+    public void analyze(String src, String dest) {
+        throw new RuntimeException("PMD needs a ruleset as parameter in order to analyze");
+    }
 
     /**
      * This method is used in order to analyze a single project against a certain ruleset (property)
