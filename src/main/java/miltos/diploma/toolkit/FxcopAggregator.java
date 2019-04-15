@@ -5,7 +5,7 @@ import miltos.diploma.qualitymodel.Property;
 
 import java.util.Iterator;
 
-public class FxcopAggregator {
+public class FxcopAggregator implements Aggregator {
     //The weights representing the relative importance of each PMD rule category
     private static final int[] WEIGHT = {1, 1, 1, 1, 1};
 

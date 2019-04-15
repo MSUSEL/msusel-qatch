@@ -146,35 +146,25 @@ public class IntegrationTests {
             Analyzer findingsAnalyzer;
 
             if (projectLanguage == ProjectLanguage.Java) {
-
                 metricsAnalyzer = new CKJMAnalyzer();
                 findingsAnalyzer = new PMDAnalyzer();
-
-                metricsAnalyzer.analyze(
-                        properties.getProperty(projLocation),
-                        BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
-                        qualityModel.getProperties()
-                );
-                findingsAnalyzer.analyze(
-                        properties.getProperty(projLocation),
-                        BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
-                        qualityModel.getProperties()
-                );
-
             }
-
             else if (projectLanguage == ProjectLanguage.CSharp) {
-
-                metricsAnalyzer = null;
+                metricsAnalyzer = new CSharpMetricsAnalyzer();
                 findingsAnalyzer = new FxcopAnalyzer();
-
-                findingsAnalyzer.analyze(
-                        properties.getProperty(projLocation),
-                        BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
-                        qualityModel.getProperties()
-                );
             }
             else throw new RuntimeException("projectLanguage did not match to a support language enumeration");
+
+            metricsAnalyzer.analyze(
+                    properties.getProperty(projLocation),
+                    BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
+                    qualityModel.getProperties()
+            );
+            findingsAnalyzer.analyze(
+                    properties.getProperty(projLocation),
+                    BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
+                    qualityModel.getProperties()
+            );
 
             //Print some messages to the user
             System.out.println("* The analysis is finished");
@@ -202,7 +192,7 @@ public class IntegrationTests {
             findingsImporter = new PMDResultsImporter();
         }
         else if (projectLanguage == ProjectLanguage.CSharp) {
-            metricsImporter = null;
+            metricsImporter = new CSharpMetricsResultsImporter();
             findingsImporter = new FxcopResultsImporter();
         }
         else throw new RuntimeException("projectLanguage did not match to a support language enumeration");
@@ -215,17 +205,14 @@ public class IntegrationTests {
         assert results != null;
         for(File resultFile : results){
 
+            //(TODO): Refactor into Builder or Template design pattern and move into framework classes
             //Check if it is a ckjm result file
             if(!resultFile.getName().contains("ckjm")){
-
                 //Parse the issues and add them to the IssueSet Vector of the Project object
-                project.addIssueSet(pmdImporter.parse(resultFile.getAbsolutePath()));
-                project.addIssueSet(fxcopImporter.parse(resultFile.getAbsolutePath()));
-
+                project.addIssueSet(findingsImporter.parse(resultFile.getAbsolutePath()));
             }else{
-
                 //Parse the metrics of the project and add them to the MetricSet field of the Project object
-                project.setMetrics(ckjmImporter.parse(resultFile.getAbsolutePath()));
+                project.setMetrics(metricsImporter.parse(resultFile.getAbsolutePath()));
             }
         }
 
@@ -253,15 +240,23 @@ public class IntegrationTests {
             project.addProperty(p);
         }
 
-        //Create an empty PMDAggregator and CKJMAggregator
-        PMDAggregator pmdAgg = new PMDAggregator();
-        CKJMAggregator ckjmAgg = new CKJMAggregator();
-        FxcopAggregator fxcopAgg = new FxcopAggregator();
+
+        //(TODO): Refactor into design pattern
+        Aggregator metricsAggregator;
+        Aggregator findingsAggregator;
+        if (projectLanguage == ProjectLanguage.Java) {
+            metricsAggregator = new CKJMAggregator();
+            findingsAggregator = new PMDAggregator();
+        }
+        else if (projectLanguage == ProjectLanguage.CSharp) {
+            metricsAggregator = new CSharpMetricsAggregator();
+            findingsAggregator = new FxcopAggregator();
+        }
+        else throw new RuntimeException("projectLanguage did not match to a support language enumeration");
 
         //Aggregate all the analysis results
-        pmdAgg.aggregate(project);
-        ckjmAgg.aggregate(project);
-        fxcopAgg.aggregate(project);
+        metricsAggregator.aggregate(project);
+        findingsAggregator.aggregate(project);
 
         //Normalize their values
         for(int i = 0; i < project.getProperties().size(); i++){

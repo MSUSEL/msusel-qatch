@@ -16,7 +16,7 @@ import miltos.diploma.qualitymodel.Property;
  *    interested in.
  */
 
-public class CKJMAggregator {
+public class CKJMAggregator implements Aggregator {
 
     /**
      * The method that implements the whole functionality of this class.

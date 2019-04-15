@@ -5,7 +5,7 @@ import miltos.diploma.qualitymodel.Property;
 
 import java.util.Iterator;
 
-public class PMDAggregator {
+public class PMDAggregator implements Aggregator {
 
     //The weights representing the relative importance of each PMD rule category
     //TODO: Define the values of the weights
@@ -14,7 +14,6 @@ public class PMDAggregator {
     /**
      * This method is responsible for the aggregation of the
      * issues of a single project.
-     *
      */
     public void aggregate(Project project){
 
