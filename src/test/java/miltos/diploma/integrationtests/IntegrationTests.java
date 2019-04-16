@@ -59,19 +59,17 @@ public class IntegrationTests {
         singleProjectEvaluatorTest();
     }
 
-    @Test
-    public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
-        setConfig(
-//            "../sample-analysis-projects/csharp/SimpleCSharp/SimpleCSharp/bin/Debug",
-            "../sample-analysis-projects/csharp/SimpleCSharp",
-            "src/test/resources/Models/csharp/qualityModel_csharp.xml",
-            true,
-            false,
-            "Results/Analysis/SingleProjectResults"
-//            "src/test/output"
-        );
-        singleProjectEvaluatorTest();
-    }
+//    @Test
+//    public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
+//        setConfig(
+//            "../sample-analysis-projects/csharp/SimpleCSharp",
+//            "src/test/resources/Models/csharp/qualityModel_csharp.xml",
+//            true,
+//            false,
+//            "Results/Analysis/SingleProjectResults"
+//        );
+//        singleProjectEvaluatorTest();
+//    }
 
     private void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException, ParserConfigurationException, SAXException {
 

@@ -14,7 +14,7 @@ import java.io.IOException;
 public class FxcopAnalyzerTest {
 
      // FxCop analysis needs a compiled CSharp project located at 'src' in order to work
-    private final String src = "../sample-analysis-projects/csharp/SimpleCSharp/SimpleCSharp/bin/Debug";
+    private final String src = "../sample-analysis-projects/csharp/SimpleCSharp";
     private final String dest = "src/test/output";
 
     @Test
@@ -24,12 +24,12 @@ public class FxcopAnalyzerTest {
         Measure measure01 = new Measure(
                 1,
                 "metricName01",
-                "src/main/resources/tools/FxCop/Rules",
+                "src/main/resources/tools/FxCop/Rules/DesignRules.dll",
                 "FxCop");
         Measure measure02 = new Measure(
                 1,
                 "metricName02",
-                "src/main/resources/tools/FxCop/Rules",
+                "src/main/resources/tools/FxCop/Rules/DesignRules.dll",
                 "FxCop");
         Property property01 = new Property("propertyName01", measure01);
         Property property02 = new Property("propertyName02", measure02);
@@ -53,7 +53,7 @@ public class FxcopAnalyzerTest {
         Assert.assertEquals("propertyName02.xml", result02.getName());
 
         // XML file has expected number of bytes
-        Assert.assertEquals(6313, result01.length(), 500);
+        Assert.assertEquals(3464, result01.length(), 500);
         Assert.assertEquals(result01.length(), result02.length(), 500);
     }
 
@@ -72,7 +72,7 @@ public class FxcopAnalyzerTest {
         FxcopAnalyzer analyzer = new FxcopAnalyzer();
         analyzer.analyze(this.src, this.dest, ruleset, filename);
 
-        File results = new File(this.dest + "/" + filename);
+        File results = new File(this.dest + File.separator + filename);
 
         // XML file exists in expected location with correct name
         Assert.assertTrue(results.exists());
@@ -82,7 +82,7 @@ public class FxcopAnalyzerTest {
         // XML file has approximate expected number of bytes. A better way to test
         // this would be to parse the XML output for expected entries, but
         // that approach adds substantial run time to the unit test
-        Assert.assertEquals(2863, results.length(), 200);
+        Assert.assertEquals(3464, results.length(), 200);
 
     }
 

@@ -3,11 +3,13 @@ package miltos.diploma.toolkit;
 import miltos.diploma.qualitymodel.Measure;
 import miltos.diploma.qualitymodel.Property;
 import miltos.diploma.qualitymodel.PropertySet;
+import miltos.diploma.utility.FileUtility;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * This class is responsible for analyzing a single C# project
@@ -34,13 +36,24 @@ public class FxcopAnalyzer implements Analyzer {
      * @param src      : The path of the folder that contains the sources of the project.
      *                   The folder must contain at least one .dll or .exe item.
      * @param dest     : The path where the XML files with the results will be placed.
-     * @param ruleset  : The set of properties against which the project will be analyzed.
+     * @param ruleset  : The  rules against which the project will be analyzed.
      * @param filename : The name of the XML file containing scan results.
      */
     public void analyze(String src, String dest, String ruleset, String filename) {
-        //Set the path delimiter based on the OS that is used
+
         ProcessBuilder builder;
-        String output = dest + "/" + filename;
+        dest = dest + "/" + filename;
+
+        Set<String> assemblyDirs = FileUtility.findAssemblyDirectories(src, ".exe", ".dll");
+        StringBuilder sb = new StringBuilder("\"");
+        assemblyDirs.forEach(dir -> sb.append("/f:").append(dir).append(" "));
+        sb.append("\"");
+
+        // Attach FxCopExe option flags
+        src = sb.toString();
+        dest = "/out:" + dest;
+        ruleset = "/r:" + ruleset;
+
 
         if(System.getProperty("os.name").contains("Windows")){
             String rootDirectory = System.getProperty("user.dir");
@@ -48,12 +61,11 @@ public class FxcopAnalyzer implements Analyzer {
      "cmd.exe",
                 "/c",
                 "ant -Dbasedir=" + rootDirectory +
-                    " -f src/main/resources/fxcop_build.xml" +
-                    " -Dsrc.dir=" + src +
-                    " -Ddest.dir=" + output +
-                    " -Druleset.file=" + ruleset);
-        }
-        else {
+                " -f src/main/resources/fxcop_build.xml" +
+                " -Dsrc.dir=" + src +
+                " -Ddest.dir=" + dest +
+                " -Druleset.file=" + ruleset);
+        } else {
             throw new RuntimeException("FxCop C# analysis not supported on non-Windows machines. FxCopCmd.exe tool only supported on Windows.");
         }
 
