@@ -17,7 +17,6 @@ public class FileUtilityTest {
 
     @Rule
     public TemporaryFolder tempRoot = new TemporaryFolder(new File(System.getProperty("user.dir")));
-    private final String src = "../sample-analysis-projects/csharp/SimpleCSharp";
 
     /**
      * Create source files of varying extention types and directory depths and
@@ -44,11 +43,14 @@ public class FileUtilityTest {
         boolean e02Succ = exe02.createNewFile();
         boolean neSucc = notExe.createNewFile();
 
-        Set<String> assemblyDirectories = FileUtility.findAssemblyDirectories(src, ".exe.", ".dll");
-        Set<String> expectedSet = new HashSet<>(Arrays.asList("dir01", "dir03"));
+        Set<String> assemblyDirectories = FileUtility.findAssemblyDirectories(root.toString(), ".exe", ".dll");
+        Set<String> expectedSet = new HashSet<>(Arrays.asList(
+            root.toString() + File.separator + "dir01",
+            root.toString() + File.separator + "dir02" +  File.separator + "dir03")
+        );
 
         Assert.assertTrue(d01Succ && d02Succ && d03Succ && e01Succ && e02Succ && neSucc);
         Assert.assertTrue(assemblyDirectories.containsAll(expectedSet));
-        Assert.assertFalse(assemblyDirectories.contains("dir02"));
+        Assert.assertFalse(assemblyDirectories.contains(root.toString() + File.separator + "dir02"));
     }
 }

@@ -2,12 +2,35 @@ package miltos.diploma.utility;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 public final class FileUtility {
     private FileUtility() { }
 
-    public static Set<String> findAssemblyDirectories(String targetRoot, String... ext) {
-        throw new NotImplementedException();
+    // (TODO): this method currently returns all directories containing a file with 'extensions' in it, but languages
+    //         such as C# duplicate .EXEs in both the bin and obj folders, so findings end up duplicated.
+    public static Set<String> findAssemblyDirectories(String rootDirectory, String... extensions) {
+
+        Path root = Paths.get(rootDirectory);
+        ArrayList<String> exts = new ArrayList<>(Arrays.asList(extensions));
+        Set<String> assemblyPaths = new HashSet<>();
+
+        exts.forEach(ex -> {
+            try {
+                Files.find(root, Integer.MAX_VALUE, (path, attr) -> path.toString().endsWith(ex))
+                .forEach(path -> assemblyPaths.add(path.getParent().toString()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        return assemblyPaths;
     }
 }
