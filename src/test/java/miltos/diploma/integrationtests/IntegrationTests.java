@@ -62,11 +62,13 @@ public class IntegrationTests {
     @Test
     public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
         setConfig(
-            "../sample-analysis-projects/csharp/SimpleCSharp/SimpleCSharp/bin/Debug/SimpleCSharp.exe",
+//            "../sample-analysis-projects/csharp/SimpleCSharp/SimpleCSharp/bin/Debug",
+            "../sample-analysis-projects/csharp/SimpleCSharp",
             "src/test/resources/Models/csharp/qualityModel_csharp.xml",
             true,
             false,
-            "src/test/output"
+            "Results/Analysis/SingleProjectResults"
+//            "src/test/output"
         );
         singleProjectEvaluatorTest();
     }
@@ -202,7 +204,7 @@ public class IntegrationTests {
         File[] results = resultsDir.listFiles();
 
         //For each result file found in the directory do...
-        assert results != null;
+        if (results == null) throw new RuntimeException("Scanner results directory " + resultsDir.toString() + " has no files");
         for(File resultFile : results){
 
             //(TODO): Refactor into Builder or Template design pattern and move into framework classes
@@ -349,8 +351,9 @@ public class IntegrationTests {
         }
 
         EvaluationResultsExporter.exportProjectToJson(
-                project,
-                new File(properties.getProperty(resultsLocation) + "/" + project.getName() + "_evalResults.json").getAbsolutePath()
+            project,
+            new File(properties.getProperty(resultsLocation) + "/" + project.getName() + "_evalResults.json")
+                .getAbsolutePath()
         );
 
         System.out.println("* Results successfully exported..!");

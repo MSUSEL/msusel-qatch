@@ -1,10 +1,9 @@
 package miltos.diploma.toolkit;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import miltos.diploma.utility.Filename;
+import miltos.diploma.utility.File;
 import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 
@@ -36,7 +35,7 @@ public class PMDResultsImporter implements FindingsResultsImporter {
 
             //Import the desired xml file with the violations and create the tree representation
             SAXBuilder builder = new SAXBuilder();
-            Document doc = builder.build(new File(path));
+            Document doc = builder.build(new java.io.File(path));
             Element root = (Element) doc.getRootElement();
 
             //Create a list of all the "files" evaluated by the PMD
@@ -56,7 +55,7 @@ public class PMDResultsImporter implements FindingsResultsImporter {
                 separator = '/';
             }
 
-            Filename propName = new Filename(path,separator,'.');
+            File propName = new File(path,separator,'.');
             issues.setPropertyName(propName.filename());
 
             //Create an empty list in order to store temporary the violations of each file
@@ -126,7 +125,7 @@ public class PMDResultsImporter implements FindingsResultsImporter {
 
             /* Import the desired xml file with the violations and create the tree representation */
             SAXBuilder builder = new SAXBuilder();
-            Document doc = builder.build(new File(path));
+            Document doc = builder.build(new java.io.File(path));
             Element root = (Element) doc.getRootElement();
 
             /* Create a list of all the "files" evaluated by the PMD */
@@ -151,11 +150,11 @@ public class PMDResultsImporter implements FindingsResultsImporter {
                 /* Create the IssueSet to store the issues of the current file*/
                 IssueSet issues = new IssueSet();
                 /* Save the name and the absolute path of the file */
-                Filename fileName = new Filename(el.getAttributeValue("name"),separator,'.');
+                File fileName = new File(el.getAttributeValue("name"),separator,'.');
                 issues.setFileName(fileName.filename());
                 issues.setFilePath(fileName.path());
 
-                Filename propName = new Filename(path,separator,'.');
+                File propName = new File(path,separator,'.');
                 issues.setPropertyName(propName.filename());
 
 

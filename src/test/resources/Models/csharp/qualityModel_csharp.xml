@@ -42,26 +42,26 @@
 			  <threshold>0.0195</threshold>
 			</thresholds>
 		</property>
-		<property name="MaintainabilityRules" type="1" description="Maintainability warnings support library and application maintenance" positive_impact="false" metricName="" ruleset="./Rulesets/CSharpTestModel/MaintainabilityRules.dll" tool="FxCop" />
+		<property name="MaintainabilityRules" type="1" description="Maintainability warnings support library and application maintenance" positive_impact="false" metricName="" ruleset="./Rulesets/CSharpTestModel/MaintainabilityRules.dll" tool="FxCop">
 			<thresholds>
 			  <threshold>0.0306</threshold>
 			  <threshold>0.1239</threshold>
 			  <threshold>0.2189</threshold>
 			</thresholds>
 		</property>
-		<property name="ReliabilityRules" type="1" description="Reliability warnings support library and application reliability, such as correct memory and thread usage" positive_impact="false" metricName="" ruleset="./Rulesets/CSharpTestModel/ReliabilityRules.dll" tool="FxCop" />
+		<property name="ReliabilityRules" type="1" description="Reliability warnings support library and application reliability, such as correct memory and thread usage" positive_impact="false" metricName="" ruleset="./Rulesets/CSharpTestModel/ReliabilityRules.dll" tool="FxCop">
 			<thresholds>
 			  <threshold>0.0</threshold>
 			  <threshold>0.0045</threshold>
 			  <threshold>0.0133</threshold>
 			</thresholds>
 		</property>
-		<property name="SecurityRules" type="1" description="Security warnings support safer libraries and applications. These warnings help prevent security flaws in your program. If you disable any of these warnings, you should clearly mark the reason in code and also inform the designated security officer for your development project" positive_impact="false" metricName="" ruleset="./Rulesets/CSharpTestModel/SecurityRules.dll" tool="FxCop" />
+		<property name="SecurityRules" type="1" description="Security warnings support safer libraries and applications. These warnings help prevent security flaws in your program. If you disable any of these warnings, you should clearly mark the reason in code and also inform the designated security officer for your development project" positive_impact="false" metricName="" ruleset="./Rulesets/CSharpTestModel/SecurityRules.dll" tool="FxCop">
 			<thresholds>
 			  <threshold>0.0</threshold>
 			  <threshold>0.0081</threshold>
 			  <threshold>0.0167</threshold>
 			</thresholds>
 		</property>
-	 </properties>
+	</properties>
 </quality_model>

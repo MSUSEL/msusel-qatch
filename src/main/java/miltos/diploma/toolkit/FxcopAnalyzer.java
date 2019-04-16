@@ -30,6 +30,12 @@ public class FxcopAnalyzer implements Analyzer {
      *
      * ATTENTION:
      *  - The appropriate fxcop_build.xml ant file should be placed inside the resources directory.
+     *
+     * @param src      : The path of the folder that contains the sources of the project.
+     *                   The folder must contain at least one .dll or .exe item.
+     * @param dest     : The path where the XML files with the results will be placed.
+     * @param ruleset  : The set of properties against which the project will be analyzed.
+     * @param filename : The name of the XML file containing scan results.
      */
     public void analyze(String src, String dest, String ruleset, String filename) {
         //Set the path delimiter based on the OS that is used

@@ -1,11 +1,14 @@
 package miltos.diploma.utility;
 
-public class Filename {
+/**
+ * (TODO): refactor into static FileUtility class
+ */
+public class File {
     private String fullPath;
     private char pathSeparator, 
                  extensionSeparator;
 
-    public Filename(String str, char sep, char ext) {
+    public File(String str, char sep, char ext) {
         fullPath = str;
         pathSeparator = sep;
         extensionSeparator = ext;

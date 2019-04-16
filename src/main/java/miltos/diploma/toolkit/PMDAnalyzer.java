@@ -45,10 +45,18 @@ public class PMDAnalyzer implements Analyzer{
             src = "\"" + src + "\"";
             dest = "\"" + dest + "\"";
             ruleset = "\"" + ruleset + "\"";
-            builder = new ProcessBuilder("cmd.exe","/c","ant -buildfile pmd_build.xml -Dsrc.dir=" + src +" -Ddest.dir="+ dest + " -Druleset.path=" + ruleset + " -Dfilename=" + filename);
+            builder = new ProcessBuilder(
+                "cmd.exe",
+                "/c",
+                "ant -buildfile pmd_build.xml -Dsrc.dir=" + src +" -Ddest.dir="+ dest + " -Druleset.path=" + ruleset + " -Dfilename=" + filename
+            );
         }
         else {
-            builder = new ProcessBuilder("sh","-c","ant -buildfile pmd_build.xml -Dsrc.dir=" + src +" -Ddest.dir="+ dest + " -Druleset.path=" + ruleset + " -Dfilename=" + filename);
+            builder = new ProcessBuilder(
+                "sh",
+                "-c",
+                "ant -buildfile pmd_build.xml -Dsrc.dir=" + src +" -Ddest.dir="+ dest + " -Druleset.path=" + ruleset + " -Dfilename=" + filename
+            );
         }
 
         builder.redirectErrorStream(true);
@@ -87,7 +95,7 @@ public class PMDAnalyzer implements Analyzer{
 
         //Create an Iterator in order to iterate through the properties of the desired PropertySet object
         Iterator<Property> iterator = properties.iterator();
-        Property p = null;
+        Property p;
 
         //For each property found in the PropertySet do...
         while(iterator.hasNext()){

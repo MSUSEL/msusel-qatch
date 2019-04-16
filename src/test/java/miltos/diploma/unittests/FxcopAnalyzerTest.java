@@ -13,9 +13,7 @@ import java.io.IOException;
 
 public class FxcopAnalyzerTest {
 
-    /**
-     * FxCop analysis needs a compiled CSharp project located at 'src' in order to work
-     */
+     // FxCop analysis needs a compiled CSharp project located at 'src' in order to work
     private final String src = "../sample-analysis-projects/csharp/SimpleCSharp/SimpleCSharp/bin/Debug";
     private final String dest = "src/test/output";
 
@@ -57,7 +55,6 @@ public class FxcopAnalyzerTest {
         // XML file has expected number of bytes
         Assert.assertEquals(6313, result01.length(), 500);
         Assert.assertEquals(result01.length(), result02.length(), 500);
-
     }
 
     /**

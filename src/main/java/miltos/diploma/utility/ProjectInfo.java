@@ -46,6 +46,8 @@ public final class ProjectInfo {
             e.printStackTrace();
         }
 
-        return languageCount.entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
+        ProjectLanguage key = languageCount.entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
+        if (languageCount.get(key) == 0) throw new RuntimeException("Unable to determine language of target project");
+        return key;
     }
 }
