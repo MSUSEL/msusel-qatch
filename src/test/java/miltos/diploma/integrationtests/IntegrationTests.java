@@ -59,17 +59,17 @@ public class IntegrationTests {
         singleProjectEvaluatorTest();
     }
 
-//    @Test
-//    public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
-//        setConfig(
-//            "../sample-analysis-projects/csharp/SimpleCSharp",
-//            "src/test/resources/Models/csharp/qualityModel_csharp.xml",
-//            true,
-//            false,
-//            "Results/Analysis/SingleProjectResults"
-//        );
-//        singleProjectEvaluatorTest();
-//    }
+    @Test
+    public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
+        setConfig(
+            "../sample-analysis-projects/csharp/SimpleCSharp",
+            "src/test/resources/Models/csharp/qualityModel_csharp.xml",
+            true,
+            false,
+            "Results/Analysis/SingleProjectResults"
+        );
+        singleProjectEvaluatorTest();
+    }
 
     private void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException, ParserConfigurationException, SAXException {
 
@@ -131,7 +131,7 @@ public class IntegrationTests {
         if(Boolean.parseBoolean(properties.getProperty(rerun))) {
 
             //Check if the results directory exists and if not create it. Clear it's contents as well.
-            checkCreateClearDirectory(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH);
+            checkCreateClearDirectory(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName());
 
             //Print some messages...
             System.out.println("\n**************** STEP 2: Project Analyzer ****************************");
@@ -157,12 +157,12 @@ public class IntegrationTests {
 
             metricsAnalyzer.analyze(
                     properties.getProperty(projLocation),
-                    BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
+                    BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName(),
                     qualityModel.getProperties()
             );
             findingsAnalyzer.analyze(
                     properties.getProperty(projLocation),
-                    BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName(),
+                    BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator +project.getName(),
                     qualityModel.getProperties()
             );
 
@@ -198,7 +198,7 @@ public class IntegrationTests {
         else throw new RuntimeException("projectLanguage did not match to a support language enumeration");
 
         //Get the directory with the results of the analysis
-        File resultsDir = new File(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+"/"+project.getName());
+        File resultsDir = new File(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+ File.separator +project.getName());
         File[] results = resultsDir.listFiles();
 
         //For each result file found in the directory do...
@@ -350,7 +350,7 @@ public class IntegrationTests {
 
         EvaluationResultsExporter.exportProjectToJson(
             project,
-            new File(properties.getProperty(resultsLocation) + "/" + project.getName() + "_evalResults.json")
+            new File(properties.getProperty(resultsLocation) + File.separator + project.getName() + "_evalResults.json")
                 .getAbsolutePath()
         );
 

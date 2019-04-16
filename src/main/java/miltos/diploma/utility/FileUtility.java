@@ -13,7 +13,9 @@ public final class FileUtility {
     private FileUtility() { }
 
     // (TODO): this method currently returns all directories containing a file with 'extensions' in it, but languages
-    //         such as C# duplicate .EXEs in both the bin and obj folders, so findings end up duplicated.
+    //         such as C# duplicate .EXEs in both the bin and obj folders, so findings end up duplicated. Consider an
+    //         "industry standard" approach using standized configurations for each language regarding where to look
+    //         for files/directories to allow the tool to scan
     public static Set<String> findAssemblyDirectories(String rootDirectory, String... extensions) {
 
         Path root = Paths.get(rootDirectory);
