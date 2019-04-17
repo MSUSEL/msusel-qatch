@@ -150,7 +150,7 @@ public class IntegrationTests {
                 findingsAnalyzer = new PMDAnalyzer();
             }
             else if (projectLanguage == ProjectLanguage.CSharp) {
-                metricsAnalyzer = new CSharpMetricsAnalyzer();
+                metricsAnalyzer = new LOCMetricsAnalyzer();
                 findingsAnalyzer = new FxcopAnalyzer();
             }
             else throw new RuntimeException("projectLanguage did not match to a support language enumeration");
@@ -162,7 +162,7 @@ public class IntegrationTests {
             );
             findingsAnalyzer.analyze(
                     properties.getProperty(projLocation),
-                    BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator +project.getName(),
+                    BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName(),
                     qualityModel.getProperties()
             );
 
@@ -192,13 +192,13 @@ public class IntegrationTests {
             findingsImporter = new PMDResultsImporter();
         }
         else if (projectLanguage == ProjectLanguage.CSharp) {
-            metricsImporter = new CSharpMetricsResultsImporter();
+            metricsImporter = new LOCMetricsResultsImporter();
             findingsImporter = new FxcopResultsImporter();
         }
         else throw new RuntimeException("projectLanguage did not match to a support language enumeration");
 
         //Get the directory with the results of the analysis
-        File resultsDir = new File(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH+ File.separator +project.getName());
+        File resultsDir = new File(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName());
         File[] results = resultsDir.listFiles();
 
         //For each result file found in the directory do...
@@ -207,7 +207,7 @@ public class IntegrationTests {
 
             //(TODO): Refactor into Builder or Template design pattern and move into framework classes
             //Check if it is a ckjm result file
-            if(!resultFile.getName().contains("ckjm")){
+            if(!resultFile.getName().contains("ckjm") && !resultFile.getName().contains("Loc")){
                 //Parse the issues and add them to the IssueSet Vector of the Project object
                 project.addIssueSet(findingsImporter.parse(resultFile.getAbsolutePath()));
             }else{
@@ -249,7 +249,7 @@ public class IntegrationTests {
             findingsAggregator = new PMDAggregator();
         }
         else if (projectLanguage == ProjectLanguage.CSharp) {
-            metricsAggregator = new CSharpMetricsAggregator();
+            metricsAggregator = new LOCMetricsAggregator();
             findingsAggregator = new FxcopAggregator();
         }
         else throw new RuntimeException("projectLanguage did not match to a support language enumeration");

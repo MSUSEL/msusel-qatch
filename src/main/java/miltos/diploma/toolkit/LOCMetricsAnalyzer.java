@@ -2,7 +2,6 @@ package miltos.diploma.toolkit;
 
 import miltos.diploma.qualitymodel.PropertySet;
 import org.apache.commons.io.FileUtils;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -76,7 +75,7 @@ public class LOCMetricsAnalyzer implements Analyzer {
 
     @Override
     public void analyze(String src, String dest, PropertySet properties) {
-        //(todo) not yet implemented
-        throw new NotImplementedException();
+        // temp solution: just run LOCMetrics in order to get LOC metric
+        analyze(src, dest);
     }
 }
