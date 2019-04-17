@@ -87,6 +87,7 @@
                 <include>config.xml</include>
                 <include>dest/</include>
                 <include>fxcopresults.xml</include>
+                <include>LOCMetrics*/**</include>
                 <include>pmd_build.xml</include>
                 <include>Rulesets/</include>
                 <include>tools/</include>

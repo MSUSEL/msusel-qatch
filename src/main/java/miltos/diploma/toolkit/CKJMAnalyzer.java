@@ -38,7 +38,6 @@ public class CKJMAnalyzer implements Analyzer {
      */
     public void analyze(String src, String dest){
 
-        //Check the OS type
         ProcessBuilder builder;
 
         if(System.getProperty("os.name").contains("Windows")){
