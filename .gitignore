@@ -202,18 +202,19 @@ $RECYCLE.BIN/
 *.lnk
 
 # Project specific
-Results/
 /build.xml
 /config.xml
 /dest
+/doc
+*_evalResults.json
+.idea/artifacts/
 /pmd_build.xml
 /reference.txt
+Results/
 /Rulesets/
 /src/test/java/miltos/diploma/Scratch.java
 /src/test/output/
 /tools/
-.idea/artifacts/
-*_evalResults.json
 
 
 # End of https://www.gitignore.io/api/git,java,maven,macos,linux,windows,intellij
