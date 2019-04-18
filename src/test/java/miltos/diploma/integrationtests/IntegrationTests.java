@@ -240,7 +240,6 @@ public class IntegrationTests {
             project.addProperty(p);
         }
 
-
         //(TODO): Refactor into design pattern
         Aggregator metricsAggregator;
         Aggregator findingsAggregator;

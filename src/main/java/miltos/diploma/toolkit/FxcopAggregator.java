@@ -12,7 +12,6 @@ public class FxcopAggregator implements Aggregator {
     /**
      * This method is responsible for the aggregation of the
      * issues of a single project.
-     *
      */
     public void aggregate(Project project){
 
