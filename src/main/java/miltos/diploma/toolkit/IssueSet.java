@@ -20,7 +20,7 @@ public class IssueSet {
 
     //Basic Fields
     private String propertyName;
-    private Vector<Issue> issues = null;		// An IssueSet is just a Vector of Issue objects
+    private Vector<Issue> issues;// An IssueSet is just a Vector of Issue objects
 
     //TODO: Remove these fields - We will not follow the class level approach
     private String fileName;
@@ -34,6 +34,10 @@ public class IssueSet {
     public IssueSet(String name) {
         this.issues = new Vector<>();
         this.propertyName = name;
+    }
+    public IssueSet(String name, Vector<Issue> issues) {
+        this.propertyName = name;
+        this.issues = issues;
     }
 
 

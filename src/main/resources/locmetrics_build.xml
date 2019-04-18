@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<project name="LOCMetrics Static Analysis" default="locmetrics" basedir=".">
+
+    <property name="src.dir" value="null"/>
+    <property name="dest.dir" value="null"/>
+    <property name="locmetrics.dir" value="src\main\resources\tools\LocMetrics.exe"/>
+
+    <target name="locmetrics">
+        <exec executable="cmd.exe">
+            <arg line="/c ${locmetrics.dir} -i ${src.dir} -o ${dest.dir}"/>
+        </exec>
+    </target>
+
+</project>

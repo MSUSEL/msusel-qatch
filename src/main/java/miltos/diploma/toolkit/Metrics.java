@@ -17,7 +17,7 @@ import java.util.Vector;
 //TODO: Instead of different fields replace it with a Vector of Metric objects
 public class Metrics {
 
-    private String className;
+    private String name;
     private int wmc;
     private int dit;
     private int noc;
@@ -41,12 +41,12 @@ public class Metrics {
 
     //Getters and Setters
 
-    public String getClassName() {
-        return className;
+    public String getName() {
+        return name;
     }
 
     public void setName(String className) {
-        this.className = className;
+        this.name = className;
     }
 
     public int getCbo() {

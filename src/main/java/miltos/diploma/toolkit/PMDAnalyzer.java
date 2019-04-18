@@ -20,16 +20,21 @@ import java.util.Iterator;
  * @author Miltos
  *
  */
-public class PMDAnalyzer {
+public class PMDAnalyzer implements Analyzer{
 
     public static final String TOOL_NAME = "PMD";
+
+    @Override
+    public void analyze(String src, String dest) {
+        throw new RuntimeException("PMD needs a ruleset as parameter in order to analyze");
+    }
 
     /**
      * This method is used in order to analyze a single project against a certain ruleset (property)
      * by calling the PMD tool through the command line with the appropriate configuration.
      *
      * ATTENTION:
-     *  - The appropriate build.xml ant file should be placed inside the base directory.
+     *  - The appropriate pmd_build.xml ant file should be placed inside the resources directory.
      */
     public void analyze(String src, String dest, String ruleset, String filename) {
 
@@ -40,10 +45,18 @@ public class PMDAnalyzer {
             src = "\"" + src + "\"";
             dest = "\"" + dest + "\"";
             ruleset = "\"" + ruleset + "\"";
-            builder = new ProcessBuilder("cmd.exe","/c","ant -buildfile pmd_build.xml -Dsrc.dir=" + src +" -Ddest.dir="+ dest + " -Druleset.path=" + ruleset + " -Dfilename=" + filename);
+            builder = new ProcessBuilder(
+                "cmd.exe",
+                "/c",
+                "ant -buildfile pmd_build.xml -Dsrc.dir=" + src +" -Ddest.dir="+ dest + " -Druleset.path=" + ruleset + " -Dfilename=" + filename
+            );
         }
         else {
-            builder = new ProcessBuilder("sh","-c","ant -buildfile pmd_build.xml -Dsrc.dir=" + src +" -Ddest.dir="+ dest + " -Druleset.path=" + ruleset + " -Dfilename=" + filename);
+            builder = new ProcessBuilder(
+                "sh",
+                "-c",
+                "ant -buildfile pmd_build.xml -Dsrc.dir=" + src +" -Ddest.dir="+ dest + " -Druleset.path=" + ruleset + " -Dfilename=" + filename
+            );
         }
 
         builder.redirectErrorStream(true);
@@ -82,7 +95,7 @@ public class PMDAnalyzer {
 
         //Create an Iterator in order to iterate through the properties of the desired PropertySet object
         Iterator<Property> iterator = properties.iterator();
-        Property p = null;
+        Property p;
 
         //For each property found in the PropertySet do...
         while(iterator.hasNext()){

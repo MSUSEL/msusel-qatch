@@ -17,6 +17,7 @@ public class Issue {
     private String packageName;
     private String description;
     private String externalInfoUrl;
+
     private int priority;   //1 is higher priority than 5
     private int beginLine;
     private int endLine;
@@ -26,6 +27,10 @@ public class Issue {
     //The path to the project's class that this violation belongs to
     private String classPath;
 
+    public Issue() { }
+    public Issue(int priority) {
+        this.priority = priority;
+    }
     /**
      * Setters and getters.
      */

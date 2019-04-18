@@ -65,10 +65,10 @@ public class BenchmarkResultImporter {
                 //Check if it is a ckjm result file
                 if(!resultFile.getName().contains("ckjm")){
                     //Import the issues found in this file and add them to the Project's IssueSet vector
-                    project.addIssueSet(pmdImporter.parseIssues(resultFile.getAbsolutePath()));
+                    project.addIssueSet(pmdImporter.parse(resultFile.getAbsolutePath()));
                 }else{
                     //Import the metrics found in the ckjm result file and store them in the Project's metrics field
-                    project.setMetrics(ckjmImporter.parseMetrics(resultFile.getAbsolutePath()));
+                    project.setMetrics(ckjmImporter.parse(resultFile.getAbsolutePath()));
                 }
             }
             //Add the project to the BenchmarkProjects object that will be returned

@@ -21,7 +21,7 @@ public class FxcopResultsImporterTest {
         String resultsPath = "src/test/resources/ScannerResults/FxcopFindingsProperty01.xml";
         FxcopResultsImporter ri = new FxcopResultsImporter();
 
-        IssueSet is = ri.parseIssues(resultsPath);
+        IssueSet is = ri.parse(resultsPath);
         Issue firstIssue = is.getIssues().firstElement();
         Issue lastIssue = is.getIssues().lastElement();
 

@@ -2,13 +2,6 @@ package miltos.diploma.qualitymodel;
 
 public class Property implements Cloneable {
 
-    //TODO: Remove this constants - Use the Analyzers constants instead!
-    public static final String PMD = "PMD";
-    public static final String CKJM = "CKJM";
-
-    /* The breakpoint of the Utility Function used for the evaluation of the Property */
-    private static final double BREAKPOINT = 0.5;
-
     /* Static constants that belong to this class */
     public static final int THRESHOLDS_NUM = 3;
 
@@ -25,6 +18,11 @@ public class Property implements Cloneable {
         // Just create the thresholds array.
         thresholds = new double[THRESHOLDS_NUM];
         measure = new Measure();
+    }
+    public Property(String name) {
+        thresholds = new double[THRESHOLDS_NUM];
+        this.name = name;
+        this.measure = new Measure();
     }
     public Property(Measure measure){
         thresholds = new double[THRESHOLDS_NUM];
@@ -88,11 +86,6 @@ public class Property implements Cloneable {
         return measure.getType() == Measure.METRIC;
     }
 
-    //TODO: Remove - Redundant
-    public boolean isFinding(){
-        return measure.getType() == Measure.FINDING;
-    }
-
     public void setMeasure(Measure measure){
         this.measure = measure;
     }
@@ -107,7 +100,6 @@ public class Property implements Cloneable {
         cloned.setMeasure((Measure)cloned.getMeasure().clone());
         return cloned;
     }
-
 
     /**
      * A method for evaluating a Property object (i.e this property).

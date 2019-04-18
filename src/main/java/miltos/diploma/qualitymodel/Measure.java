@@ -116,6 +116,8 @@ public class Measure implements Cloneable {
             this.normValue = this.value/this.normalizer;
         }else{
             System.out.println("Devision by zero avoided!!");
+            throw new RuntimeException("Division by zero encountered during normalization.\n" +
+                    "This may be due to a problem running the metrics tool ant process.");
         }
     }
 }

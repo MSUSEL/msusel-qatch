@@ -22,10 +22,7 @@ import org.jdom.input.SAXBuilder;
  * @author Miltos
  *
  */
-public class CKJMResultsImporter {
-
-    //The delimiter that the OS uses for the urls and the paths
-    private final static char PATH_SEPARATOR = '\\';
+public class CKJMResultsImporter implements MetricsResultsImporter {
 
     /**
      * The method that is used to parse the calculated metrics from
@@ -34,7 +31,7 @@ public class CKJMResultsImporter {
      *
      * @param path : The exact path to the ckjmResults.xml file
      */
-    public MetricSet parseMetrics(String path){
+    public MetricSet parse(String path){
 
         //A MetricSet object for storing the calculated metrics
         MetricSet metricSet = new MetricSet();
@@ -43,7 +40,7 @@ public class CKJMResultsImporter {
             //Import the desired xml file with the ckjm results and create the tree representation
             SAXBuilder builder = new SAXBuilder();
             Document doc = builder.build(new File(path));
-            Element root = (Element) doc.getRootElement();
+            Element root = doc.getRootElement();
 
             //Create a list of all the classes evaluated by the CKJM
             List<Element> classList = root.getChildren();

@@ -20,7 +20,8 @@ import java.util.Iterator;
  *
  */
 //TODO: CKJM should be invoked at any case because we need the total LOC of the project for normalization purposes.
-public class CKJMAnalyzer  {
+
+public class CKJMAnalyzer implements Analyzer {
 
     public static final String TOOL_NAME = "CKJM";
 
@@ -29,8 +30,7 @@ public class CKJMAnalyzer  {
      * tool.
      *
      * ATTENTION:
-     *  - The appropriate build.xml ant file should be placed inside the eclipse folder.
-     *  - TODO: Check if you can provide the path of the build.xml.
+     *  - The appropriate build.xml ant file should be placed inside the resources directory.
      *
      * @param src      : The path of the folder that contains the class files of the project.
      * @param dest     : The path where the XML file that contains the results will be placed.
@@ -38,7 +38,6 @@ public class CKJMAnalyzer  {
      */
     public void analyze(String src, String dest){
 
-        //Check the OS type
         ProcessBuilder builder;
 
         if(System.getProperty("os.name").contains("Windows")){
@@ -67,6 +66,11 @@ public class CKJMAnalyzer  {
         }catch(IOException e){
             System.out.println(e.getMessage());
         }
+    }
+
+    @Override
+    public void analyze(String src, String dest, String ruleset, String filename) {
+        throw new RuntimeException("Ruleset analyze not supported in CKJM");
     }
 
     /**
@@ -107,13 +111,8 @@ public class CKJMAnalyzer  {
 
                 //Analyze this project
                 analyze(src, dest);
-
                 //Found at least one ckjm property. Process finished.
                 break;
-
-            }else{
-                //Print some messages for debugging purposes
-                //System.out.println("* Property : " + p.getName() + " is not a CKJM Property!!");
             }
         }
     }

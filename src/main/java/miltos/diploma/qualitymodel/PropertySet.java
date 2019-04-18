@@ -48,6 +48,13 @@ public class PropertySet implements Cloneable{
         return properties.get(index);
     }
 
+    public Property get(String name) {
+        for (Property p : properties) {
+            if (p.getName().equals(name)) { return p; }
+        }
+        throw new RuntimeException("Unable to find property named " + name);
+    }
+
     public boolean isEmpty(){
         return properties.isEmpty();
     }
