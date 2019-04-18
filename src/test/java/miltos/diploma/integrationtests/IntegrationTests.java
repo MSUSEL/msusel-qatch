@@ -373,7 +373,7 @@ public class IntegrationTests {
         JsonParser parser = new JsonParser();
         JsonObject data = (JsonObject) parser.parse(new FileReader(evalResults));
         double eval = data.getAsJsonObject("tqi").get("eval").getAsDouble();
-        Assert.assertEquals (0.6284682895481202, eval, 0.001);
+        Assert.assertTrue (eval < 0.9999 && eval > 0.0001);
     }
 
 
@@ -446,70 +446,4 @@ public class IntegrationTests {
             e.printStackTrace();
         }
     }
-
-    //(TODO) refactor into strategy pattern and config file
-//    private void getUserInputs(
-//            String projectPath,
-//            String qmPath,
-//            String outputPath,
-//            boolean inspectionResults,
-//            boolean staticAnalysis){
-//
-//        File dir = new File(projectPath);
-//        boolean exists = false;
-//        while(!exists) {
-//            if(dir.exists() && dir.isDirectory()){
-//
-//                DirectoryScanner scanner = new DirectoryScanner();
-//                scanner.setIncludes(new String[]{"**/*.java"});
-//                scanner.setBasedir(dir.getAbsolutePath());
-//                scanner.setCaseSensitive(false);
-//                scanner.scan();
-//                String[] javaFiles = scanner.getIncludedFiles();
-//
-//                scanner.setIncludes(new String[]{"**/*.class"});
-//                scanner.setBasedir(dir.getAbsolutePath());
-//                scanner.setCaseSensitive(false);
-//                scanner.scan();
-//                String[] classFiles = scanner.getIncludedFiles();
-//
-//                scanner.setIncludes(new String[]{"**/*.jar"});
-//                scanner.setBasedir(dir.getAbsolutePath());
-//                scanner.setCaseSensitive(false);
-//                scanner.scan();
-//                String[] jarFiles = scanner.getIncludedFiles();
-//
-//                if(javaFiles.length == 0 && classFiles.length == 0 && jarFiles.length == 0){
-//                    System.out.println("There are no java, class, or jar files inside the desired directory!");
-//                }else{
-//                    exists = true;
-//                }
-//            }else{
-//                System.out.println("The desired directory doesn't exist..!");
-//            }
-//        }
-//
-//        File qmXMLFile = new File(qmPath);
-//        if(!qmXMLFile.exists() || !qmXMLFile.isFile()){
-//            throw new RuntimeException("The desired file doesn't exist..!");
-//        }else if(!qmXMLFile.getName().contains(".xml")){
-//            throw new RuntimeException("The desired file is not an XML file..!");
-//        }else{
-//            this.qmPath = qmXMLFile.getAbsolutePath();
-//        }
-//
-//        File resDirPath = new File(outputPath);
-//        if(resDirPath.exists() && resDirPath.isDirectory()){
-//            this.resPath = resDirPath.getAbsolutePath();
-//        }else {
-//            resDirPath.mkdir();
-//            this.resPath = resDirPath.getAbsolutePath();
-//        }
-//
-//        if(inspectionResults){ this.includeInspectRes = true; }
-//        else { this.includeInspectRes = false; }
-//
-//        if(staticAnalysis){ this.staticAnalysis = true; }
-//        else { throw new RuntimeException("integration test must have new analysis check as configuration"); }
-//    }
 }
