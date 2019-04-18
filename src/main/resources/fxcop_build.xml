@@ -4,7 +4,7 @@
     <!-- FxCop analysis parameters -->
     <property name="src.dir" value="null"/>
     <property name="dest.dir" value="null"/>
-    <property name="fxcop.dir" value="src\test\resources\tools\FxCop\FxCopCmd.exe"/>
+    <property name="fxcop.dir" value="src\main\resources\tools\FxCop\FxCopCmd.exe"/>
     <property name="ruleset.file" value="null"/>
 
     <target name="fxcop">

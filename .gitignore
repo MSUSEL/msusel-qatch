@@ -209,9 +209,10 @@ Results/
 /pmd_build.xml
 /reference.txt
 /Rulesets/
+/src/test/java/miltos/diploma/Scratch.java
+/src/test/output/
 /tools/
 .idea/artifacts/
-/src/test/java/miltos/diploma/Scratch.java
 *_evalResults.json
 
 

@@ -66,7 +66,7 @@ public class FxcopAnalyzerTest {
     public void testAnalyzeSubroutine() throws IOException {
         clean();
 
-        String ruleset = "src/test/resources/Rulesets/CSharpTestModel/DesignRules.dll",
+        String ruleset = "src/main/resources/Rulesets/CSharpTestModel/DesignRules.dll",
                filename = "fxcopresults.xml";
 
         FxcopAnalyzer analyzer = new FxcopAnalyzer();

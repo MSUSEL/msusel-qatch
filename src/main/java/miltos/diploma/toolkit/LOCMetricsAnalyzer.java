@@ -62,8 +62,11 @@ public class LOCMetricsAnalyzer implements Analyzer {
             // move desired results file out of temporary folder
             File results = new File(tempDest.toFile(), LOCMetricsAnalyzer.RESULT_FILE_NAME);
             FileUtils.copyFileToDirectory(results, new File(dest));
-
             FileUtils.cleanDirectory(tempDest.toFile());
+
+            if (!new File(new File(dest), results.getName()).isFile()) {
+                throw new RuntimeException("No LOCMetrice results found in " + dest);
+            }
 
         } catch (IOException e) { e.printStackTrace(); }
     }

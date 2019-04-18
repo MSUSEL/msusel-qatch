@@ -60,6 +60,7 @@ public class LOCMetricsAggregator implements Aggregator {
             property.getMeasure().setNormalizer(totalLoc);
 
             //Check if this property is quantified by the CKJM tool
+            //(TODO) generify to all metrics tools
             if(property.getMeasure().getTool().equalsIgnoreCase("ckjm")){
                 Measure measure = property.getMeasure();
 
