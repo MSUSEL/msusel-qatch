@@ -51,7 +51,7 @@ public class IntegrationTests {
     public void singleProjectEvaluatorTest_Java() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
         setConfig(
             "../sample-analysis-projects/java/SimpleJava",
-            "src/test/resources/Models/java/qualityModel_java.xml",
+            "src/main/resources/Models/java/qualityModel_java.xml",
             true,
             false,
             "src/test/output"
@@ -62,8 +62,8 @@ public class IntegrationTests {
     @Test
     public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
         setConfig(
-            "../sample-analysis-projects/csharp/SimpleCSharp",
-            "src/test/resources/Models/csharp/qualityModel_csharp.xml",
+            "../sample-analysis-projects/csharp/FxcopFindings",
+            "src/main/resources/Models/csharp/qualityModel_csharp.xml",
             true,
             false,
             "Results/Analysis/SingleProjectResults"
@@ -405,7 +405,7 @@ public class IntegrationTests {
         String buildLoc, pmd_buildLoc, rulesetsLoc, toolsLoc;
         File rootDirectory = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
 
-        String resourcesLoc = "src/test/resources/";
+        String resourcesLoc = "src/main/resources/";
         buildLoc = resourcesLoc + "build.xml";
         pmd_buildLoc = resourcesLoc + "pmd_build.xml";
         rulesetsLoc = resourcesLoc + "Rulesets";

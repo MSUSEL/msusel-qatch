@@ -1,7 +1,0 @@
-Folder,Files,LOC,SLOC-P,SLOC-L,MVG,BLOC,C&SLOC,CLOC,CWORD,HCLOC,HCWORD
-Total,2,50,26,8,0,7,0,17,120,0,0
-../sample-analysis-projects/csharp/SimpleCSharp,2,50,26,8,0,7,0,17,120,0,0
-../sample-analysis-projects/csharp/SimpleCSharp\SimpleCSharp,2,50,26,8,0,7,0,17,120,0,0
-../sample-analysis-projects/csharp/SimpleCSharp\SimpleCSharp\Properties,1,37,15,3,0,5,0,17,120,0,0
-../sample-analysis-projects/csharp/SimpleCSharp\SimpleCSharp\obj,0,0,0,0,0,0,0,0,0,0,0
-../sample-analysis-projects/csharp/SimpleCSharp\SimpleCSharp\obj\Debug,0,0,0,0,0,0,0,0,0,0,0
