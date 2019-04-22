@@ -87,7 +87,12 @@ public class FxcopAnalyzerTest {
     }
 
     private void clean() throws IOException {
-        File output = new File(this.dest);
-        FileUtils.cleanDirectory(output);
+        File outputFolder = new File(this.dest);
+
+        if (outputFolder.exists()) {
+            File output = new File(this.dest);
+            FileUtils.cleanDirectory(output);
+        }
+        outputFolder.mkdirs();
     }
 }
