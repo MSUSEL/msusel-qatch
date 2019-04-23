@@ -98,10 +98,8 @@ public class EvaluationResultsExporter {
         //Create the header of the xls file
         if(prop_norm){
             for(int i = 0; i < projects.getProject(0).getProperties().size(); i++){
-
                 //Get the i-th property
                 Property p = projects.getProject(0).getProperties().get(i);
-
                 //Set the name of the i-th column to the name of this Property
                 rowhead.createCell(start).setCellValue(p.getName());
                 start++;
@@ -110,12 +108,9 @@ public class EvaluationResultsExporter {
 
         //Check if the the properties' quality scores should be included in the xls file
         if(prop_eval){
-
             for(int i = 0; i < projects.getProject(0).getProperties().size(); i++){
-
                 //Get the i-th property
                 Property p = projects.getProject(0).getProperties().get(i);
-
                 //Set the name of the i-th column to the name of this Property
                 rowhead.createCell(start).setCellValue(p.getName() + "_Eval");
                 start++;

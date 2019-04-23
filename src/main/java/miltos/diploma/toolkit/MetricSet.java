@@ -27,7 +27,7 @@ public class MetricSet {
     public MetricSet(){
         metricSet = new Vector<>();
     }
-
+    public MetricSet(Vector<Metrics> metrics) { this.metricSet = metrics; }
 
     //Setters and Getters
     public Vector<Metrics> getMetricSet() {

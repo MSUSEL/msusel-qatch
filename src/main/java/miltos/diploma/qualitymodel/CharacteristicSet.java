@@ -22,6 +22,9 @@ public class CharacteristicSet {
     public CharacteristicSet(){
         this.characteristics = new Vector<>();
     }
+    public CharacteristicSet(Vector<Characteristic> characteristics) {
+        this.characteristics = characteristics;
+    }
 
     //Setters and Getters
     public Vector<Characteristic> getCharacteristics() {

@@ -11,14 +11,17 @@ public class PropertySet implements Cloneable{
 
     private Vector<Property> properties;
 
-    //Create a copy constructor
-    public PropertySet(PropertySet p){
-        this.properties = p.properties;
-    }
 
     public PropertySet(){
         properties = new Vector<>();
     }
+    public PropertySet(PropertySet p){
+        this.properties = p.properties;
+    }
+    public PropertySet(Vector<Property> properties) {
+        this.properties = properties;
+    }
+
 
     public Vector<Property> getPropertyVector(){
         return properties;

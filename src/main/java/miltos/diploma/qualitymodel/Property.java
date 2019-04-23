@@ -6,6 +6,7 @@ public class Property implements Cloneable {
     public static final int THRESHOLDS_NUM = 3;
 
     private String name;//The name of the property
+
     private String description;//A brief description of the property (optional)
     private double[] thresholds;//The three thresholds of the property metric, needed for the evaluation
     private double eval;//The quality score of the property
@@ -13,12 +14,12 @@ public class Property implements Cloneable {
     private boolean positive;//If this field is true then the metric has a positive impact on the property
     private Measure measure;
 
-
     public Property(){
         // Just create the thresholds array.
         thresholds = new double[THRESHOLDS_NUM];
         measure = new Measure();
     }
+
     public Property(String name) {
         thresholds = new double[THRESHOLDS_NUM];
         this.name = name;
@@ -31,6 +32,15 @@ public class Property implements Cloneable {
     public Property(String name, Measure measure){
         thresholds = new double[THRESHOLDS_NUM];
         this.name = name;
+        this.measure = measure;
+    }
+    public Property(String name, String description, double[] thresholds, double eval, double[] profile, boolean positive, Measure measure) {
+        this.name = name;
+        this.description = description;
+        this.thresholds = thresholds;
+        this.eval = eval;
+        this.profile = profile;
+        this.positive = positive;
         this.measure = measure;
     }
 

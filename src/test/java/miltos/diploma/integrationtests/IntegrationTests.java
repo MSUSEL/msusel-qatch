@@ -334,7 +334,6 @@ public class IntegrationTests {
         /*
          * Step 8 : Export the project's data and properties in a json file
          */
-
         System.out.println("\n**************** STEP 8: Exporting Evaluation Results ****************");
         System.out.println("*");
         System.out.println("* Exporting the results of the project evaluation...");
@@ -357,14 +356,16 @@ public class IntegrationTests {
         System.out.println("* You can find the results at : " + new File(properties.getProperty(resultsLocation)).getAbsolutePath());
 
         /*
-         * Step 9 : Export the results to the predefined path as well
+         * Step 8.1 : Export the results to the predefined path as well
          */
-
         checkCreateClearDirectory(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH);
-
         //Export the results
         EvaluationResultsExporter.exportProjectToJson(project, new File(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH + "/" + project.getName() + "_evalResults.json").getAbsolutePath());
         System.out.println("* You can find the results at : " + new File(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH).getAbsolutePath() + " as well..!");
+
+        /*
+         * Step 8.2 : Send to DBMS (mongoDB)
+         */
 
         /*
          * (Test Step) Step 10: Assert TQI is its expected value

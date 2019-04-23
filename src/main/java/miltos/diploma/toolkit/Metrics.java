@@ -39,8 +39,10 @@ public class Metrics {
     //The list of methods that can be found in the class
     private Vector<MethodLevelAttributes> methods;
 
-    //Getters and Setters
+    public Metrics() { }
+    public Metrics(int loc) { this.loc = loc; }
 
+    //Getters and Setters
     public String getName() {
         return name;
     }

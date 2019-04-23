@@ -17,7 +17,6 @@ public class Issue {
     private String packageName;
     private String description;
     private String externalInfoUrl;
-
     private int priority;   //1 is higher priority than 5
     private int beginLine;
     private int endLine;
@@ -25,12 +24,39 @@ public class Issue {
     private int endCol;
 
     //The path to the project's class that this violation belongs to
-    private String classPath;
 
+    private String classPath;
     public Issue() { }
+
+    public Issue(String ruleName) { this.ruleName = ruleName; }
     public Issue(int priority) {
         this.priority = priority;
     }
+    public Issue(String ruleName,
+                 String ruleSetName,
+                 String packageName,
+                 String description,
+                 String externalInfoUrl,
+                 int priority,
+                 int beginLine,
+                 int endLine,
+                 int beginCol,
+                 int endCol,
+                 String classPath)
+    {
+        this.ruleName = ruleName;
+        this.ruleSetName = ruleSetName;
+        this.packageName = packageName;
+        this.description = description;
+        this.externalInfoUrl = externalInfoUrl;
+        this.priority = priority;
+        this.beginLine = beginLine;
+        this.endLine = endLine;
+        this.beginCol = beginCol;
+        this.endCol = endCol;
+        this.classPath = classPath;
+    }
+
     /**
      * Setters and getters.
      */

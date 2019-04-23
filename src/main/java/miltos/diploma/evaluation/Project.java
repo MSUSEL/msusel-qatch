@@ -42,7 +42,6 @@ public class Project{
     /*
      * The constructor methods of this class.
      */
-
     public Project(){
         this.issues = new Vector<>();
         this.metrics = new MetricSet();
@@ -50,7 +49,6 @@ public class Project{
         this.characteristics = new CharacteristicSet();
         this.tqi = new Tqi();
     }
-
     public Project(String name){
         this.name = name;
         this.issues = new Vector<>();
@@ -60,6 +58,15 @@ public class Project{
         this.tqi = new Tqi();
     }
 
+    public Project(String name, String path, Vector<IssueSet> issues, MetricSet metrics, PropertySet properties, CharacteristicSet characteristics, Tqi tqi) {
+        this.name = name;
+        this.path = path;
+        this.issues = issues;
+        this.metrics = metrics;
+        this.properties = properties;
+        this.characteristics = characteristics;
+        this.tqi = tqi;
+    }
 
     /*
      * Getters and setters.

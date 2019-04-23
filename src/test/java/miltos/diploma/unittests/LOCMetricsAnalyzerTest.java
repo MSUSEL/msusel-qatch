@@ -41,6 +41,9 @@ public class LOCMetricsAnalyzerTest {
 
     private void clean() throws IOException {
         File output = new File(this.dest);
-        FileUtils.cleanDirectory(output);
+        if (output.exists()) {
+            FileUtils.cleanDirectory(output);
+        }
+        else output.mkdirs();
     }
 }
