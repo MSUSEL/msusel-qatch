@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
 import com.mongodb.DB;
@@ -56,6 +57,7 @@ public class EvaluationResultsExporter {
     public static void exportProjectToMongoDB(Project project, String hostName, int port, String dbName, String collectionName) {
         String json = new Gson().toJson(project);
         DBObject doc = (DBObject) JSON.parse(json);
+        doc.put("analysis_time", new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(System.currentTimeMillis()));
 
         try {
             MongoClient client = new MongoClient(hostName, port);
