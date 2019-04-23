@@ -32,7 +32,13 @@ public class IntegrationTests {
                           qmLocation        = "qm.location",
                           rerun             = "analysis.rerun",
                           inspectionResults = "output.inspectionresults",
-                          resultsLocation   = "results.location";
+                          resultsLocation   = "results.location",
+                          host              = "db.hostname",
+                          port              = "db.port",
+                          dbName            = "db.dbname",
+                          collName          = "db.collectionname";
+
+
     private Properties properties = new Properties();
 
     /**
@@ -366,9 +372,16 @@ public class IntegrationTests {
         /*
          * Step 8.2 : Send to DBMS (mongoDB)
          */
+        EvaluationResultsExporter.exportProjectToMongoDB(
+            project,
+            properties.getProperty(host),
+            Integer.parseInt(properties.getProperty(port)),
+            properties.getProperty(dbName),
+            properties.getProperty(collName)
+        );
 
         /*
-         * (Test Step) Step 10: Assert TQI is its expected value
+         * (Test Step) Step 9: Assert TQI is its expected value
          */
         File evalResults = new File(System.getProperty("user.dir") + "/Results/Evaluation/SingleProjectResults/" + project.getName() + "_evalResults.json" );
         JsonParser parser = new JsonParser();
@@ -432,8 +445,9 @@ public class IntegrationTests {
      */
     private void setConfig(String projectLoc, String qmLoc, boolean analysisRerun, boolean inspectionResults, String resultsLocation) {
         try {
-            OutputStream output = new FileOutputStream(new File("src/main/resources/config.properties"));
+            String propertiesLocation = "src/main/resources/config.properties";
             Properties properties = new Properties();
+            properties.load(new FileInputStream(propertiesLocation));
 
             properties.setProperty("project.location", projectLoc);
             properties.setProperty("qm.location", qmLoc);
@@ -441,7 +455,7 @@ public class IntegrationTests {
             properties.setProperty("output.inspectionresults", Boolean.toString(inspectionResults));
             properties.setProperty("results.location", resultsLocation);
 
-            properties.store(output, null);
+            properties.store(new FileOutputStream(propertiesLocation), null);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -5,8 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.util.JSON;
 import miltos.diploma.calibration.BenchmarkProjects;
 import miltos.diploma.evaluation.Project;
 import miltos.diploma.qualitymodel.Characteristic;
@@ -44,6 +50,20 @@ public class EvaluationResultsExporter {
             writer.close();
         }catch(IOException e){
             System.out.println(e.getMessage());
+        }
+    }
+
+    public static void exportProjectToMongoDB(Project project, String hostName, int port, String dbName, String collectionName) {
+        String json = new Gson().toJson(project);
+        DBObject doc = (DBObject) JSON.parse(json);
+
+        try {
+            MongoClient client = new MongoClient(hostName, port);
+            DB db = client.getDB(dbName);
+            DBCollection collection = db.getCollection(collectionName);
+            collection.insert(doc);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
     }
 
