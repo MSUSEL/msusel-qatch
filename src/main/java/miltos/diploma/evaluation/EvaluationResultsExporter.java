@@ -57,7 +57,7 @@ public class EvaluationResultsExporter {
     public static void exportProjectToMongoDB(Project project, String hostName, int port, String dbName, String collectionName) {
         String json = new Gson().toJson(project);
         DBObject doc = (DBObject) JSON.parse(json);
-        doc.put("analysis_time", new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(System.currentTimeMillis()));
+        doc.put("analysis_time", new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss").format(System.currentTimeMillis()));
 
         try {
             MongoClient client = new MongoClient(hostName, port);
