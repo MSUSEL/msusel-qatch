@@ -95,6 +95,7 @@
                 <include>LOCMetrics*/**</include>
                 <include>pmd_build.xml</include>
                 <include>Results/</include>
+                <include>resources/</include>
                 <include>Rulesets/</include>
                 <include>tools/</include>
               </includes>
@@ -135,7 +136,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>miltos.diploma.TodoRefactorMe.TestSingleProjectEvaluator</mainClass>
+              <mainClass>miltos.diploma.SingleProjectEvaluator</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>

@@ -3,7 +3,7 @@
 
     <property name="src.dir" value="null"/>
     <property name="dest.dir" value="null"/>
-    <property name="locmetrics.dir" value="src\main\resources\tools\LocMetrics.exe"/>
+    <property name="locmetrics.dir" value="resources\tools\LocMetrics.exe"/>
 
     <target name="locmetrics">
         <exec executable="cmd.exe">

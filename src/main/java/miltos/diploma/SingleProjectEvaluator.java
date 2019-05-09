@@ -1,7 +1,4 @@
-package miltos.diploma.integrationtests;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+package miltos.diploma;
 
 import miltos.diploma.calibration.BenchmarkAnalyzer;
 import miltos.diploma.evaluation.EvaluationResultsExporter;
@@ -10,84 +7,59 @@ import miltos.diploma.evaluation.ProjectCharacteristicsEvaluator;
 import miltos.diploma.evaluation.ProjectEvaluator;
 import miltos.diploma.qualitymodel.*;
 import miltos.diploma.toolkit.*;
-
 import miltos.diploma.utility.ProjectInfo;
 import miltos.diploma.utility.ProjectLanguage;
 import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.util.Enumeration;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
-@Category(IntegrationTest.class)
-public class IntegrationTests {
+/**
+ * Driver class for single project evaluation
+ */
+public class SingleProjectEvaluator {
 
-    //Shorthand reference for accessing config properties
-    private final String  projLocation      = "project.location",
-                          qmLocation        = "qm.location",
-                          rerun             = "analysis.rerun",
-                          inspectionResults = "output.inspectionresults",
-                          resultsLocation   = "results.location",
-                          host              = "db.hostname",
-                          port              = "db.port",
-                          dbName            = "db.dbname",
-                          collName          = "db.collectionname";
+    private static File root = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
 
+    private static final boolean INSPECTION_RESULTS = false;
+    private static final boolean RERUN = true;
+    private static final String QM_LOC = "resources/Models/csharp/qualityModel_csharp.xml";
 
-    private Properties properties = new Properties();
+    private static Properties properties = new Properties();
 
     /**
-     * Tests the single project evaluation test using the following modules:
-     *  - qualitymodel
-     *  - toolkit
-     *  - evaluation
-     *
-     * Note: to reduce repository size, the projects being analyzed are kept in an outside folder.
-     * Adjust the string path provided in singleProjectEvaluatorTest(<PATH_STRING>) if needed.
-     *
-     * The asserted value at the end is the expected TQI of the project and will vary depending what the project
-     * is and which quality model is used. Be sure to adjust the parameter accordingly.
+     * @param args configuration array in following order:
+     *             0: path to project root folder
+     *             1: path to folder to place results
+     *    These arg paths can be relative or full path
      */
-    @Test
-    public void singleProjectEvaluatorTest_Java() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
-        setConfig(
-            "../sample-analysis-projects/java/SimpleJava",
-            "src/main/resources/Models/java/qualityModel_java.xml",
-            true,
-            false,
-            "src/test/output"
-        );
-        singleProjectEvaluatorTest();
-    }
+    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, CloneNotSupportedException {
 
-    @Test
-    public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
-        setConfig(
-            "../sample-analysis-projects/csharp/FxcopFindings",
-            "src/main/resources/Models/csharp/qualityModel_csharp.xml",
-            true,
-            false,
-            "Results/Analysis/SingleProjectResults"
-        );
-        singleProjectEvaluatorTest();
-    }
-
-    private void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException, ParserConfigurationException, SAXException {
-
-        //Instantiate Properties file
-        properties.load(new FileInputStream("src/main/resources/config.properties"));
-        //Reference for majorty language represented by project root
-        ProjectLanguage projectLanguage = ProjectInfo.getProjectLanguage(properties.getProperty(projLocation));
-        //Extract necessary tools if not already extracted (necessary for deployable JAR run)
-        extractResources();
+        clean("resources", "config.properties");
 
         System.out.println("******************************  Project Evaluator *******************************");
         System.out.println();
+
+        // Initialize configurations
+        try {
+            String projectLoc = args[0];
+            String resultsLoc = args[1];
+            setConfig(projectLoc, resultsLoc);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new RuntimeException("Application was not provided project location and results location command line arguments");
+        }
+        properties.load(new FileInputStream("config.properties"));
+        ProjectLanguage projectLanguage = ProjectInfo.getProjectLanguage(properties.getProperty("project.location"));
+        extractResources();
+
 
         /*
          * Step 0 : Load the desired Quality Model
@@ -99,17 +71,17 @@ public class IntegrationTests {
         System.out.println("*");
 
         //Instantiate the Quality Model importer
-        QualityModelLoader qmImporter = new QualityModelLoader(properties.getProperty(qmLocation));
+        QualityModelLoader qmImporter = new QualityModelLoader(properties.getProperty("qm.location"));
 
         //Load the desired quality model
         QualityModel qualityModel = qmImporter.importQualityModel();
 
         System.out.println("* Quality Model successfully loaded..!");
 
+
         /*
          * Step 1: Create the Project object that simulates the desired project
          */
-
         System.out.println("\n**************** STEP 1: Project Loader ******************************");
         System.out.println("*");
         System.out.println("* Loading the desired project...");
@@ -117,13 +89,13 @@ public class IntegrationTests {
         System.out.println("*");
 
         //Get the directory of the project
-        File projectDir = new File(properties.getProperty(projLocation));
+        File projectDir = new File(properties.getProperty("project.location"));
 
         //Create a Project object to store the results of the static analysis and the evaluation of this project...
         Project project = new Project();
 
         //Set the absolute path and the name of the project
-        project.setPath(properties.getProperty(projLocation));
+        project.setPath(properties.getProperty("project.location"));
         project.setName(projectDir.getName());
 
         System.out.println("* Project Name : " + project.getName());
@@ -131,13 +103,14 @@ public class IntegrationTests {
         System.out.println("*");
         System.out.println("* Project successfully loaded..!");
 
+
         /*
          * Step 2: Analyze the desired project against the selected properties
          */
-        if(Boolean.parseBoolean(properties.getProperty(rerun))) {
+        if(Boolean.parseBoolean(properties.getProperty("analysis.rerun"))) {
 
             //Check if the results directory exists and if not create it. Clear it's contents as well.
-            checkCreateClearDirectory(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName());
+            clean(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName());
 
             //Print some messages...
             System.out.println("\n**************** STEP 2: Project Analyzer ****************************");
@@ -162,12 +135,12 @@ public class IntegrationTests {
             else throw new RuntimeException("projectLanguage did not match to a support language enumeration");
 
             metricsAnalyzer.analyze(
-                    properties.getProperty(projLocation),
+                    properties.getProperty("project.location"),
                     BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName(),
                     qualityModel.getProperties()
             );
             findingsAnalyzer.analyze(
-                    properties.getProperty(projLocation),
+                    properties.getProperty("project.location"),
                     BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName(),
                     qualityModel.getProperties()
             );
@@ -177,10 +150,6 @@ public class IntegrationTests {
             System.out.println("* You can find the results at : " + BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH);
             System.out.println();
         }
-
-        /*
-         * Step 3: Import the results of the static analysis tools
-         */
 
         System.out.println("\n**************** STEP 3: Results Importer ****************************");
         System.out.println("*");
@@ -226,10 +195,10 @@ public class IntegrationTests {
         System.out.println("*");
         System.out.println("* The results of the static analysis are successfully imported ");
 
+
         /*
          * Step 4 : Aggregate the static analysis results of the desired project
          */
-
         System.out.println("\n**************** STEP 4: Aggregation Process *************************");
 
         //Print some messages
@@ -271,6 +240,7 @@ public class IntegrationTests {
 
         System.out.println("*");
         System.out.println("* Aggregation process finished..!");
+
 
         /*
          * STEP 5 : Evaluate all the benchmark projects against their thresholds.
@@ -348,117 +318,128 @@ public class IntegrationTests {
 
         //Clear Issues and metrics for more lightweight solution
         //TODO: Remove this ... For debugging purposes only
-        if(!Boolean.parseBoolean(properties.getProperty(inspectionResults))){
+        if(!Boolean.parseBoolean(properties.getProperty("output.inspectionresults"))){
             project.clearIssuesAndMetrics();
         }
 
         EvaluationResultsExporter.exportProjectToJson(
-            project,
-            new File(properties.getProperty(resultsLocation) + File.separator + project.getName() + "_evalResults.json")
-                .getAbsolutePath()
+                project,
+                new File(properties.getProperty("results.location") + File.separator + project.getName() + "_evalResults.json")
+                        .getAbsolutePath()
         );
 
         System.out.println("* Results successfully exported..!");
-        System.out.println("* You can find the results at : " + new File(properties.getProperty(resultsLocation)).getAbsolutePath());
+        System.out.println("* You can find the results at : " + new File(properties.getProperty("results.location")).getAbsolutePath());
 
         /*
          * Step 8.1 : Export the results to the predefined path as well
          */
-        checkCreateClearDirectory(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH);
+        clean(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH);
         //Export the results
         EvaluationResultsExporter.exportProjectToJson(project, new File(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH + "/" + project.getName() + "_evalResults.json").getAbsolutePath());
         System.out.println("* You can find the results at : " + new File(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH).getAbsolutePath() + " as well..!");
 
-        /*
-         * Step 8.2 : Send to DBMS (mongoDB)
-         */
-        EvaluationResultsExporter.exportProjectToMongoDB(
-            project,
-            properties.getProperty(host),
-            Integer.parseInt(properties.getProperty(port)),
-            properties.getProperty(dbName),
-            properties.getProperty(collName)
-        );
-
-        /*
-         * (Test Step) Step 9: Assert TQI is its expected value
-         */
-        File evalResults = new File(System.getProperty("user.dir") + "/Results/Evaluation/SingleProjectResults/" + project.getName() + "_evalResults.json" );
-        JsonParser parser = new JsonParser();
-        JsonObject data = (JsonObject) parser.parse(new FileReader(evalResults));
-        double eval = data.getAsJsonObject("tqi").get("eval").getAsDouble();
-        Assert.assertTrue (eval < 0.9999 && eval > 0.0001);
     }
 
+    private static void clean(String... filePaths) throws IOException {
+        for (String f : filePaths) {
+            File toDelete = new File(f);
+            if (Files.exists(toDelete.toPath())) {
+                FileUtils.forceDelete(toDelete);
+                System.out.println("Deleted File " + f);
+            }
+        }
+    }
 
-    /**
-     * A method that checks the predefined directory structure, creates the
-     * directory tree if it doesn't exists and clears it's contents for the
-     * new analysis (optional).
-     */
-    private void checkCreateClearDirectory(String path){
+    private static void extractResources() {
 
-        File dir = new File(path);
+        String protocol = SingleProjectEvaluator.class.getResource("").getProtocol();
 
-        //Check if the directory exists
-        if(!dir.isDirectory() || !dir.exists()) dir.mkdirs();
+        if (Objects.equals(protocol, "jar")) {
+            try {
+                extractResourcesToTempFolder(root);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-        //Clear previous results
-        try {
-            FileUtils.cleanDirectory(dir);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        else if (Objects.equals(protocol, "file")) {
+
+            String resourcesLoc = "src/main/resources/";
+            File resourcesFolder = new File(resourcesLoc);
+            try {
+                FileUtils.copyDirectoryToDirectory(resourcesFolder, root);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        else {
+            throw new RuntimeException("Unable to determine if project is running from IDE or JAR");
         }
     }
 
     /**
-     * Automatically extract necessary scripts and tools for analaysis run.
+     * Code from https://stackoverflow.com/questions/1529611/how-to-write-a-java-program-which-can-extract-a-jar-file-and-store-its-data-in-s/1529707#1529707
+     * by user Jamesst20
+     *
+     * Used when running program as a JAR.
+     *
+     * Takes resources in the resources folder within the JAR and copies them to a
+     * resources folder in the same directory as the JAR. Also moves the ant build.xml
+     * file to root directory.
      */
-    private void extractResources() {
-        //Set filepath for resources depending if run from jar or in IDE
-        String buildLoc, pmd_buildLoc, rulesetsLoc, toolsLoc;
-        File rootDirectory = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
+    private static void extractResourcesToTempFolder(File root) throws IOException {
 
-        String resourcesLoc = "src/main/resources/";
-        buildLoc = resourcesLoc + "Ant/build.xml";
-        pmd_buildLoc = resourcesLoc + "Ant/pmd_build.xml";
-        rulesetsLoc = resourcesLoc + "Rulesets";
-        toolsLoc = resourcesLoc + "tools";
+        String rootPath = SingleProjectEvaluator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        String destPath = root.getCanonicalPath().concat(File.separator);
 
-        File buildXml = new File(buildLoc);
-        File pmd_buildXml = new File(pmd_buildLoc);
-        File rulesetsFolder = new File(rulesetsLoc);
-        File toolsFolder = new File(toolsLoc);
-
-        try {
-            FileUtils.copyFileToDirectory(buildXml, rootDirectory);
-            FileUtils.copyFileToDirectory(pmd_buildXml, rootDirectory);
-            FileUtils.copyDirectoryToDirectory(rulesetsFolder, rootDirectory);
-            FileUtils.copyDirectoryToDirectory(toolsFolder, rootDirectory);
-        } catch (IOException e) {
-            e.printStackTrace();
+        //Recursively build resources folder from JAR sibling to JAR file
+        JarFile jarFile = new JarFile(rootPath);
+        Enumeration<JarEntry> enums = jarFile.entries();
+        while (enums.hasMoreElements()) {
+            JarEntry entry = enums.nextElement();
+            if (entry.getName().startsWith("resources")) {
+                File toWrite = new File(destPath + entry.getName());
+                if (entry.isDirectory()) {
+                    boolean mkdirsResult = toWrite.mkdirs();
+                    continue;
+                }
+                InputStream in = new BufferedInputStream(jarFile.getInputStream(entry));
+                OutputStream out = new BufferedOutputStream(new FileOutputStream(toWrite));
+                byte[] buffer = new byte[2048];
+                for (;;) {
+                    int nBytes = in.read(buffer);
+                    if (nBytes <= 0) {
+                        break;
+                    }
+                    out.write(buffer, 0, nBytes);
+                }
+                out.flush();
+                out.close();
+                in.close();
+            }
         }
     }
 
     /**
      * Update config.properties with desired user input
      */
-    private void setConfig(String projectLoc, String qmLoc, boolean analysisRerun, boolean inspectionResults, String resultsLocation) {
+    private static void setConfig(String projectLoc, String resultsLocation) {
         try {
-            String propertiesLocation = "src/main/resources/config.properties";
-            Properties properties = new Properties();
-            properties.load(new FileInputStream(propertiesLocation));
+            properties.load(SingleProjectEvaluator.class.getClassLoader().getResourceAsStream("resources/config.properties"));
 
             properties.setProperty("project.location", projectLoc);
-            properties.setProperty("qm.location", qmLoc);
-            properties.setProperty("analysis.rerun", Boolean.toString(analysisRerun));
-            properties.setProperty("output.inspectionresults", Boolean.toString(inspectionResults));
+            properties.setProperty("qm.location", QM_LOC);
+            properties.setProperty("analysis.rerun", Boolean.toString(RERUN));
+            properties.setProperty("output.inspectionresults", Boolean.toString(INSPECTION_RESULTS));
             properties.setProperty("results.location", resultsLocation);
 
-            properties.store(new FileOutputStream(propertiesLocation), null);
+            properties.store(new FileOutputStream(new File(System.getProperty("user.dir") + File.separator + "config.properties")), null);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

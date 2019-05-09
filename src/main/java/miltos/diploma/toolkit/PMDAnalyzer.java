@@ -40,22 +40,30 @@ public class PMDAnalyzer implements Analyzer{
 
         //Set the path delimiter based on the OS that is used
         ProcessBuilder builder;
+        String rootDirectory = System.getProperty("user.dir");
 
         if(System.getProperty("os.name").contains("Windows")){
-            src = "\"" + src + "\"";
-            dest = "\"" + dest + "\"";
-            ruleset = "\"" + ruleset + "\"";
             builder = new ProcessBuilder(
                 "cmd.exe",
                 "/c",
-                "ant -buildfile pmd_build.xml -Dsrc.dir=" + src +" -Ddest.dir="+ dest + " -Druleset.path=" + ruleset + " -Dfilename=" + filename
+                "ant -Dbasedir=" + rootDirectory +
+                " -f resources/Ant/pmd_build.xml" +
+                " -Dsrc.dir=" + src +
+                " -Ddest.dir="+ dest +
+                " -Druleset.path=" + ruleset +
+                " -Dfilename=" + filename
             );
         }
         else {
             builder = new ProcessBuilder(
                 "sh",
                 "-c",
-                "ant -buildfile pmd_build.xml -Dsrc.dir=" + src +" -Ddest.dir="+ dest + " -Druleset.path=" + ruleset + " -Dfilename=" + filename
+                "ant -Dbasedir=" + rootDirectory +
+                " -f resources/Ant/pmd_build.xml" +
+                " -Dsrc.dir=" + src +
+                " -Ddest.dir="+ dest +
+                " -Druleset.path=" + ruleset +
+                " -Dfilename=" + filename
             );
         }
 
