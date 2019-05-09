@@ -1,5 +1,10 @@
 package miltos.diploma;
 
+import miltos.diploma.calibration.BenchmarkAnalyzer;
+import miltos.diploma.evaluation.Project;
+import miltos.diploma.qualitymodel.QualityModel;
+import miltos.diploma.qualitymodel.QualityModelLoader;
+import miltos.diploma.toolkit.*;
 import miltos.diploma.utility.ProjectInfo;
 import miltos.diploma.utility.ProjectLanguage;
 import org.apache.commons.io.FileUtils;
@@ -50,11 +55,102 @@ public class SingleProjectEvaluator {
         properties.load(new FileInputStream("config.properties"));
         ProjectLanguage projectLanguage = ProjectInfo.getProjectLanguage(properties.getProperty("project.location"));
         extractResources();
+
+
+        /*
+         * Step 0 : Load the desired Quality Model
+         */
+        System.out.println("**************** STEP 0: Quality Model Loader ************************");
+        System.out.println("*");
+        System.out.println("* Loading the desired Quality Model...");
+        System.out.println("* Please wait...");
+        System.out.println("*");
+
+        //Instantiate the Quality Model importer
+        QualityModelLoader qmImporter = new QualityModelLoader(properties.getProperty("qm.location"));
+
+        //Load the desired quality model
+        QualityModel qualityModel = qmImporter.importQualityModel();
+
+        System.out.println("* Quality Model successfully loaded..!");
+
+
+        /*
+         * Step 1: Create the Project object that simulates the desired project
+         */
+        System.out.println("\n**************** STEP 1: Project Loader ******************************");
+        System.out.println("*");
+        System.out.println("* Loading the desired project...");
+        System.out.println("* Please wait...");
+        System.out.println("*");
+
+        //Get the directory of the project
+        File projectDir = new File(properties.getProperty("project.location"));
+
+        //Create a Project object to store the results of the static analysis and the evaluation of this project...
+        Project project = new Project();
+
+        //Set the absolute path and the name of the project
+        project.setPath(properties.getProperty("project.location"));
+        project.setName(projectDir.getName());
+
+        System.out.println("* Project Name : " + project.getName());
+        System.out.println("* Project Path : " + project.getPath());
+        System.out.println("*");
+        System.out.println("* Project successfully loaded..!");
+
+
+        /*
+         * Step 2: Analyze the desired project against the selected properties
+         */
+        if(Boolean.parseBoolean(properties.getProperty("analysis.rerun"))) {
+
+            //Check if the results directory exists and if not create it. Clear it's contents as well.
+            clean(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName());
+
+            //Print some messages...
+            System.out.println("\n**************** STEP 2: Project Analyzer ****************************");
+            System.out.println("*");
+            System.out.println("* Analyzing the desired project");
+            System.out.println("* Please wait...");
+            System.out.println("*");
+
+            //Instantiate the available single project analyzers of the system ...
+            //(TODO): Refactor into Builder or Template design pattern and move into framework classes
+            Analyzer metricsAnalyzer;
+            Analyzer findingsAnalyzer;
+
+            if (projectLanguage == ProjectLanguage.Java) {
+                metricsAnalyzer = new CKJMAnalyzer();
+                findingsAnalyzer = new PMDAnalyzer();
+            }
+            else if (projectLanguage == ProjectLanguage.CSharp) {
+                metricsAnalyzer = new LOCMetricsAnalyzer();
+                findingsAnalyzer = new FxcopAnalyzer();
+            }
+            else throw new RuntimeException("projectLanguage did not match to a support language enumeration");
+
+            metricsAnalyzer.analyze(
+                    properties.getProperty("project.location"),
+                    BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName(),
+                    qualityModel.getProperties()
+            );
+            findingsAnalyzer.analyze(
+                    properties.getProperty("project.location"),
+                    BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName(),
+                    qualityModel.getProperties()
+            );
+
+            //Print some messages to the user
+            System.out.println("* The analysis is finished");
+            System.out.println("* You can find the results at : " + BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH);
+            System.out.println();
+        }
     }
 
     private static void clean(String... filePaths) throws IOException {
         for (String f : filePaths) {
-            File toDelete = new File(root.toString(), f);
+            File toDelete = new File(f);
             if (Files.exists(toDelete.toPath())) {
                 FileUtils.forceDelete(toDelete);
                 System.out.println("Deleted File " + f);
