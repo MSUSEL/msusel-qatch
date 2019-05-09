@@ -65,7 +65,7 @@ public class FxcopAnalyzer implements Analyzer {
      "cmd.exe",
                 "/c",
                 "ant -Dbasedir=" + rootDirectory +
-                " -f src/main/resources/fxcop_build.xml" +
+                " -f resources/Ant/fxcop_build.xml" +
                 " -Dsrc.dir=" + srcExt +
                 " -Ddest.dir=" + destExt +
                 " -Druleset.file=" + rulesetExt);

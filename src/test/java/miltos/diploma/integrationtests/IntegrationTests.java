@@ -420,8 +420,8 @@ public class IntegrationTests {
         File rootDirectory = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
 
         String resourcesLoc = "src/main/resources/";
-        buildLoc = resourcesLoc + "build.xml";
-        pmd_buildLoc = resourcesLoc + "pmd_build.xml";
+        buildLoc = resourcesLoc + "Ant/build.xml";
+        pmd_buildLoc = resourcesLoc + "Ant/pmd_build.xml";
         rulesetsLoc = resourcesLoc + "Rulesets";
         toolsLoc = resourcesLoc + "tools";
 

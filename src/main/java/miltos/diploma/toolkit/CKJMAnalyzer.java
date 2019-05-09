@@ -39,14 +39,25 @@ public class CKJMAnalyzer implements Analyzer {
     public void analyze(String src, String dest){
 
         ProcessBuilder builder;
+        String rootDirectory = System.getProperty("user.dir");
 
         if(System.getProperty("os.name").contains("Windows")){
-            src = "\"" + src + "\"";
-            dest = "\"" + dest + "\"";
-            builder = new ProcessBuilder("cmd.exe","/c","ant  -Dsrc.dir="+ src +" -Ddest.dir="+ dest);
+            builder = new ProcessBuilder(
+                "cmd.exe",
+                "/c",
+                "ant -Dbasedir=" + rootDirectory +
+                " -f resources/Ant/ckjm_build.xml" +
+                " -Dsrc.dir=" + src +
+                " -Ddest.dir="+ dest);
         }
         else {
-            builder = new ProcessBuilder("sh","-c","ant  -Dsrc.dir="+ src +" -Ddest.dir="+ dest);
+            builder = new ProcessBuilder(
+                "sh",
+                "/c",
+                "ant -Dbasedir=" + rootDirectory +
+                " -f resources/Ant/ckjm_build.xml" +
+                " -Dsrc.dir=" + src +
+                " -Ddest.dir="+ dest);
         }
 
         builder.redirectErrorStream(true);

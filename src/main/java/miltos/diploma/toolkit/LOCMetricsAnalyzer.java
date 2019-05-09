@@ -41,7 +41,7 @@ public class LOCMetricsAnalyzer implements Analyzer {
                     "cmd.exe",
                     "/c",
                     "ant -Dbasedir=" + rootDirectory +
-                    " -f src/main/resources/locmetrics_build.xml" +
+                    " -f resources/Ant/locmetrics_build.xml" +
                     " -Dsrc.dir=" + src +
                     " -Ddest.dir=" + tempDest.toString()
                 );

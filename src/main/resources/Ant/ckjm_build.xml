@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Ckjm analysis" default="ckjm" basedir=".">
+<project name="Ckjm analysis" default="ckjm" basedir="..">
 	<description>
 
 	</description>
@@ -31,7 +31,7 @@
 		<!-- Configure the ckjm task by setting its classpath -->
 		<taskdef name="ckjm" classname="gr.spinellis.ckjm.ant.CkjmTask">
 			<classpath>
-				 <pathelement location="./tools/runable-ckjm_ext-2.2.jar"/>
+				 <pathelement location="../tools/runable-ckjm_ext-2.2.jar"/>
 			</classpath>
 		</taskdef>
 

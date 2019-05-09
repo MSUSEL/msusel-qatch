@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
-<project name="PMD Static Analysis" default="pmd" basedir=".">
+<project name="PMD Static Analysis" default="pmd" basedir="..">
 
 	<!-- Src and destination directories to search for java files -->
 	<property name="src.dir" value="src"/>
 	<property name="dest.dir" value="dest"/>
 	<!-- PMDs home folder. Nedded for adding the needed APIs (.jars) to the classpath-->
-	<property name="pmd.dir" value="./tools/pmd-bin-5.4.1"/>
+	<property name="pmd.dir" value="../tools/pmd-bin-5.4.1"/>
 	
 	<!-- The name of the result xml file -->
 	<property name="ruleset.path" value="ruleset.path"/>
@@ -13,7 +13,7 @@
 	
 	<!-- The pmd classpath containing all the needed libraries in order to function -->
 	<path id="pmd.classpath">
-		<fileset dir="${pmd.dir}\lib">
+		<fileset dir="../tools/pmd-bin-5.4.1/lib">
 			<include name="**/*.jar"/>
 		</fileset>
 	</path>
