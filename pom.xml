@@ -135,7 +135,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>miltos.diploma.TodoRefactorMe.TestSingleProjectEvaluator</mainClass>
+              <mainClass>miltos.diploma.SingleProjectEvaluator</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
