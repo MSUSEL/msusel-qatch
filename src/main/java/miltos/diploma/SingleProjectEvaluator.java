@@ -51,10 +51,21 @@ public class SingleProjectEvaluator {
 
     }
 
-    private static void extractResources() {
+    private static void extractResources() throws IOException {
+        //temp
+        System.out.println("entered extract resources");
+
+        File rootDirectory = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
+
+        // If resources folder exist, delete it.
+        if (Files.exists(new File(rootDirectory, "resources").toPath())) {
+            FileUtils.forceDelete(new File(rootDirectory, "resources"));
+            System.out.println("Deleted resources folder");
+        }
+
         //Set filepath for resources depending if run from jar or in IDE
         String buildLoc, configLoc, pmd_buildLoc, rulesetsLoc, toolsLoc;
-        File rootDirectory = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
+
 
         String protocol = SingleProjectEvaluator.class.getResource("").getProtocol();
 
@@ -67,26 +78,27 @@ public class SingleProjectEvaluator {
         }
 
         else if (Objects.equals(protocol, "file")) {
+
             File tempResources = new File(rootDirectory, "resources");
 
             String resourcesLoc = "src/main/resources/";
-            buildLoc = resourcesLoc + "Ant/build.xml";
-            configLoc = resourcesLoc + "config.xml";
-            pmd_buildLoc = resourcesLoc + "Ant/pmd_build.xml";
-            rulesetsLoc = resourcesLoc + "Rulesets";
+//            buildLoc = resourcesLoc + "Ant/build.xml";
+//            configLoc = resourcesLoc + "config.xml";
+//            pmd_buildLoc = resourcesLoc + "Ant/pmd_build.xml";
+//            rulesetsLoc = resourcesLoc + "Rulesets";
             toolsLoc = resourcesLoc + "tools";
 
-            File buildXml = new File(buildLoc);
-            File configXml = new File(configLoc);
-            File pmd_buildXml = new File(pmd_buildLoc);
-            File rulesetsFolder = new File(rulesetsLoc);
+//            File buildXml = new File(buildLoc);
+//            File configXml = new File(configLoc);
+//            File pmd_buildXml = new File(pmd_buildLoc);
+//            File rulesetsFolder = new File(rulesetsLoc);
             File toolsFolder = new File(toolsLoc);
 
             try {
-                FileUtils.copyFileToDirectory(buildXml, tempResources);
-                FileUtils.copyFileToDirectory(configXml, tempResources);
-                FileUtils.copyFileToDirectory(pmd_buildXml, tempResources);
-                FileUtils.copyDirectoryToDirectory(rulesetsFolder, tempResources);
+//                FileUtils.copyFileToDirectory(buildXml, tempResources);
+//                FileUtils.copyFileToDirectory(configXml, tempResources);
+//                FileUtils.copyFileToDirectory(pmd_buildXml, tempResources);
+//                FileUtils.copyDirectoryToDirectory(rulesetsFolder, tempResources);
                 FileUtils.copyDirectoryToDirectory(toolsFolder, tempResources);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -109,15 +121,11 @@ public class SingleProjectEvaluator {
      * file to root directory.
      */
     private static void extractResourcesToTempFolder(File root) throws IOException {
-        File resources = new File(root, "resources");
+        // temp
+        System.out.println("Entered extractResourcesToTempFolder");
+
         String rootPath = SingleProjectEvaluator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         String destPath = root.getCanonicalPath().concat(File.separator);
-
-        //If folder exist, delete it.
-        if (Files.exists(resources.toPath())) {
-            FileUtils.forceDelete(new File(root, "resources"));
-            System.out.println("Deleted resources folder");
-        }
 
         //Recursively build resources folder from JAR sibling to JAR file
         JarFile jarFile = new JarFile(rootPath);
@@ -127,7 +135,7 @@ public class SingleProjectEvaluator {
             if (entry.getName().startsWith("resources")) {
                 File toWrite = new File(destPath + entry.getName());
                 if (entry.isDirectory()) {
-                    toWrite.mkdirs();
+                    boolean mkdirsResult = toWrite.mkdirs();
                     continue;
                 }
                 InputStream in = new BufferedInputStream(jarFile.getInputStream(entry));
@@ -145,13 +153,6 @@ public class SingleProjectEvaluator {
                 in.close();
             }
         }
-
-        //Move necessary files to root directory
-        FileUtils.copyFileToDirectory(new File(resources, "Ant/build.xml"), root);
-        FileUtils.copyFileToDirectory(new File(resources, "config.xml"), root);
-        FileUtils.copyFileToDirectory(new File(resources, "Ant/pmd_build.xml"), root);
-        FileUtils.copyDirectoryToDirectory(new File(resources, "Rulesets"), root);
-        FileUtils.copyDirectoryToDirectory(new File(resources, "tools"), root);
     }
 
     /**
