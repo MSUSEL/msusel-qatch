@@ -18,6 +18,8 @@ import java.util.jar.JarFile;
  */
 public class SingleProjectEvaluator {
 
+    private static File root = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
+
     private static final boolean INSPECTION_RESULTS = false;
     private static final boolean RERUN = true;
     private static final String QM_LOC = "resources/Models/csharp/qualityModel_csharp.xml";
@@ -31,6 +33,8 @@ public class SingleProjectEvaluator {
      *    These arg paths can be relative or full path
      */
     public static void main(String[] args) throws IOException {
+
+        clean("resources", "config.properties");
 
         System.out.println("******************************  Project Evaluator *******************************");
         System.out.println();
@@ -46,32 +50,25 @@ public class SingleProjectEvaluator {
         properties.load(new FileInputStream("config.properties"));
         ProjectLanguage projectLanguage = ProjectInfo.getProjectLanguage(properties.getProperty("project.location"));
         extractResources();
-
-
-
     }
 
-    private static void extractResources() throws IOException {
-        //temp
-        System.out.println("entered extract resources");
-
-        File rootDirectory = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
-
-        // If resources folder exist, delete it.
-        if (Files.exists(new File(rootDirectory, "resources").toPath())) {
-            FileUtils.forceDelete(new File(rootDirectory, "resources"));
-            System.out.println("Deleted resources folder");
+    private static void clean(String... filePaths) throws IOException {
+        for (String f : filePaths) {
+            File toDelete = new File(root.toString(), f);
+            if (Files.exists(toDelete.toPath())) {
+                FileUtils.forceDelete(toDelete);
+                System.out.println("Deleted File " + f);
+            }
         }
+    }
 
-        //Set filepath for resources depending if run from jar or in IDE
-        String buildLoc, configLoc, pmd_buildLoc, rulesetsLoc, toolsLoc;
-
+    private static void extractResources() {
 
         String protocol = SingleProjectEvaluator.class.getResource("").getProtocol();
 
         if (Objects.equals(protocol, "jar")) {
             try {
-                extractResourcesToTempFolder(rootDirectory);
+                extractResourcesToTempFolder(root);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -79,27 +76,10 @@ public class SingleProjectEvaluator {
 
         else if (Objects.equals(protocol, "file")) {
 
-            File tempResources = new File(rootDirectory, "resources");
-
             String resourcesLoc = "src/main/resources/";
-//            buildLoc = resourcesLoc + "Ant/build.xml";
-//            configLoc = resourcesLoc + "config.xml";
-//            pmd_buildLoc = resourcesLoc + "Ant/pmd_build.xml";
-//            rulesetsLoc = resourcesLoc + "Rulesets";
-            toolsLoc = resourcesLoc + "tools";
-
-//            File buildXml = new File(buildLoc);
-//            File configXml = new File(configLoc);
-//            File pmd_buildXml = new File(pmd_buildLoc);
-//            File rulesetsFolder = new File(rulesetsLoc);
-            File toolsFolder = new File(toolsLoc);
-
+            File resourcesFolder = new File(resourcesLoc);
             try {
-//                FileUtils.copyFileToDirectory(buildXml, tempResources);
-//                FileUtils.copyFileToDirectory(configXml, tempResources);
-//                FileUtils.copyFileToDirectory(pmd_buildXml, tempResources);
-//                FileUtils.copyDirectoryToDirectory(rulesetsFolder, tempResources);
-                FileUtils.copyDirectoryToDirectory(toolsFolder, tempResources);
+                FileUtils.copyDirectoryToDirectory(resourcesFolder, root);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -121,8 +101,6 @@ public class SingleProjectEvaluator {
      * file to root directory.
      */
     private static void extractResourcesToTempFolder(File root) throws IOException {
-        // temp
-        System.out.println("Entered extractResourcesToTempFolder");
 
         String rootPath = SingleProjectEvaluator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         String destPath = root.getCanonicalPath().concat(File.separator);
