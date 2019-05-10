@@ -53,7 +53,7 @@ public class IntegrationTests {
      * The asserted value at the end is the expected TQI of the project and will vary depending what the project
      * is and which quality model is used. Be sure to adjust the parameter accordingly.
      */
-    @Test
+//    @Test
     public void singleProjectEvaluatorTest_Java() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException, InterruptedException {
         setConfig(
             "../sample-analysis-projects/java/SimpleJava",
@@ -65,7 +65,7 @@ public class IntegrationTests {
         singleProjectEvaluatorTest();
     }
 
-    @Test
+//    @Test
     public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException, InterruptedException {
         setConfig(
             "../sample-analysis-projects/csharp/FxcopFindings",
