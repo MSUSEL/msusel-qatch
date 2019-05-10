@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="FxCop Static Analysis" default="fxcop" basedir=".">
+<project name="FxCop Static Analysis" default="fxcop" basedir="">
 
     <!-- FxCop analysis parameters -->
     <property name="src.dir" value="null"/>

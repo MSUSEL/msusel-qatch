@@ -360,10 +360,10 @@ public class SingleProjectEvaluator {
 
         else if (Objects.equals(protocol, "file")) {
 
-            String resourcesLoc = "src/main/resources/";
+            String resourcesLoc = "src/main/resources";
             File resourcesFolder = new File(resourcesLoc);
             try {
-                FileUtils.copyDirectoryToDirectory(resourcesFolder, root);
+                FileUtils.copyDirectoryToDirectory(resourcesFolder , root);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="LOCMetrics Static Analysis" default="locmetrics" basedir=".">
+<project name="LOCMetrics Static Analysis" default="locmetrics" basedir="">
 
     <property name="src.dir" value="null"/>
     <property name="dest.dir" value="null"/>

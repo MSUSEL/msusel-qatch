@@ -32,7 +32,7 @@ public class LOCMetricsAnalyzer implements Analyzer {
                 String sep = File.separator;
                 pb = new ProcessBuilder(
                     "cmd.exe", "/c",
-                    "tools"+sep+"LocMetrics.exe", "-i", src, "-o", dest
+                    "resources"+sep+"tools"+sep+"LocMetrics.exe", "-i", src, "-o", dest
                 );
             }
             else throw new RuntimeException("LOCMetrics tool only supported on Windows operating systems.");

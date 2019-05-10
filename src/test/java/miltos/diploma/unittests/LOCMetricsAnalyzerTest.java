@@ -14,9 +14,9 @@ public class LOCMetricsAnalyzerTest {
     private final String src = "..\\sample-analysis-projects\\csharp\\SimpleCSharp";
     private final String dest = "src\\test\\output";
     private File root = new File(System.getProperty("user.dir"));
-    private String toolsLoc = "src/main/resources/tools";
-    private File resourcesFolder = new File(toolsLoc);
-    private File rootTools = new File(root, "tools");
+    private String resourcesLoc = "src/main/resources";
+    private File resourcesFolder = new File(resourcesLoc);
+    private File rootResources = new File(root, "resources");
 
     /**
      * Ensures the LOCMetrics tool successfully runs on a small C# project
@@ -47,6 +47,8 @@ public class LOCMetricsAnalyzerTest {
         // this would be to parse the XML output for expected entries, but
         // that approach adds substantial run time to the unit test
         Assert.assertEquals(553, results.length(), 150);
+
+        clean();
     }
 
     private void clean() throws IOException {
@@ -55,8 +57,8 @@ public class LOCMetricsAnalyzerTest {
             FileUtils.cleanDirectory(output);
         }
         else output.mkdirs();
-//        if (rootTools.exists()) {
-//            FileUtils.cleanDirectory((rootTools));
-//        }
+        if (rootResources.exists()) {
+            FileUtils.cleanDirectory((rootResources));
+        }
     }
 }

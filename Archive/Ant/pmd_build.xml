@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="PMD Static Analysis" default="pmd" basedir=".">
+<project name="PMD Static Analysis" default="pmd" basedir="">
 
 	<!-- Src and destination directories to search for java files -->
 	<property name="src.dir" value="src"/>
