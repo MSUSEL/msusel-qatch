@@ -49,14 +49,17 @@ public class FxcopAnalyzer implements Analyzer {
         ProcessBuilder pb;
         String destFile = dest + sep + filename;
         Set<String> assemblyDirs = FileUtility.findAssemblyDirectories(src, ".exe", ".dll");
+        Set<String> removeDirs = new HashSet<>();
 
         for (String s : assemblyDirs) {
             for (String directory : s.split("\\\\")) {
                 if (directory.trim().equals("obj")) {
-                    assemblyDirs.remove(s);
+                    removeDirs.add(s);
                 }
             }
         }
+
+        assemblyDirs.removeAll(removeDirs);
 
         StringBuilder sb = new StringBuilder("\"");
         assemblyDirs.forEach(dir -> sb.append("/f:").append(dir).append(" "));
