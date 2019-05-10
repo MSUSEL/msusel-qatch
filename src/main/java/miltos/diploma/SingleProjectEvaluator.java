@@ -56,7 +56,7 @@ public class SingleProjectEvaluator {
             String resultsLoc = args[1];
             setConfig(projectLoc, resultsLoc);
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new RuntimeException("Application was not provided project location and results location command line arguments");
+            throw new RuntimeException("Application was not provided Project Location and Results Location command line arguments");
         }
         properties.load(new FileInputStream("config.properties"));
         ProjectLanguage projectLanguage = ProjectInfo.getProjectLanguage(properties.getProperty("project.location"));
@@ -336,6 +336,13 @@ public class SingleProjectEvaluator {
 
         System.out.println("* Results successfully exported..!");
         System.out.println("* You can find the results at : " + new File(properties.getProperty("results.location")).getAbsolutePath());
+
+
+        /*
+         * Step Z : Clean up unwanted files before exit
+         */
+        clean("resources", "Results", "config.properties");
+
     }
 
 
@@ -359,14 +366,16 @@ public class SingleProjectEvaluator {
         }
     }
 
-    private static void clean(String... filePaths) throws IOException {
-        for (String f : filePaths) {
-            File toDelete = new File(f);
-            if (Files.exists(toDelete.toPath())) {
-                FileUtils.forceDelete(toDelete);
-                System.out.println("Deleted File " + f);
+    private static void clean(String... filePaths)  {
+        try {
+            for (String f : filePaths) {
+                File toDelete = new File(f);
+                if (Files.exists(toDelete.toPath())) {
+                    FileUtils.forceDelete(toDelete);
+                    System.out.println("Deleted File " + f);
+                }
             }
-        }
+        } catch (IOException e) { System.out.println(e.getMessage()); }
     }
 
     private static void extractResources() throws URISyntaxException {
@@ -426,7 +435,7 @@ public class SingleProjectEvaluator {
             if (entry.getName().startsWith("resources")) {
                 File toWrite = new File(destPath + entry.getName());
                 if (entry.isDirectory()) {
-                    boolean mkdirsResult = toWrite.mkdirs();
+                    toWrite.mkdirs();
                     continue;
                 }
                 InputStream in = new BufferedInputStream(jarFile.getInputStream(entry));
