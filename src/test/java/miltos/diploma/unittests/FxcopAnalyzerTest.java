@@ -18,7 +18,7 @@ public class FxcopAnalyzerTest {
     private final String dest = "src/test/output";
 
     @Test
-    public void testAnalyze() throws IOException {
+    public void testAnalyze() throws IOException, InterruptedException {
         clean();
 
         Measure measure01 = new Measure(
@@ -53,7 +53,7 @@ public class FxcopAnalyzerTest {
         Assert.assertEquals("propertyName02.xml", result02.getName());
 
         // XML file has expected number of bytes
-        Assert.assertEquals(3464, result01.length(), 500);
+        Assert.assertEquals(2844, result01.length(), 500);
         Assert.assertEquals(result01.length(), result02.length(), 500);
     }
 
@@ -63,7 +63,7 @@ public class FxcopAnalyzerTest {
      * results.
      */
     @Test
-    public void testAnalyzeSubroutine() throws IOException {
+    public void testAnalyzeSubroutine() throws IOException, InterruptedException {
         clean();
 
         String ruleset = "src/main/resources/Rulesets/CSharpTestModel/DesignRules.dll",
@@ -82,7 +82,7 @@ public class FxcopAnalyzerTest {
         // XML file has approximate expected number of bytes. A better way to test
         // this would be to parse the XML output for expected entries, but
         // that approach adds substantial run time to the unit test
-        Assert.assertEquals(3464, results.length(), 200);
+        Assert.assertEquals(2844, results.length(), 200);
 
     }
 

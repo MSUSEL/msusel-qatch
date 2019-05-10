@@ -114,7 +114,7 @@ public class SingleProjectEvaluator {
         if(Boolean.parseBoolean(properties.getProperty("analysis.rerun"))) {
 
             //Check if the results directory exists and if not create it. Clear it's contents as well.
-            clean(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName());
+            checkCreateClearDirectory(BenchmarkAnalyzer.SINGLE_PROJ_RESULT_PATH + File.separator + project.getName());
 
             //Print some messages...
             System.out.println("\n**************** STEP 2: Project Analyzer ****************************");
@@ -334,6 +334,27 @@ public class SingleProjectEvaluator {
 
         System.out.println("* Results successfully exported..!");
         System.out.println("* You can find the results at : " + new File(properties.getProperty("results.location")).getAbsolutePath());
+    }
+
+
+    /**
+     * A method that checks the predefined directory structure, creates the
+     * directory tree if it doesn't exists and clears it's contents for the
+     * new analysis (optional).
+     */
+    private static void checkCreateClearDirectory(String path){
+
+        File dir = new File(path);
+
+        //Check if the directory exists
+        if(!dir.isDirectory() || !dir.exists()) dir.mkdirs();
+
+        //Clear previous results
+        try {
+            FileUtils.cleanDirectory(dir);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private static void clean(String... filePaths) throws IOException {

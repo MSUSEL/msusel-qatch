@@ -24,24 +24,21 @@ public class LOCMetricsAnalyzer implements Analyzer {
     public static final String RESULT_FILE_NAME = "LocMetricsFolders.csv";
 
     @Override
-    public void analyze(String src, String dest) throws InterruptedException {
+    public void analyze(String src, String dest) throws InterruptedException, IOException {
 
         ProcessBuilder pb;
-        try {
-            if(System.getProperty("os.name").contains("Windows")){
-                String sep = File.separator;
-                pb = new ProcessBuilder(
-                    "cmd.exe", "/c",
-                    "resources"+sep+"tools"+sep+"LocMetrics.exe", "-i", src, "-o", dest
-                );
-            }
-            else throw new RuntimeException("LOCMetrics tool only supported on Windows operating systems.");
+        if(System.getProperty("os.name").contains("Windows")){
+            String sep = File.separator;
+            pb = new ProcessBuilder(
+                "cmd.exe", "/c",
+                "resources"+sep+"tools"+sep+"LocMetrics.exe", "-i", src, "-o", dest
+            );
+        }
+        else throw new RuntimeException("LOCMetrics tool only supported on Windows operating systems.");
 
-            pb.redirectErrorStream(true);
-            Process p = pb.start();
-            p.waitFor();
-
-        } catch (IOException e) { e.printStackTrace(); }
+        pb.redirectErrorStream(true);
+        Process p = pb.start();
+        p.waitFor();
     }
 
     @Override
@@ -50,7 +47,7 @@ public class LOCMetricsAnalyzer implements Analyzer {
     }
 
     @Override
-    public void analyze(String src, String dest, PropertySet properties) throws InterruptedException {
+    public void analyze(String src, String dest, PropertySet properties) throws InterruptedException, IOException {
         // temp solution: just run LOCMetrics in order to get LOC metric
         analyze(src, dest);
     }
