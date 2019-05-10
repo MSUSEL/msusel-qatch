@@ -54,7 +54,7 @@ public class IntegrationTests {
      * is and which quality model is used. Be sure to adjust the parameter accordingly.
      */
     @Test
-    public void singleProjectEvaluatorTest_Java() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
+    public void singleProjectEvaluatorTest_Java() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException, InterruptedException {
         setConfig(
             "../sample-analysis-projects/java/SimpleJava",
             "src/main/resources/Models/java/qualityModel_java.xml",
@@ -66,7 +66,7 @@ public class IntegrationTests {
     }
 
     @Test
-    public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException {
+    public void singleProjectEvaluatorTest_CSharp() throws IOException, CloneNotSupportedException, ParserConfigurationException, SAXException, InterruptedException {
         setConfig(
             "../sample-analysis-projects/csharp/FxcopFindings",
             "src/main/resources/Models/csharp/qualityModel_csharp.xml",
@@ -77,7 +77,7 @@ public class IntegrationTests {
         singleProjectEvaluatorTest();
     }
 
-    private void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException, ParserConfigurationException, SAXException {
+    private void singleProjectEvaluatorTest() throws CloneNotSupportedException, IOException, ParserConfigurationException, SAXException, InterruptedException {
 
         //Instantiate Properties file
         properties.load(new FileInputStream("src/main/resources/config.properties"));

@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class gathers metrics on a single project by invoking the
@@ -20,53 +21,25 @@ import java.nio.file.Paths;
  */
 public class LOCMetricsAnalyzer implements Analyzer {
 
-    public static final String TOOL_NAME = "LOCMetrics";
     public static final String RESULT_FILE_NAME = "LocMetricsFolders.csv";
 
     @Override
-    public void analyze(String src, String dest) {
+    public void analyze(String src, String dest) throws InterruptedException {
 
-        // temp directory needed for clean handling or extra files produced by tool
-        Path tempDest;
-        ProcessBuilder builder;
-        String rootDirectory = System.getProperty("user.dir");
-
+        ProcessBuilder pb;
         try {
-            tempDest = Files.createTempDirectory(Paths.get(rootDirectory), "LOCMetrics");
-            tempDest.toFile().deleteOnExit();
-
             if(System.getProperty("os.name").contains("Windows")){
-
-                builder = new ProcessBuilder(
-                    "cmd.exe",
-                    "/c",
-                    "ant -Dbasedir=" + rootDirectory +
-                    " -f resources/Ant/locmetrics_build.xml" +
-                    " -Dsrc.dir=" + src +
-                    " -Ddest.dir=" + tempDest.toString()
+                String sep = File.separator;
+                pb = new ProcessBuilder(
+                    "cmd.exe", "/c",
+                    "tools"+sep+"LocMetrics.exe", "-i", src, "-o", dest
                 );
             }
             else throw new RuntimeException("LOCMetrics tool only supported on Windows operating systems.");
 
-            builder.redirectErrorStream(true);
-            Process p = builder.start();
-            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            //Print the console output for debugging purposes
-            String line;
-            while (true) {
-                line = r.readLine();
-                if (line == null) { break; }
-            }
-
-            // move desired results file out of temporary folder
-            File results = new File(tempDest.toFile(), LOCMetricsAnalyzer.RESULT_FILE_NAME);
-            FileUtils.copyFileToDirectory(results, new File(dest));
-            FileUtils.cleanDirectory(tempDest.toFile());
-
-            if (!new File(new File(dest), results.getName()).isFile()) {
-                throw new RuntimeException("No LOCMetrice results found in " + dest);
-            }
+            pb.redirectErrorStream(true);
+            Process p = pb.start();
+            p.waitFor();
 
         } catch (IOException e) { e.printStackTrace(); }
     }
@@ -77,7 +50,7 @@ public class LOCMetricsAnalyzer implements Analyzer {
     }
 
     @Override
-    public void analyze(String src, String dest, PropertySet properties) {
+    public void analyze(String src, String dest, PropertySet properties) throws InterruptedException {
         // temp solution: just run LOCMetrics in order to get LOC metric
         analyze(src, dest);
     }

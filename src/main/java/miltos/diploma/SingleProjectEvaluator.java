@@ -41,7 +41,7 @@ public class SingleProjectEvaluator {
      *             1: path to folder to place results
      *    These arg paths can be relative or full path
      */
-    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, CloneNotSupportedException {
+    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, CloneNotSupportedException, InterruptedException {
 
         clean("resources", "config.properties");
 
@@ -58,6 +58,10 @@ public class SingleProjectEvaluator {
         }
         properties.load(new FileInputStream("config.properties"));
         ProjectLanguage projectLanguage = ProjectInfo.getProjectLanguage(properties.getProperty("project.location"));
+
+        // temp
+        if (projectLanguage == ProjectLanguage.Java) throw new RuntimeException("[temp] temporarily only supporting csharp");
+
         extractResources();
 
 

@@ -11,8 +11,12 @@ import java.io.IOException;
 public class LOCMetricsAnalyzerTest {
 
     // LOCMetrics analysis needs a compiled CSharp project located at 'src' in order to work
-    private final String src = "../sample-analysis-projects/csharp/SimpleCSharp";
-    private final String dest = "src/test/output";
+    private final String src = "..\\sample-analysis-projects\\csharp\\SimpleCSharp";
+    private final String dest = "src\\test\\output";
+    private File root = new File(System.getProperty("user.dir"));
+    private String toolsLoc = "src/main/resources/tools";
+    private File resourcesFolder = new File(toolsLoc);
+    private File rootTools = new File(root, "tools");
 
     /**
      * Ensures the LOCMetrics tool successfully runs on a small C# project
@@ -20,8 +24,14 @@ public class LOCMetricsAnalyzerTest {
      * results.
      */
     @Test
-    public void testAnalyzeSubroutine() throws IOException {
+    public void testAnalyzeSubroutine() throws IOException, InterruptedException {
         clean();
+
+        try {
+            FileUtils.copyDirectoryToDirectory(resourcesFolder, root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         LOCMetricsAnalyzer analyzer = new LOCMetricsAnalyzer();
         analyzer.analyze(src, dest);
@@ -45,5 +55,8 @@ public class LOCMetricsAnalyzerTest {
             FileUtils.cleanDirectory(output);
         }
         else output.mkdirs();
+//        if (rootTools.exists()) {
+//            FileUtils.cleanDirectory((rootTools));
+//        }
     }
 }
