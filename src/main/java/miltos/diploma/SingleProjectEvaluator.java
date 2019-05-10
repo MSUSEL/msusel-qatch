@@ -330,15 +330,6 @@ public class SingleProjectEvaluator {
 
         System.out.println("* Results successfully exported..!");
         System.out.println("* You can find the results at : " + new File(properties.getProperty("results.location")).getAbsolutePath());
-
-        /*
-         * Step 8.1 : Export the results to the predefined path as well
-         */
-        clean(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH);
-        //Export the results
-        EvaluationResultsExporter.exportProjectToJson(project, new File(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH + "/" + project.getName() + "_evalResults.json").getAbsolutePath());
-        System.out.println("* You can find the results at : " + new File(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH).getAbsolutePath() + " as well..!");
-
     }
 
     private static void clean(String... filePaths) throws IOException {

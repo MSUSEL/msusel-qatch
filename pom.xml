@@ -128,7 +128,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>miltos.diploma.TodoRefactorMe.TestSingleProjectEvaluator</mainClass>
+          <mainClass>miltos.diploma.SingleProjectEvaluator</mainClass>
         </configuration>
       </plugin>
       <plugin>

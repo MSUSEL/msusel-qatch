@@ -1,7 +1,5 @@
 package miltos.diploma.toolkit;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
