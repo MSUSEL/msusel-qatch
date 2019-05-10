@@ -16,10 +16,20 @@ public class FxcopAnalyzerTest {
      // FxCop analysis needs a compiled CSharp project located at 'src' in order to work
     private final String src = "../sample-analysis-projects/csharp/SimpleCSharp";
     private final String dest = "src/test/output";
+    private File root = new File(System.getProperty("user.dir"));
+    private String resourcesLoc = "src/main/resources";
+    private File resourcesFolder = new File(resourcesLoc);
+    private File rootResources = new File(root, "resources");
 
     @Test
     public void testAnalyze() throws IOException, InterruptedException {
         clean();
+
+        try {
+            FileUtils.copyDirectoryToDirectory(resourcesFolder, root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Measure measure01 = new Measure(
                 1,
@@ -55,35 +65,8 @@ public class FxcopAnalyzerTest {
         // XML file has expected number of bytes
         Assert.assertEquals(2844, result01.length(), 500);
         Assert.assertEquals(result01.length(), result02.length(), 500);
-    }
 
-    /**
-     * This test should cause the FxCop tool to successfully run on a small C# project
-     * and generate an XML results file in the expected directory with the expected analysis
-     * results.
-     */
-    @Test
-    public void testAnalyzeSubroutine() throws IOException, InterruptedException {
         clean();
-
-        String ruleset = "src/main/resources/Rulesets/CSharpTestModel/DesignRules.dll",
-               filename = "fxcopresults.xml";
-
-        FxcopAnalyzer analyzer = new FxcopAnalyzer();
-        analyzer.analyze(this.src, this.dest, ruleset, filename);
-
-        File results = new File(this.dest + File.separator + filename);
-
-        // XML file exists in expected location with correct name
-        Assert.assertTrue(results.exists());
-        Assert.assertTrue(results.isFile());
-        Assert.assertEquals("fxcopresults.xml", results.getName());
-
-        // XML file has approximate expected number of bytes. A better way to test
-        // this would be to parse the XML output for expected entries, but
-        // that approach adds substantial run time to the unit test
-        Assert.assertEquals(2844, results.length(), 200);
-
     }
 
     private void clean() throws IOException {
@@ -92,5 +75,8 @@ public class FxcopAnalyzerTest {
             FileUtils.cleanDirectory(output);
         }
         else output.mkdirs();
+        if (rootResources.exists()) {
+            FileUtils.cleanDirectory((rootResources));
+        }
     }
 }

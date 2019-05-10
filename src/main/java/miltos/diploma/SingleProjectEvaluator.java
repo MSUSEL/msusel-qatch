@@ -14,6 +14,8 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.Enumeration;
@@ -41,7 +43,7 @@ public class SingleProjectEvaluator {
      *             1: path to folder to place results
      *    These arg paths can be relative or full path
      */
-    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, CloneNotSupportedException, InterruptedException {
+    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, CloneNotSupportedException, InterruptedException, URISyntaxException {
 
         clean("resources", "config.properties");
 
@@ -54,7 +56,7 @@ public class SingleProjectEvaluator {
             String resultsLoc = args[1];
             setConfig(projectLoc, resultsLoc);
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new RuntimeException("Application was not provided project location and results location command line arguments");
+            throw new RuntimeException("Application was not provided Project Location and Results Location command line arguments");
         }
         properties.load(new FileInputStream("config.properties"));
         ProjectLanguage projectLanguage = ProjectInfo.getProjectLanguage(properties.getProperty("project.location"));
@@ -334,6 +336,13 @@ public class SingleProjectEvaluator {
 
         System.out.println("* Results successfully exported..!");
         System.out.println("* You can find the results at : " + new File(properties.getProperty("results.location")).getAbsolutePath());
+
+
+        /*
+         * Step Z : Clean up unwanted files before exit
+         */
+        clean("resources", "Results", "config.properties");
+
     }
 
 
@@ -357,17 +366,19 @@ public class SingleProjectEvaluator {
         }
     }
 
-    private static void clean(String... filePaths) throws IOException {
-        for (String f : filePaths) {
-            File toDelete = new File(f);
-            if (Files.exists(toDelete.toPath())) {
-                FileUtils.forceDelete(toDelete);
-                System.out.println("Deleted File " + f);
+    private static void clean(String... filePaths)  {
+        try {
+            for (String f : filePaths) {
+                File toDelete = new File(f);
+                if (Files.exists(toDelete.toPath())) {
+                    FileUtils.forceDelete(toDelete);
+                    System.out.println("Deleted File " + f);
+                }
             }
-        }
+        } catch (IOException e) { System.out.println(e.getMessage()); }
     }
 
-    private static void extractResources() {
+    private static void extractResources() throws URISyntaxException {
 
         String protocol = SingleProjectEvaluator.class.getResource("").getProtocol();
 
@@ -405,9 +416,15 @@ public class SingleProjectEvaluator {
      * resources folder in the same directory as the JAR. Also moves the ant build.xml
      * file to root directory.
      */
-    private static void extractResourcesToTempFolder(File root) throws IOException {
+    private static void extractResourcesToTempFolder(File root) throws IOException, URISyntaxException {
 
-        String rootPath = SingleProjectEvaluator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        String rootPath = new File(SingleProjectEvaluator.class
+                .getProtectionDomain()
+                .getCodeSource()
+                .getLocation()
+                .toURI()
+                .getPath())
+            .getName();
         String destPath = root.getCanonicalPath().concat(File.separator);
 
         //Recursively build resources folder from JAR sibling to JAR file
@@ -418,7 +435,7 @@ public class SingleProjectEvaluator {
             if (entry.getName().startsWith("resources")) {
                 File toWrite = new File(destPath + entry.getName());
                 if (entry.isDirectory()) {
-                    boolean mkdirsResult = toWrite.mkdirs();
+                    toWrite.mkdirs();
                     continue;
                 }
                 InputStream in = new BufferedInputStream(jarFile.getInputStream(entry));

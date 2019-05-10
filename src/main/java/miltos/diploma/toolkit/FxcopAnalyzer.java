@@ -49,14 +49,21 @@ public class FxcopAnalyzer implements Analyzer {
         ProcessBuilder pb;
         String destFile = dest + sep + filename;
         Set<String> assemblyDirs = FileUtility.findAssemblyDirectories(src, ".exe", ".dll");
+        Set<String> removeDirs = new HashSet<>();
+        if (assemblyDirs.isEmpty()) {
+            throw new RuntimeException("[ERROR] No directories containing .exe or .dll file(s) were found in project root "
+                + src + ". Has the project been built?");
+        }
 
         for (String s : assemblyDirs) {
             for (String directory : s.split("\\\\")) {
                 if (directory.trim().equals("obj")) {
-                    assemblyDirs.remove(s);
+                    removeDirs.add(s);
                 }
             }
         }
+
+        assemblyDirs.removeAll(removeDirs);
 
         StringBuilder sb = new StringBuilder("\"");
         assemblyDirs.forEach(dir -> sb.append("/f:").append(dir).append(" "));
@@ -68,7 +75,6 @@ public class FxcopAnalyzer implements Analyzer {
         String rulesetExt = "/r:" + ruleset;
 
         if(System.getProperty("os.name").contains("Windows")){
-            String rootDirectory = System.getProperty("user.dir");
             pb = new ProcessBuilder(
                 "cmd.exe", "/c",
                 "resources"+sep+"tools"+sep+"FxCop"+sep+"FxCopCmd.exe",
