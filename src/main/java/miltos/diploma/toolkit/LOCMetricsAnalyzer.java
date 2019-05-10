@@ -3,14 +3,9 @@ package miltos.diploma.toolkit;
 import miltos.diploma.qualitymodel.PropertySet;
 import org.apache.commons.io.FileUtils;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
 
 /**
  * This class gathers metrics on a single project by invoking the
@@ -39,6 +34,8 @@ public class LOCMetricsAnalyzer implements Analyzer {
         pb.redirectErrorStream(true);
         Process p = pb.start();
         p.waitFor();
+
+        cleanAllButOne(new File(dest), RESULT_FILE_NAME);
     }
 
     @Override
@@ -50,5 +47,14 @@ public class LOCMetricsAnalyzer implements Analyzer {
     public void analyze(String src, String dest, PropertySet properties) throws InterruptedException, IOException {
         // temp solution: just run LOCMetrics in order to get LOC metric
         analyze(src, dest);
+    }
+
+    private void cleanAllButOne(File directory, String toKeep) {
+        for (File f : Objects.requireNonNull(directory.listFiles())) {
+            if (!f.getName().equals(toKeep)) {
+                f.delete();
+            }
+        }
+
     }
 }
