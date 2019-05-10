@@ -14,6 +14,8 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.Enumeration;
@@ -41,7 +43,7 @@ public class SingleProjectEvaluator {
      *             1: path to folder to place results
      *    These arg paths can be relative or full path
      */
-    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, CloneNotSupportedException, InterruptedException {
+    public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, CloneNotSupportedException, InterruptedException, URISyntaxException {
 
         clean("resources", "config.properties");
 
@@ -367,7 +369,7 @@ public class SingleProjectEvaluator {
         }
     }
 
-    private static void extractResources() {
+    private static void extractResources() throws URISyntaxException {
 
         String protocol = SingleProjectEvaluator.class.getResource("").getProtocol();
 
@@ -405,9 +407,15 @@ public class SingleProjectEvaluator {
      * resources folder in the same directory as the JAR. Also moves the ant build.xml
      * file to root directory.
      */
-    private static void extractResourcesToTempFolder(File root) throws IOException {
+    private static void extractResourcesToTempFolder(File root) throws IOException, URISyntaxException {
 
-        String rootPath = SingleProjectEvaluator.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        String rootPath = new File(SingleProjectEvaluator.class
+                .getProtectionDomain()
+                .getCodeSource()
+                .getLocation()
+                .toURI()
+                .getPath())
+            .getName();
         String destPath = root.getCanonicalPath().concat(File.separator);
 
         //Recursively build resources folder from JAR sibling to JAR file
