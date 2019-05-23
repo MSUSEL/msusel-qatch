@@ -370,17 +370,6 @@ public class IntegrationTests {
         System.out.println("* You can find the results at : " + new File(EvaluationResultsExporter.SINGLE_PROJ_RESULT_PATH).getAbsolutePath() + " as well..!");
 
         /*
-         * Step 8.2 : Send to DBMS (mongoDB)
-         */
-        EvaluationResultsExporter.exportProjectToMongoDB(
-            project,
-            properties.getProperty(host),
-            Integer.parseInt(properties.getProperty(port)),
-            properties.getProperty(dbName),
-            properties.getProperty(collName)
-        );
-
-        /*
          * (Test Step) Step 9: Assert TQI is its expected value
          */
         File evalResults = new File(System.getProperty("user.dir") + "/Results/Evaluation/SingleProjectResults/" + project.getName() + "_evalResults.json" );
