@@ -422,9 +422,9 @@ public class SingleProjectEvaluator {
                 .getProtectionDomain()
                 .getCodeSource()
                 .getLocation()
-                .toURI()
-                .getPath())
-            .getName();
+                .toURI())
+            .getPath();
+        System.out.println("rootPath: " + rootPath);
         String destPath = root.getCanonicalPath().concat(File.separator);
 
         //Recursively build resources folder from JAR sibling to JAR file
