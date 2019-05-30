@@ -5,10 +5,8 @@ import miltos.diploma.qualitymodel.Property;
 import miltos.diploma.qualitymodel.PropertySet;
 import miltos.diploma.utility.FileUtility;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -77,7 +75,7 @@ public class FxcopAnalyzer implements Analyzer {
         if(System.getProperty("os.name").contains("Windows")){
             pb = new ProcessBuilder(
                 "cmd.exe", "/c",
-                "resources"+sep+"tools"+sep+"FxCop"+sep+"FxCopCmd.exe",
+                "QA"+sep+"resources"+sep+"tools"+sep+"FxCop"+sep+"FxCopCmd.exe",
                 srcExt,
                 destExt,
                 rulesetExt

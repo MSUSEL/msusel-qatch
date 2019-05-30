@@ -209,6 +209,7 @@ $RECYCLE.BIN/
 *_evalResults.json
 .idea/artifacts/
 /pmd_build.xml
+QA
 /reference.txt
 /resources/
 Results/

@@ -1,7 +1,6 @@
 package miltos.diploma.toolkit;
 
 import miltos.diploma.qualitymodel.PropertySet;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +25,7 @@ public class LOCMetricsAnalyzer implements Analyzer {
             String sep = File.separator;
             pb = new ProcessBuilder(
                 "cmd.exe", "/c",
-                "resources"+sep+"tools"+sep+"LocMetrics.exe", "-i", src, "-o", dest
+                "QA"+sep+"resources"+sep+"tools"+sep+"LocMetrics.exe", "-i", src, "-o", dest
             );
         }
         else throw new RuntimeException("LOCMetrics tool only supported on Windows operating systems.");

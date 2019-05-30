@@ -29,9 +29,8 @@ public class BenchmarkAnalyzer {
 
     // Useful static fields
     public static String BASE_DIR = new File(System.getProperty("user.dir")).getAbsolutePath();
-    public static String BENCH_RESULT_PATH = new File(BASE_DIR + "/Results/Analysis/BenchmarkResults").getAbsolutePath();
-    public static String WORKSPACE_RESULT_PATH = new File(BASE_DIR + "/Results/Analysis/WorkspaceResults").getAbsolutePath();
-    public static String SINGLE_PROJ_RESULT_PATH = new File(BASE_DIR + "/Results/Analysis/SingleProjectResults").getAbsolutePath();
+    public static String BENCH_RESULT_PATH = new File(BASE_DIR + "/QA/Results/Analysis/BenchmarkResults").getAbsolutePath();
+    public static String SINGLE_PROJ_RESULT_PATH = new File(BASE_DIR + "/QA/Results/Analysis/SingleProjectResults").getAbsolutePath();
 
     private String benchRepoPath;
     private PropertySet properties;

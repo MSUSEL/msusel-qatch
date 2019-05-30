@@ -14,7 +14,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -29,11 +28,11 @@ import java.util.jar.JarFile;
  */
 public class SingleProjectEvaluator {
 
-    private static File root = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
-
+    private static File root = new File(FileSystems.getDefault().getPath(".").toAbsolutePath().toString()).getParentFile();
+    private static File qaDir = new File(root, "QA");
     private static final boolean INSPECTION_RESULTS = false;
     private static final boolean RERUN = true;
-    private static final String QM_LOC = "resources/Models/csharp/qualityModel_csharp.xml";
+    private static final String QM_LOC = qaDir.getPath() + "/resources/Models/csharp/qualityModel_csharp.xml";
 
     private static Properties properties = new Properties();
 
@@ -45,20 +44,25 @@ public class SingleProjectEvaluator {
      */
     public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, CloneNotSupportedException, InterruptedException, URISyntaxException {
 
-        clean("resources", "config.properties");
-
         System.out.println("******************************  Project Evaluator *******************************");
         System.out.println();
+
+//        clean("resources", "config.properties");
+        qaDir.mkdirs();
 
         // Initialize configurations
         try {
             String projectLoc = args[0];
             String resultsLoc = args[1];
+
+            System.out.println("Input arg[0] (project root): " + projectLoc);
+            System.out.println("Input arg[1] (results folder destination): " + resultsLoc);
+
             setConfig(projectLoc, resultsLoc);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new RuntimeException("Application was not provided Project Location and Results Location command line arguments");
         }
-        properties.load(new FileInputStream("config.properties"));
+        properties.load(new FileInputStream(qaDir.getName() + File.separator + "config.properties"));
         ProjectLanguage projectLanguage = ProjectInfo.getProjectLanguage(properties.getProperty("project.location"));
 
         // temp
@@ -84,7 +88,6 @@ public class SingleProjectEvaluator {
 
         System.out.println("* Quality Model successfully loaded..!");
 
-
         /*
          * Step 1: Create the Project object that simulates the desired project
          */
@@ -104,7 +107,7 @@ public class SingleProjectEvaluator {
         project.setPath(properties.getProperty("project.location"));
         project.setName(projectDir.getName());
 
-        System.out.println("* Project Name : " + project.getName());
+        System.out.println("* Root Folder Name : " + project.getName());
         System.out.println("* Project Path : " + project.getPath());
         System.out.println("*");
         System.out.println("* Project successfully loaded..!");
@@ -341,10 +344,9 @@ public class SingleProjectEvaluator {
         /*
          * Step Z : Clean up unwanted files before exit
          */
-        clean("resources", "Results", "config.properties");
+//        clean("resources", "Results", "config.properties");
 
     }
-
 
     /**
      * A method that checks the predefined directory structure, creates the
@@ -384,7 +386,7 @@ public class SingleProjectEvaluator {
 
         if (Objects.equals(protocol, "jar")) {
             try {
-                extractResourcesToTempFolder(root);
+                extractResourcesToTempFolder();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -395,7 +397,7 @@ public class SingleProjectEvaluator {
             String resourcesLoc = "src/main/resources";
             File resourcesFolder = new File(resourcesLoc);
             try {
-                FileUtils.copyDirectoryToDirectory(resourcesFolder , root);
+                FileUtils.copyDirectoryToDirectory(resourcesFolder , qaDir);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -416,20 +418,23 @@ public class SingleProjectEvaluator {
      * resources folder in the same directory as the JAR. Also moves the ant build.xml
      * file to root directory.
      */
-    private static void extractResourcesToTempFolder(File root) throws IOException, URISyntaxException {
+    private static void extractResourcesToTempFolder() throws IOException, URISyntaxException {
 
-        String rootPath = new File(SingleProjectEvaluator.class
+        File jarFile = new File(SingleProjectEvaluator.class
                 .getProtectionDomain()
                 .getCodeSource()
                 .getLocation()
-                .toURI())
-            .getPath();
-        System.out.println("rootPath: " + rootPath);
+                .toURI());
+        String jarPath = jarFile.getPath();
+        String jarFolder = jarFile.getParent();
+
+        System.out.println("jarFile: " + jarPath);
+        System.out.println("root: " + root);
         String destPath = root.getCanonicalPath().concat(File.separator);
 
         //Recursively build resources folder from JAR sibling to JAR file
-        JarFile jarFile = new JarFile(rootPath);
-        Enumeration<JarEntry> enums = jarFile.entries();
+        JarFile jar = new JarFile(jarPath);
+        Enumeration<JarEntry> enums = jar.entries();
         while (enums.hasMoreElements()) {
             JarEntry entry = enums.nextElement();
             if (entry.getName().startsWith("resources")) {
@@ -438,7 +443,7 @@ public class SingleProjectEvaluator {
                     toWrite.mkdirs();
                     continue;
                 }
-                InputStream in = new BufferedInputStream(jarFile.getInputStream(entry));
+                InputStream in = new BufferedInputStream(jar.getInputStream(entry));
                 OutputStream out = new BufferedOutputStream(new FileOutputStream(toWrite));
                 byte[] buffer = new byte[2048];
                 for (;;) {
@@ -468,7 +473,7 @@ public class SingleProjectEvaluator {
             properties.setProperty("output.inspectionresults", Boolean.toString(INSPECTION_RESULTS));
             properties.setProperty("results.location", resultsLocation);
 
-            properties.store(new FileOutputStream(new File(System.getProperty("user.dir") + File.separator + "config.properties")), null);
+            properties.store(new FileOutputStream(new File(qaDir + File.separator + "config.properties")), null);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -69,6 +69,7 @@
             <fileset>
               <directory>.</directory>
               <includes>
+                <include>QA/</include>
                 <include>*_evalResults.json</include>
                 <include>**/output/*</include>
                 <include>build.xml</include>
